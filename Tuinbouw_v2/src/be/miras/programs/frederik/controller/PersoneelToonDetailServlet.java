@@ -55,7 +55,7 @@ public class PersoneelToonDetailServlet extends HttpServlet {
 			 * 'PersoneelDetail.jsp'. Daarom stellen we nu de voornaam van het
 			 * personeelslid tijdelijk in.
 			 */
-			aanspreeknaam = "een nieuw personeelslid";
+			aanspreeknaam = "";
 			buttonNaam = "Voeg toe";
 
 		} else {

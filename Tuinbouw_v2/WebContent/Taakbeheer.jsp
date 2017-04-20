@@ -6,6 +6,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link rel="stylesheet" type="text/css" href="style/lijst.css">
+	
+	
+	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	<script type="text/javascript" src="script/nieuweTaak.js"></script>
+	
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -70,7 +77,7 @@
 					Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
 					<br />
 					naam: 
-					<input type="text" name="taaknaam" value ="${taak.taakNaam }" />
+					<input type="text"  id="taaknaam" name="taaknaam" value ="${taak.taakNaam }" />
 					<br />
 					opmerking: 
 					<br />
@@ -79,7 +86,7 @@
 					<input type="submit" name="submit" value="opslaan" />
 				</form>
 			</div>
-			<div id="planning"></div>
+			<div id="planning">
 				<fieldset>
 					<legend>Planning</legend>
 						<form action="taakPlanningToevoegen" method="post">
@@ -120,6 +127,7 @@
 							</c:forEach>
 						</table>
 				</fieldset>
+				</div>
 			<div id="vooruitgang">
 				<table>
 					<tr>

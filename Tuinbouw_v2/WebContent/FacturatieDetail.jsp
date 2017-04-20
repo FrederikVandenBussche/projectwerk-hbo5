@@ -6,6 +6,12 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link rel="stylesheet" type="text/css" href="style/lijst.css">
+	
+	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	
+	
 </head>
 <body>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -89,14 +95,14 @@
 									<th>Taak</th>
 									<th>Datum</th>
 									<th>&#x23; uren</th>
-									<th></th>						
+															
 								</tr>
 								<c:forEach items="${opdracht.taakLijst }" var="taak">
 									<tr>
 										<td>${taak.taakNaam }</td>
 										<td></td>
 										<td></td>
-										<td></td>
+										
 									</tr>
 									<c:forEach items="${taak.planningLijst }" var="planning">
 										<tr>
@@ -105,7 +111,7 @@
 												<fmt:formatDate value="${planning.beginuur }" pattern="dd/MM/yyyy"/>
 											</td>
 											<td>${planning.aantalUren }</td>
-											<td>Verwijder</td>
+											
 										</tr>
 									</c:forEach>
 								</c:forEach>
@@ -122,7 +128,7 @@
 								<th>Dag	</th>
 								<th>aantalKm</th>
 								<th>aantal verplaatsingen</th>
-								<th></th>						
+													
 							</tr>
 							<c:forEach items="${factuur.verplaatsingLijst }" var="verplaatsing">
 								<tr>
@@ -131,7 +137,7 @@
 									</td>
 									<td>${verplaatsing.aantalKm }</td>
 									<td>${verplaatsing.aantalVerplaatsingen }</td>
-									<td></td>
+									
 								</tr>
 							</c:forEach>
 						</table>

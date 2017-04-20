@@ -6,6 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Tuinbouwbedrijf Hitek</title>
 <link rel="stylesheet" type="text/css" href="style/style.css">
+
+<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->

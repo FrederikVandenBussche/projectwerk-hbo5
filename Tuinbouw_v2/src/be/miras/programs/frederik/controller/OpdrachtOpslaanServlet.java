@@ -157,6 +157,9 @@ public class OpdrachtOpslaanServlet extends HttpServlet {
 
 				dbOpdracht.setLatitude(latitude);
 				dbOpdracht.setLongitude(longitude);
+				
+				String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+				String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 
 				dbOpdrachtDao.voegToe(dbOpdracht);
 
@@ -182,6 +185,8 @@ public class OpdrachtOpslaanServlet extends HttpServlet {
 				opdrachtDetailData.setVariabelveld2(", wijzigen : ");
 
 				opdrachtDetailData.setOpdracht(opdracht);
+				opdrachtDetailData.setGooglemap(googlemap);
+				opdrachtDetailData.setStaticmap(staticmap);
 			}
 
 		} else {
@@ -231,6 +236,13 @@ public class OpdrachtOpslaanServlet extends HttpServlet {
 				Adres adres = (Adres) adresAdapter.lees(klantAdresId);
 
 				opdrachtDetailData.setAdresString(adresString);
+				
+				System.out.println(TAG + "adres: " + adres.toString());
+				String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+				String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
+				
+				opdrachtDetailData.setStaticmap(staticmap);
+				opdrachtDetailData.setGooglemap(googlemap);
 
 				double[] latlng = GoogleApis.zoeklatlng(adres);
 				latitude = latlng[0];

@@ -38,8 +38,6 @@ tr:nth-child(even) {
 	*
 	* overflow-x: auto; :plaatst een scrollbar indien gewenst 
 	*/
-	
-	overflow-x: auto;
 	white-space: nowrap;
 	width: 750px;
 }

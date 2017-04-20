@@ -59,6 +59,7 @@ public class GoogleApis {
 
 	public static Adres zoekAdres (double lat, double lng){
 		String url = urlBuilder(lat, lng);
+		System.out.println(TAG + "url = " + url);
 		String jsonString = executePost(url);
 		Adres adres = haalAdres(jsonString);
 		
@@ -224,7 +225,7 @@ public class GoogleApis {
 		try {
 			JSONParser parser = new JSONParser();
 			Object resultObject = parser.parse(jsonString);
-
+			
 			if (resultObject instanceof JSONObject) {
 				System.out.println(TAG + "is instance of jsonobject");
 				JSONObject obj = (JSONObject) resultObject;
