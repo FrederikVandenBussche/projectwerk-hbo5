@@ -1,0 +1,15 @@
+@CHARSET "ISO-8859-1";
+
+#container{
+	margin-top: 100px;
+	text-align: center;
+}
+
+label, input {
+   	display: inline-block;
+   	width: 150px;
+    
+    
+}
+
+

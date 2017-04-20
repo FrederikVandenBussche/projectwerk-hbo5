@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<!-- class naam, gevolgd door de tabelnaam -->
+	<class name="be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak" table="werknemer_opdracht_taak">
+		<id column="ID" name="id" type="java.lang.Integer">
+			<!-- generator class increment omdat Id in de tabel auto-increment is -->
+			<generator class="increment"></generator>
+		</id>
+		<property column="WerknemerID" name="werknemerId" type="java.lang.Integer" />
+		<property column="Opdracht_TaakOpdrachtID" name="opdrachtTaakOpdrachtId" type="java.lang.Integer" />
+		<property column="Opdracht_TaakTaakID" name="opdrachtTaakTaakId" type="java.lang.Integer" />
+		<property column="Beginuur" name="beginuur" type="java.util.Date" />
+		<property column="Einduur" name="einduur" type="java.util.Date" />
+		<property column="aanwezig" name="aanwezig" type="java.lang.Integer" />
+	</class>
+</hibernate-mapping>

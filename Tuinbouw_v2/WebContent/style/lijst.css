@@ -1,0 +1,63 @@
+@CHARSET "ISO-8859-1";
+
+.tabel{
+	height: 200px;
+	overflow-y: auto;
+}
+
+.groteTabel{
+	height: 400px;
+	overflow-y: auto;
+}
+
+table{
+    width: 100%;	
+}
+
+
+
+th, td {
+	text-align: left;
+	padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+.celinhoud {
+	 height: em;
+    overflow: hidden;
+}
+
+.adresLijst, .horizontaleDivs {
+	/*
+	* white-space: nowrap; de inhoud zal nooit naar de volgende lijn wrappen.
+	* De inhoud blijft op dezelfde lijn tot er een <br> tag volgt
+	* Dit maakt het mogelijk om een horizontale scrollbar te verkrijgen.
+	*
+	* overflow-x: auto; :plaatst een scrollbar indien gewenst 
+	*/
+	
+	overflow-x: auto;
+	white-space: nowrap;
+	width: 750px;
+}
+
+.horizontaleDivs > div {
+	display: inline-block;
+}
+	
+.adresLijst > div {
+	display: inline-block;
+	border: 1px solid black;
+	height: 170px;
+	width : 650px;
+	padding: 5px;
+	margin-right: 10px;
+}
+
+progress {
+	width: 5em;
+}
+

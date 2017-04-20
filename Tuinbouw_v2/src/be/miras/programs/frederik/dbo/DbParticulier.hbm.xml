@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<!-- class naam, gevolgd door de tabelnaam -->
+	<class name="be.miras.programs.frederik.dbo.DbParticulier" table="particulier">
+		<id column="ParticulierId" name="id" type="java.lang.Integer" />
+		<property column="Naam" name="naam" type="java.lang.String" />
+		<property column="Voornaam" name="voornaam" type="java.lang.String" />
+	</class>
+</hibernate-mapping>

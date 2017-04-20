@@ -1,0 +1,82 @@
+#container{
+	/* centreren*/
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	
+	margin-top: 20px;
+	
+	width: 1000px;
+	height: 500px;
+	
+	border: 1px solid black;
+}
+
+#nav{
+	float: left;
+	width: 200px;
+	height: 100%;
+	background-color: #C0C0C0;
+}
+
+#content{
+	float: right;
+	width: calc(100% - 210px); /* #nav width: 200px; */
+	height: 95%;
+	padding: 5px;
+	overflow-x: hidden; 
+	overflow-y: auto;
+}
+
+#nav div{
+	
+	height: 70px;
+
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#logo{
+	float: left;
+	margin: 2px;
+	width: 65px;
+	height: 65px; /*de div heeft een hoogte van 70px; */
+}
+
+
+
+#afmeldBtn{
+	float: right;
+	width: 80px;
+	padding: 5px;
+	height: 40px;
+}
+
+#nav input{
+	background-color: #696969;	
+	margin-left: 5px;;
+	width: 90%;
+	height: 75px;
+}
+
+#nav input:hover{
+	background-color: #909090;
+	
+	
+}
+
+.actiefItem input {
+	background-color: #909090 !important;
+}
+
+#afmeldBtn input {
+	background-color: #C0C0C0;
+	background:url("../images/logout.png");
+	background-repeat: no-repeat;
+}
+
+#content div, #content fieldset{
+	margin-bottom: 20px;
+}
+
+.
