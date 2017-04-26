@@ -35,26 +35,21 @@ public class Datatype {
 		final String Digits = "(\\p{Digit}+)";
 		final String HexDigits = "(\\p{XDigit}+)";
 
-		// an exponent is 'e' or 'E' followed by an optionally
-		// signed decimal integer.
+		// een exponent is 'e' of 'E' optioneel gevolgd door een + of - 
+		// met daarna een integer.
 		final String Exp = "[eE][+-]?" + Digits;
-		final String fpRegex = ("[\\x00-\\x20]*" + // Optional leading
+		final String fpRegex = ("[\\x00-\\x20]*" + // optioneel beginnent met
 													// "whitespace"
-				"[+-]?(" + // Optional sign character
+				"[+-]?(" + // optioneel + of - karakter
 				"NaN|" + // "NaN" string
 				"Infinity|" + // "Infinity" string
 
-				// A decimal floating-point string representing a finite
-				// positive
-				// number without a leading sign has at most five basic pieces:
+				// Een decimaal floating-point string is een eindig aantal
+				// positieve nummers die niet voorafgaan aan een teken.
+				// ze hebben 5 basis stukken: 
 				// Digits . Digits ExponentPart FloatTypeSuffix
 				//
-				// Since this method allows integer-only strings as input
-				// in addition to strings of floating-point literals, the
-				// two sub-patterns below are simplifications of the grammar
-				// productions from the Java Language Specification, 2nd
-				// edition, section 3.10.2.
-
+				
 				// Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
 				"(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|" +
 
@@ -75,11 +70,7 @@ public class Datatype {
 																				// "whitespace"
 
 		if (Pattern.matches(fpRegex, tekst))
-			getal = Double.valueOf(tekst); // Will not throw
-											// NumberFormatException
-		else {
-			// Perform suitable alternative action
-		}
+			getal = Double.valueOf(tekst); 
 		return getal;
 	}
 }

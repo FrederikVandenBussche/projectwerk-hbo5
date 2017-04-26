@@ -62,7 +62,7 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 				}
 			}
 
-			request.setAttribute("materiaal", materiaal);
+			session.setAttribute("materiaal", materiaal);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 

@@ -16,12 +16,13 @@ import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
 import be.miras.programs.frederik.dbo.DbStatus;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.model.Taak;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class TaakOpslaanServlet
  */
 @WebServlet("/TaakOpslaanServlet")
-public class TaakOpslaanServlet extends HttpServlet {
+public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
 	private String TAG = "TaakOpslaanServet: ";
 
@@ -42,48 +43,64 @@ public class TaakOpslaanServlet extends HttpServlet {
 
 		String taaknaam = request.getParameter("taaknaam").trim();
 		String opmerking = request.getParameter("opmerking").trim();
+		
+		String inputValidatieErrorMsg = inputValidatie(new String[]{taaknaam, opmerking});
+		
+		RequestDispatcher view = null;
+		
+		if (inputValidatieErrorMsg.isEmpty()) {
+			
+			
+					
+			HttpSession session = request.getSession();
+			Taak taak = (Taak) session.getAttribute("taak");
+			OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
 
-		HttpSession session = request.getSession();
-		Taak taak = (Taak) session.getAttribute("taak");
-		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+			TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
 
-		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
+			List<Taak> takenlijst = opdrachtDetailData.getOpdracht().getTaakLijst();
 
-		List<Taak> takenlijst = opdrachtDetailData.getOpdracht().getTaakLijst();
+			int id = taak.getId();
 
-		int id = taak.getId();
-
-		if (id < 0) {
-			// een nieuwe taak toevoegen
-			taak.setTaakNaam(taaknaam);
-			taak.setOpmerking(opmerking);
-			taak.setOpdrachtId(opdrachtDetailData.getOpdracht().getId());
-
-			taakDaoAdapter.voegToe(taak);
-			System.out.println(TAG + "takenlijst.size() = " + takenlijst.size());
-			taak.setId(takenlijst.size() + 1);
-			DbStatusDao dbStatusDao = new DbStatusDao();
-			// een nieuwe taak heeft als status de waarde van DbStatus met id =
-			// 1
-			DbStatus dbStatus = (DbStatus) dbStatusDao.lees(1);
-			taak.setStatus(dbStatus.getNaam());
-			// een nieuwe taak heeft een vooruitgangspercentage van 0
-			taak.setVooruitgangPercentage(0);
-			takenlijst.add(taak);
-		} else {
-			// het betreft een bestaande taak
-			// indien er iets gewijzigd werd, de wijzigingen aanpassen
-
-			if (!taak.getTaakNaam().equals(taaknaam) || !taak.getOpmerking().equals(opmerking)) {
+			if (id < 0) {
+				// een nieuwe taak toevoegen
 				taak.setTaakNaam(taaknaam);
 				taak.setOpmerking(opmerking);
-				taakDaoAdapter.wijzig(taak);
+				taak.setOpdrachtId(opdrachtDetailData.getOpdracht().getId());
 
+				taakDaoAdapter.voegToe(taak);
+				System.out.println(TAG + "takenlijst.size() = " + takenlijst.size());
+				taak.setId(takenlijst.size() + 1);
+				DbStatusDao dbStatusDao = new DbStatusDao();
+				// een nieuwe taak heeft als status de waarde van DbStatus met id =
+				// 1
+				DbStatus dbStatus = (DbStatus) dbStatusDao.lees(1);
+				taak.setStatus(dbStatus.getNaam());
+				// een nieuwe taak heeft een vooruitgangspercentage van 0
+				taak.setVooruitgangPercentage(0);
+				takenlijst.add(taak);
+			} else {
+				// het betreft een bestaande taak
+				// indien er iets gewijzigd werd, de wijzigingen aanpassen
+
+				if (!taak.getTaakNaam().equals(taaknaam) || !taak.getOpmerking().equals(opmerking)) {
+					taak.setTaakNaam(taaknaam);
+					taak.setOpmerking(opmerking);
+					taakDaoAdapter.wijzig(taak);
+
+				}
 			}
+			view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
+			
+		} else {
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+			view = request.getRequestDispatcher("/Taakbeheer.jsp");
+			
 		}
-
-		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);
+		
+
+		
 	}
 
 	/**
@@ -96,6 +113,28 @@ public class TaakOpslaanServlet extends HttpServlet {
 
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String taaknaam = teValideren[0];
+		String opmerking = teValideren[1];
+		
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+		
+		msg = InputValidatie.enkelAlfabetisch(taaknaam);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Taaknaam").concat(msg);
+		}
+		
+		msg = InputValidatie.ingevuld(opmerking);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Opmerking").concat(msg);
+		}
+		
+		return inputValidatieErrorMsg;
 	}
 
 }

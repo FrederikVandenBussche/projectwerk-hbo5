@@ -68,7 +68,9 @@
 			</div>
 		</div>
 		<div id="content">
-			<div id="personeelAanspreekNaam">Gegevens van ${aanspreeknaam}:</div>
+			<div id="personeelAanspreekNaam">Gegevens van ${aanspreeknaam}: </div>
+			<div class="inlogError">${inputValidatieErrorMsg }</div>
+			
 			<form action="personeelslidOpslaan" method="post">
 				<input type="hidden" name="id" value="${id}" />
 				<fieldset>

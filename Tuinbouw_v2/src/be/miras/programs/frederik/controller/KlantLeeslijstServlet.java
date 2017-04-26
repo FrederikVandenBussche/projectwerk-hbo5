@@ -20,8 +20,9 @@ import be.miras.programs.frederik.dbo.DbParticulier;
  * Servlet implementation class KlantLeeslijstServlet
  */
 @WebServlet("/KlantLeeslijstServlet")
-public class KlantLeeslijstServlet extends HttpServlet {
+public class KlantLeeslijstServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
+	private String TAG = "KlantLeeslijstServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -38,11 +39,13 @@ public class KlantLeeslijstServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html");
 
-		RequestDispatcher view = null;
+		
 
 		HttpSession session = request.getSession();
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
-
+		System.out.println(TAG + "isIngelogd" + isIngelogd);
+		RequestDispatcher view = null;
+		
 		if (isIngelogd == null || isIngelogd == false) {
 			view = request.getRequestDispatcher("/logout");
 
@@ -62,5 +65,7 @@ public class KlantLeeslijstServlet extends HttpServlet {
 		view.forward(request, response);
 
 	}
+
+
 
 }

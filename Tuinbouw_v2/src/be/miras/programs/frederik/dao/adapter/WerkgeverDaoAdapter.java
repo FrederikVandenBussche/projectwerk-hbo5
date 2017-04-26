@@ -10,6 +10,7 @@ import be.miras.programs.frederik.dao.DbWerkgeverDao;
 import be.miras.programs.frederik.dao.ICRUD;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
+import be.miras.programs.frederik.dbo.DbWerkgever;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.GoogleApis;
@@ -22,28 +23,32 @@ public class WerkgeverDaoAdapter implements ICRUD {
 	}
 
 	@Override
-	public Object lees(int id) {
+	public Object lees(int gebruikerId) {
+		
 		Werkgever werkgever = new Werkgever();
 		DbWerkgeverDao dbWerkgeverDao = new DbWerkgeverDao();
 		DbPersoonDao dbPersoonDao = new DbPersoonDao();
+		
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 		List<Adres> adresLijst = new ArrayList<Adres>();
 		PersoonAdresDaoAdapter adresDaoAdapter = new PersoonAdresDaoAdapter();
 		
-		//de id van de werkgever
-		int werkgeverId = dbWerkgeverDao.geefId();
 		
-		DbPersoon dbPersoon = (DbPersoon) dbPersoonDao.lees(werkgeverId);
-		DbGebruiker dbGebruiker = (DbGebruiker) dbGebruikerDao.lees(werkgeverId);
+		DbGebruiker dbGebruiker = (DbGebruiker) dbGebruikerDao.lees(gebruikerId);
+		DbPersoon dbPersoon = (DbPersoon) dbPersoonDao.lees(dbGebruiker.getPersoonId());
+		DbWerkgever dbWerkgever = dbWerkgeverDao.geefId(dbPersoon.getId());
 		
 		
-		adresLijst = adresDaoAdapter.leesSelectief("persoon", werkgeverId);
+		adresLijst = adresDaoAdapter.leesSelectief("persoon", dbPersoon.getId());
 		
-		werkgever.setId(werkgeverId);
+		werkgever.setId(dbWerkgever.getId());
+		
+		werkgever.setPersoonId(dbPersoon.getId());
 		werkgever.setNaam(dbPersoon.getNaam());
 		werkgever.setVoornaam(dbPersoon.getVoornaam());
 		werkgever.setGeboortedatum(dbPersoon.getGeboortedatum());
 		
+		werkgever.setGebruikerId(dbGebruiker.getId());
 		werkgever.setEmail(dbGebruiker.getEmail());
 		werkgever.setWachtwoord(dbGebruiker.getWachtwoord());
 		werkgever.setGebruikersnaam(dbGebruiker.getGebruikersnaam());
@@ -62,9 +67,6 @@ public class WerkgeverDaoAdapter implements ICRUD {
 		
 		werkgever.setAdreslijst((ArrayList<Adres>) adresLijst);
 		
-		
-		
-		//maak een werkgever aan en return de werkgever
 		return werkgever;
 	}
 

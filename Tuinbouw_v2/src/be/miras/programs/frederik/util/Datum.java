@@ -3,6 +3,7 @@ package be.miras.programs.frederik.util;
 import java.util.Date;
 
 public class Datum {
+	private static final String TAG = "util.Datum.java: ";
 
 	public static int converteerMaand(String maandString) {
 		int maand = 0;
@@ -53,34 +54,50 @@ public class Datum {
 	public static Date creeerDatum(String datumString) {
 		if (datumString != null && !datumString.isEmpty()) {
 			String eersteLetter = datumString.substring(0, 1);
-			int geboortejaar = 0;
-			int geboortemaand = 0;
-			int geboortedag = 0;
-			if (eersteLetter.equals("1") || eersteLetter.equals("2")) {
-				geboortejaar = Datatype.stringNaarInt(datumString.substring(0, 4)) - 1900; // YYYY
-																							// -
-																							// 1900
-				geboortemaand = Datatype.stringNaarInt(datumString.substring(5, 7)) - 1; // tussen
-																							// 0
-																							// en
-																							// 11
-				geboortedag = Datatype.stringNaarInt(datumString.substring(8, 10));// tussen
-																					// 1
-																					// en
-																					// 31
-
-			} else {
-				geboortejaar = Datatype.stringNaarInt(datumString.substring(24, 28)) - 1900; // YYYY
+			int jaar = 0;
+			int maand = 0;
+			int dag = 0;
+			datumString = datumString.trim();
+			if (datumString.length() == 10){
+				// type dd/mm/yyyy of type yyyy/mm/dd
+				if (datumString.substring(2, 3).equals("/") && 
+						datumString.substring(5, 6).equals("/") && 
+						datumString.length() == 10) {
+					// Er is reeds gevalideerd dat de datum van het type dd/mm/yyyy is
+					
+					dag = Datatype.stringNaarInt(datumString.substring(0, 2));
+					maand = Datatype.stringNaarInt(datumString.substring(3, 5)) - 1;
+					jaar = Datatype.stringNaarInt(datumString.substring(6, 10));
+					jaar = jaar - 1900;
+				//einde dd/mm/yyyy	
+				} else if ((datumString.subSequence(4, 5).equals("/") && 
+						datumString.substring(7, 8).equals("/")
+						&& datumString.length() == 10) ||
+						(datumString.subSequence(4, 5).equals("-") &&
+								datumString.substring(7, 8).equals("-")
+								&& datumString.length() == 10)) {
+					System.out.println(TAG + "dendien!");
+					// Er is reeds gevalideerd dat de datum van het type yyyy/mm/dd is
+					dag = Datatype.stringNaarInt(datumString.substring(8, 10));
+					maand = Datatype.stringNaarInt(datumString.substring(5, 7)) - 1;
+					jaar = Datatype.stringNaarInt(datumString.substring(0, 4));
+					jaar = jaar - 1900;
+				}
+					
+					
+			} else if (datumString.length() == 29) {
+				jaar = Datatype.stringNaarInt(datumString.substring(24, 28)) - 1900; // YYYY
 																								// -
 																								// 1900
 				String maandString = datumString.substring(4, 7);
-				geboortemaand = Datum.converteerMaand(maandString);
-				geboortedag = Datatype.stringNaarInt(datumString.substring(8, 10));// tussen
+				maand = Datum.converteerMaand(maandString);
+				dag = Datatype.stringNaarInt(datumString.substring(8, 10));// tussen
 																					// 1
 																					// en
 																					// 31
 			}
-			Date datum = new Date(geboortejaar, geboortemaand, geboortedag);
+			Date datum = new Date(jaar, maand, dag);
+			System.out.println(TAG + "String: " + datumString + " geconverteerd naar datum: " + datum);
 			return datum;
 		} else {
 			return null;

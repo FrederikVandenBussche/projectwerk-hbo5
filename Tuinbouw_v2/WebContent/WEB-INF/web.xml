@@ -322,12 +322,11 @@
     <url-pattern>/genereerPdf</url-pattern>
   </servlet-mapping>
   <servlet>
-  	<servlet-name>exporteerPrestaties</servlet-name>
-  	<servlet-class>be.miras.programs.frederik.controller.ExporteerPrestatiesServlet</servlet-class>
+    <servlet-name>exporteerPrestaties</servlet-name>
+    <servlet-class>be.miras.programs.frederik.controller.ExporteerPrestatiesServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>exporteerPrestaties</servlet-name>
-  	<url-pattern>/exporteerPrestaties</url-pattern>
+    <servlet-name>exporteerPrestaties</servlet-name>
+    <url-pattern>/exporteerPrestaties</url-pattern>
   </servlet-mapping>
-  
 </web-app>

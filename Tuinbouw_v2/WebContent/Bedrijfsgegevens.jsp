@@ -67,6 +67,7 @@
 		<div id="content">
 			<div>
 				Bedrijfsgegevens ${werkgever.naam } ${werkgever.voornaam }.
+				<div class="inlogError">${inputValidatieErrorMsg }</div>
 			</div>
 			<form action="bedrijfsgegevensWijzigen" method="post">
 				<fieldset>

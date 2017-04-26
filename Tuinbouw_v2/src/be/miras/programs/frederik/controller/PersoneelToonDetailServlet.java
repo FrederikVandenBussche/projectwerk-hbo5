@@ -24,6 +24,7 @@ import be.miras.programs.frederik.util.GoogleApis;
 @WebServlet("/PersoneelToonDetailServlet")
 public class PersoneelToonDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static final String TAG = "PersoneelToonDetailServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -107,14 +108,22 @@ public class PersoneelToonDetailServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		session.setAttribute("id", id);
-
-		request.setAttribute("aanspreeknaam", aanspreeknaam);
-		request.setAttribute("buttonNaam", buttonNaam);
+		System.out.println(TAG + "de id die meegegeven wordt in de session = " + id);
+		
+		session.setAttribute("aanspreeknaam", aanspreeknaam);
+		session.setAttribute("buttonNaam", buttonNaam);
 
 		session.setAttribute("personeelslid", personeelslid);
+		
+		System.out.println(TAG + "gebruikerId: " + personeelslid.getGebruikerId());
+		System.out.println(TAG + "persoonId: " + personeelslid.getPersoonId());
+		System.out.println(TAG + "werknemerId: " + personeelslid.getWerknemerId());
+		
 
 		RequestDispatcher view = this.getServletContext().getRequestDispatcher("/PersoneelDetail.jsp");
 		view.forward(request, response);
 	}
+
+
 
 }

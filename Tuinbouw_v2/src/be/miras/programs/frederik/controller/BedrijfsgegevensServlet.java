@@ -19,6 +19,7 @@ import be.miras.programs.frederik.model.Werkgever;
 @WebServlet("/BedrijfsgegevensServlet")
 public class BedrijfsgegevensServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private final String TAG = "BedrijfsgegevensServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -46,6 +47,7 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
+		
 
 		RequestDispatcher view = null;
 
@@ -53,11 +55,16 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 			view = request.getRequestDispatcher("/logout");
 
 		} else {
+			
+			int gebruikerId = (int) session.getAttribute("gebruikerId");
+			
 			WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
 			Werkgever werkgever = new Werkgever();
 
-			werkgever = (Werkgever) wDao.lees(0);
+			System.out.println(TAG + "GebruikerId= " + gebruikerId);
+			werkgever = (Werkgever) wDao.lees(gebruikerId);
 
+			System.out.println(TAG + "de werkgeversvoornaam: " + werkgever.getVoornaam());
 			session.setAttribute("werkgever", werkgever);
 
 			view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");

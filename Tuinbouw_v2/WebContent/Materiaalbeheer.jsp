@@ -65,7 +65,8 @@
 			</div>
 		</div>
 		<div id="content">
-			Materiaal 
+			Materiaalbeheer 
+			<div class="inlogError">${inputValidatieErrorMsg }</div>
 			<br />
 			<fieldset>
 				<legend>Nieuw materiaal/wijzig materiaal</legend>

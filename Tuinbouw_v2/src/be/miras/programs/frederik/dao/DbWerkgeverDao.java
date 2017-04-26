@@ -139,16 +139,17 @@ public class DbWerkgeverDao implements ICRUD {
 		return isGelukt;
 	}
 
-	public int geefId() {
+	public DbWerkgever geefId(int persoonId) {
 		DbWerkgever werkgever = new DbWerkgever();
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-		String query = "FROM DbWerkgever";
+		String query = "FROM DbWerkgever where persoonId = :persoonId";
 		List<DbWerkgever> lijst = new ArrayList<DbWerkgever>();
 		try {
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			Query q = session.createQuery(query);
+			q.setParameter("persoonId", persoonId);
 			lijst = q.list();
 			session.getTransaction().commit();
 		} catch (Exception e) {
@@ -163,8 +164,8 @@ public class DbWerkgeverDao implements ICRUD {
 		if (!lijst.isEmpty()) {
 			werkgever = lijst.get(0);
 		}
-		int id = werkgever.getId();
-		return id;
+		
+		return werkgever;
 	}
 
 }

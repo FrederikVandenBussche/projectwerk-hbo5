@@ -12,6 +12,8 @@ public class Werkgever implements Ivergelijk {
 	private String wachtwoord;
 	private String gebruikersnaam;
 	private int bevoegdheidID;
+	private int persoonId;
+	private int gebruikerId;
 	private ArrayList<Adres> adreslijst;
 
 	
@@ -96,6 +98,38 @@ public class Werkgever implements Ivergelijk {
 	}
 
 
+	/**
+	 * @return the persoonId
+	 */
+	public int getPersoonId() {
+		return persoonId;
+	}
+
+
+	/**
+	 * @param persoonId the persoonId to set
+	 */
+	public void setPersoonId(int persoonId) {
+		this.persoonId = persoonId;
+	}
+
+
+	/**
+	 * @return the gebruikerId
+	 */
+	public int getGebruikerId() {
+		return gebruikerId;
+	}
+
+
+	/**
+	 * @param gebruikerId the gebruikerId to set
+	 */
+	public void setGebruikerId(int gebruikerId) {
+		this.gebruikerId = gebruikerId;
+	}
+
+
 	public ArrayList<Adres> getAdreslijst() {
 		return adreslijst;
 	}
@@ -111,6 +145,9 @@ public class Werkgever implements Ivergelijk {
 		boolean isVerschillend = true;
 		Werkgever w1 = (Werkgever) o;
 		Werkgever w2 = (Werkgever) p;
+		System.out.println(w1.toString());
+		System.out.println(w2.toString());
+		
 		if (w1.getNaam().equals(w2.getNaam()) 
 				&& w1.getVoornaam().equals(w2.getVoornaam())
 				&& w1.getGeboortedatum().equals(w2.getGeboortedatum())
@@ -119,6 +156,17 @@ public class Werkgever implements Ivergelijk {
 			isVerschillend = false;
 		}
 		return isVerschillend;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Werkgever [id=" + id + ", naam=" + naam + ", voornaam=" + voornaam + ", geboortedatum=" + geboortedatum
+				+ ", email=" + email + ", wachtwoord=" + wachtwoord + ", gebruikersnaam=" + gebruikersnaam
+				+ ", bevoegdheidID=" + bevoegdheidID + "]";
 	}
 
 }

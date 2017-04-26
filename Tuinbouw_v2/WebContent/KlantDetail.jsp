@@ -69,8 +69,10 @@
 		</div>
 		<div id="content">
 			<div id = "klantAanspreekNaam">
-				Details van klant: ${aanspreeknaam }.
+				Details van klant: ${aanspreeknaam }. 
 			</div>
+			<div class="inlogError">${inputValidatieErrorMsg }</div>
+			
 			<form action="klantOpslaan" method="post">
 				<input type="hidden" name="id" value="${id }" />
 				<!--  Via het hidden veld "variabelVeldnaam1 wordt bekeken of het om een 

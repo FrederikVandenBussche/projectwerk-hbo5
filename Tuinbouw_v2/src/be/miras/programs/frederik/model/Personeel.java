@@ -17,6 +17,7 @@ import java.util.Date;
 public class Personeel implements Ivergelijk {
 	private int persoonId;
 	private int werknemerId;
+	private int gebruikerId;
 	private String voornaam;
 	private String naam;
 	private Date geboortedatum;
@@ -42,6 +43,22 @@ public class Personeel implements Ivergelijk {
 	public void setWerknemerId(int werknemerId) {
 		this.werknemerId = werknemerId;
 	}
+	
+	
+	/**
+	 * @return the gebruikerId
+	 */
+	public int getGebruikerId() {
+		return gebruikerId;
+	}
+
+	/**
+	 * @param gebruikerId the gebruikerId to set
+	 */
+	public void setGebruikerId(int gebruikerId) {
+		this.gebruikerId = gebruikerId;
+	}
+
 	public String getVoornaam() {
 		return voornaam;
 	}
@@ -110,6 +127,16 @@ public class Personeel implements Ivergelijk {
 			isVerschillend = false;
 		}
 		return isVerschillend;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Personeel [persoonId=" + persoonId + ", werknemerId=" + werknemerId + ", voornaam=" + voornaam
+				+ ", naam=" + naam + ", geboortedatum=" + geboortedatum + ", aanwervingsdatum=" + aanwervingsdatum
+				+ ", loon=" + loon + ", email=" + email + "]";
 	}
 
 	

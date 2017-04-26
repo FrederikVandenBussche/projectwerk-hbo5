@@ -16,12 +16,13 @@ import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.GoogleApis;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class BedrijfsgegevensAdresOpslaanServlet
  */
 @WebServlet("/BedrijfsgegevensAdresOpslaanServlet")
-public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet {
+public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -44,38 +45,49 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet {
 		String bus = request.getParameter("bus").trim();
 		String postcodeString = request.getParameter("postcode").trim();
 		String plaats = request.getParameter("plaats").trim();
-		int nr = Datatype.stringNaarInt(nummerString);
-		int postcode = Datatype.stringNaarInt(postcodeString);
+		
+		String inputValidatieErrorMsg = inputValidatie(
+				new String[]{straat, nummerString, bus, postcodeString, plaats});
+				if (inputValidatieErrorMsg.isEmpty()) {
 
-		HttpSession session = request.getSession();
-		Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+			int nr = Datatype.stringNaarInt(nummerString);
+			int postcode = Datatype.stringNaarInt(postcodeString);
 
-		Adres adres = new Adres();
-		PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
+			HttpSession session = request.getSession();
+			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
 
-		adres.setStraat(straat);
-		adres.setNummer(nr);
-		adres.setBus(bus);
-		adres.setPostcode(postcode);
-		adres.setPlaats(plaats);
-		adres.setPersoonId(werkgever.getId());
+			Adres adres = new Adres();
+			PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
 
-		adao.voegToe(adres);
-		int maxId = adao.geefMaxId();
-		adres.setId(maxId);
+			adres.setStraat(straat);
+			adres.setNummer(nr);
+			adres.setBus(bus);
+			adres.setPostcode(postcode);
+			adres.setPlaats(plaats);
+			adres.setPersoonId(werkgever.getPersoonId());
 
-		String staticmap = GoogleApis.urlBuilderStaticMap(adres);
-		adres.setStaticmap(staticmap);
+			adao.voegToe(adres);
+			int maxId = adao.geefMaxId();
+			adres.setId(maxId);
 
-		String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
-		adres.setGooglemap(googlemap);
+			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+			adres.setStaticmap(staticmap);
 
-		ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
-		adreslijst.add(adres);
-		werkgever.setAdreslijst(adreslijst);
+			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
+			adres.setGooglemap(googlemap);
 
-		session.setAttribute("werkgever", werkgever);
+			ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
+			adreslijst.add(adres);
+			werkgever.setAdreslijst(adreslijst);
 
+			session.setAttribute("werkgever", werkgever);
+
+			
+		} else {
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+			
+		}
+		
 		RequestDispatcher view = request.getRequestDispatcher("/bedrijfsgegevensMenu");
 		view.forward(request, response);
 	}
@@ -90,6 +102,46 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet {
 
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String straat = teValideren[0];
+		String nummerString = teValideren[1];
+		String bus = teValideren[2];
+		String postcodeString = teValideren[3];
+		String plaats = teValideren[4];
+		
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+		
+		msg = InputValidatie.enkelAlfabetisch(straat);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Straat").concat(msg);
+		}
+		
+		msg = InputValidatie.geheelGetal(nummerString);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Huisnummer").concat(msg);
+		}
+		
+		if (bus != null && bus.length() > 4) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Bus is niet correct ingevuld.");
+		}
+		
+		msg = InputValidatie.geheelGetal(postcodeString);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Postcode").concat(msg);
+		}
+		
+		msg = InputValidatie.enkelAlfabetisch(plaats);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Plaats").concat(msg);
+		}
+		
+		return inputValidatieErrorMsg;
+
 	}
 
 }

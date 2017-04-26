@@ -6,6 +6,7 @@ public class DbGebruiker {
 	private String wachtwoord;
 	private String gebruikersnaam;
 	private int bevoegdheidId;
+	private int persoonId;
 
 	public int getId() {
 		return id;
@@ -46,5 +47,21 @@ public class DbGebruiker {
 	public void setBevoegdheidId(int bevoegdheidId) {
 		this.bevoegdheidId = bevoegdheidId;
 	}
+
+	/**
+	 * @return the persoonId
+	 */
+	public int getPersoonId() {
+		return persoonId;
+	}
+
+	/**
+	 * @param persoonId the persoonId to set
+	 */
+	public void setPersoonId(int persoonId) {
+		this.persoonId = persoonId;
+	}
+	
+	
 
 }

@@ -19,12 +19,13 @@ import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class KlantOpslaanServlet
  */
 @WebServlet("/KlantOpslaanServlet")
-public class KlantOpslaanServlet extends HttpServlet {
+public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
 	private String TAG = "KlantOpslaanServlet: ";
 
@@ -48,6 +49,8 @@ public class KlantOpslaanServlet extends HttpServlet {
 		String variabelVeld1 = request.getParameter("variabelVeld1");
 		String variabelVeld2 = request.getParameter("variabelVeld2");
 
+		DbKlant klant = null;
+
 		DbKlantDao dbKlantDao = new DbKlantDao();
 
 		HttpSession session = request.getSession();
@@ -55,7 +58,7 @@ public class KlantOpslaanServlet extends HttpServlet {
 		ArrayList<DbParticulier> particulierLijst = (ArrayList<DbParticulier>) session.getAttribute("particulierLijst");
 		ArrayList<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) session.getAttribute("bedrijfLijst");
 
-		DbKlant klant = null;
+		RequestDispatcher view = null;
 
 		System.out.println(TAG + "");
 		System.out.println(TAG + "id: " + id);
@@ -89,66 +92,79 @@ public class KlantOpslaanServlet extends HttpServlet {
 			klant.setId(id);
 		}
 
-		// de 2 variabelen uit de veriabelevelden vastleggen
-		if (klant.getClass().getSimpleName().equals("DbParticulier")) {
-			((DbParticulier) klant).setVoornaam(variabelVeld1);
-			((DbParticulier) klant).setNaam(variabelVeld2);
-		} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
-			((DbBedrijf) klant).setBedrijfnaam(variabelVeld1);
-			((DbBedrijf) klant).setBtwNummer(variabelVeld2);
-		}
+		String inputValidatieErrorMsg = inputValidatie(
+				new String[] { klant.getClass().getSimpleName(), variabelVeld1, variabelVeld2 });
 
-		// wijzigingen aanbrengen in de databijs en de sessionlijsten
-		if (id < 0) {
-			// nieuw Klant toevoegen
-			dbKlantDao.voegToe(klant);
-			id = dbKlantDao.zoekMakId();
-			klant.setId(id);
+		if (inputValidatieErrorMsg.isEmpty()) {
+			// de 2 variabelen uit de veriabelevelden vastleggen
 			if (klant.getClass().getSimpleName().equals("DbParticulier")) {
-				// dbKlantDao.voegToePartiulier((DbParticulier) klant);
-				particulierLijst.add((DbParticulier) klant);
+				((DbParticulier) klant).setVoornaam(variabelVeld1);
+				((DbParticulier) klant).setNaam(variabelVeld2);
 			} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
-				// dbKlantDao.voegToeBedrijf((DbBedrijf) klant);
-				bedrijfLijst.add((DbBedrijf) klant);
-
+				((DbBedrijf) klant).setBedrijfnaam(variabelVeld1);
+				((DbBedrijf) klant).setBtwNummer(variabelVeld2);
 			}
-		} else { // ( id !< 0)
-			// een bestaande Klant wijzigen
-			dbKlantDao.wijzig(klant);
-			if (klant.getClass().getSimpleName().equals("DbParticulier")) {
-				ListIterator<DbParticulier> it = particulierLijst.listIterator();
-				while (it.hasNext()) {
-					DbParticulier dbParticulier = it.next();
-					if (dbParticulier.getId() == id) {
-						if (dbParticulier.isVerschillend(klant, dbParticulier)) {
-							klant.setId(id);
-							// dbKlantDao.wijzigParticulier((DbParticulier)
-							// klant);
-							it.set((DbParticulier) klant);
-						}
-					}
-				}
-			} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
 
-				ListIterator<DbBedrijf> it = bedrijfLijst.listIterator();
-				while (it.hasNext()) {
-					DbBedrijf bedrijf = it.next();
-					if (bedrijf.getId() == id) {
-						if (bedrijf.isVerschillend(klant, bedrijf)) {
-							klant.setId(id);
-							// dbKlantDao.wijzigBedrijf((DbBedrijf) klant);
-							it.set((DbBedrijf) klant);
-						}
-					}
+			// wijzigingen aanbrengen in de databijs en de sessionlijsten
+			if (id < 0) {
+				// nieuw Klant toevoegen
+				dbKlantDao.voegToe(klant);
+				id = dbKlantDao.zoekMakId();
+				klant.setId(id);
+				if (klant.getClass().getSimpleName().equals("DbParticulier")) {
+					// dbKlantDao.voegToePartiulier((DbParticulier) klant);
+					particulierLijst.add((DbParticulier) klant);
+				} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
+					// dbKlantDao.voegToeBedrijf((DbBedrijf) klant);
+					bedrijfLijst.add((DbBedrijf) klant);
 
 				}
+			} else { // ( id !< 0)
+				// een bestaande Klant wijzigen
+				dbKlantDao.wijzig(klant);
+				if (klant.getClass().getSimpleName().equals("DbParticulier")) {
+					ListIterator<DbParticulier> it = particulierLijst.listIterator();
+					while (it.hasNext()) {
+						DbParticulier dbParticulier = it.next();
+						if (dbParticulier.getId() == id) {
+							if (dbParticulier.isVerschillend(klant, dbParticulier)) {
+								klant.setId(id);
+								// dbKlantDao.wijzigParticulier((DbParticulier)
+								// klant);
+								it.set((DbParticulier) klant);
+							}
+						}
+					}
+				} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
+
+					ListIterator<DbBedrijf> it = bedrijfLijst.listIterator();
+					while (it.hasNext()) {
+						DbBedrijf bedrijf = it.next();
+						if (bedrijf.getId() == id) {
+							if (bedrijf.isVerschillend(klant, bedrijf)) {
+								klant.setId(id);
+								// dbKlantDao.wijzigBedrijf((DbBedrijf) klant);
+								it.set((DbBedrijf) klant);
+							}
+						}
+
+					}
+				}
 			}
+
+			session.setAttribute("particulierLijst", particulierLijst);
+			session.setAttribute("bedrijfLijst", bedrijfLijst);
+
+			view = request.getRequestDispatcher("/Klantbeheer.jsp");
+
+		} else {
+
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+
+			view = request.getRequestDispatcher("/KlantDetail.jsp");
+
 		}
 
-		session.setAttribute("particulierLijst", particulierLijst);
-		session.setAttribute("bedrijfLijst", bedrijfLijst);
-
-		RequestDispatcher view = request.getRequestDispatcher("/Klantbeheer.jsp");
 		view.forward(request, response);
 	}
 
@@ -162,6 +178,44 @@ public class KlantOpslaanServlet extends HttpServlet {
 
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String klantSimpleName = teValideren[0];
+		String variabelVeld1 = teValideren[1];
+		String variabelVeld2 = teValideren[2];
+		
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+		if (klantSimpleName.equals("DbParticulier")){
+			
+			msg = InputValidatie.enkelAlfabetisch(variabelVeld1);
+			if (msg != null) {
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Voornaam").concat(msg);
+			}
+			
+			msg = InputValidatie.enkelAlfabetisch(variabelVeld2);
+			if (msg != null) {
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+			}
+			
+		} else if (klantSimpleName.equals("DbBedrijf")){
+			
+			msg = InputValidatie.enkelAlfabetisch(variabelVeld1);
+			if (msg != null) {
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+			}
+			
+			msg = InputValidatie.geldigBtwNummer(variabelVeld2);
+			if (msg != null) {
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" BTW nummer").concat(msg);
+			}
+		}
+		
+		return inputValidatieErrorMsg;
+
 	}
 
 }

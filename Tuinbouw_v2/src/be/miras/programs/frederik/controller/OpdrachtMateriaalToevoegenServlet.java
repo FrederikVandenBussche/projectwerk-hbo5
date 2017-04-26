@@ -18,12 +18,13 @@ import be.miras.programs.frederik.dbo.DbOpdrachtMateriaal;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class OpdrachtMateriaalToevoegenServlet
  */
 @WebServlet("/OpdrachtMateriaalToevoegenServlet")
-public class OpdrachtMateriaalToevoegenServlet extends HttpServlet {
+public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -42,48 +43,61 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		int materiaalId = Datatype.stringNaarInt(request.getParameter("materialen"));
-		int hoeveelheid = Datatype.stringNaarInt(request.getParameter("hoeveelheid").trim());
+		String hoeveelheidString = request.getParameter("hoeveelheid").trim();
+		
+		String inputValidatieErrorMsg = inputValidatie(
+				new String[]{hoeveelheidString});
+		
+		
+		if (inputValidatieErrorMsg.isEmpty()) {
+			HttpSession session = request.getSession();
+			OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
 
-		HttpSession session = request.getSession();
-		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+			int hoeveelheid = Datatype.stringNaarInt(hoeveelheidString);
 
-		Materiaal materiaal = new Materiaal();
-		DbOpdrachtMateriaal dbOpdrachtMateriaal = new DbOpdrachtMateriaal();
-		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
-		MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
+			Materiaal materiaal = new Materiaal();
+			DbOpdrachtMateriaal dbOpdrachtMateriaal = new DbOpdrachtMateriaal();
+			DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
+			MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
 
-		List<Materiaal> gebruiktemateriaalLijst = null;
+			List<Materiaal> gebruiktemateriaalLijst = null;
 
-		int opdrachtId = opdrachtDetailData.getOpdracht().getId();
-		List<Materiaal> materiaalLijst = (List<Materiaal>) (Object) materiaalDaoAdapter.leesAlle();
+			int opdrachtId = opdrachtDetailData.getOpdracht().getId();
+			List<Materiaal> materiaalLijst = (List<Materiaal>) (Object) materiaalDaoAdapter.leesAlle();
 
-		Iterator<Materiaal> it = materiaalLijst.iterator();
-		while (it.hasNext()) {
-			Materiaal m = it.next();
-			if (m.getId() == materiaalId) {
-				materiaal = m;
+			Iterator<Materiaal> it = materiaalLijst.iterator();
+			while (it.hasNext()) {
+				Materiaal m = it.next();
+				if (m.getId() == materiaalId) {
+					materiaal = m;
+				}
 			}
+
+			// toevoegen aan databank
+			dbOpdrachtMateriaal.setOpdrachtId(opdrachtId);
+			dbOpdrachtMateriaal.setMateriaalId(materiaal.getId());
+			dbOpdrachtMateriaal.setVerbruik(hoeveelheid);
+
+			dbOpdrachtMateriaalDao.voegToe(dbOpdrachtMateriaal);
+
+			// toevoegen aan opdrachtdetailData.opdracht.materiaalLijst
+			gebruiktemateriaalLijst = opdrachtDetailData.getOpdracht().getGebruiktMateriaalLijst();
+
+			// System.out.println(TAG + "de lijst met gebruikte materialen = " +
+			// gebruiktemateriaalLijst.size());
+			materiaal.setId(dbOpdrachtMateriaal.getId());
+			materiaal.setHoeveelheid(hoeveelheid);
+
+			gebruiktemateriaalLijst.add(materiaal);
+			opdrachtDetailData.getOpdracht().setGebruiktMateriaalLijst(gebruiktemateriaalLijst);
+			session.setAttribute("opdrachtDetailData", opdrachtDetailData);
+
+		} else {
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+			
 		}
-
-		// toevoegen aan databank
-		dbOpdrachtMateriaal.setOpdrachtId(opdrachtId);
-		dbOpdrachtMateriaal.setMateriaalId(materiaal.getId());
-		dbOpdrachtMateriaal.setVerbruik(hoeveelheid);
-
-		dbOpdrachtMateriaalDao.voegToe(dbOpdrachtMateriaal);
-
-		// toevoegen aan opdrachtdetailData.opdracht.materiaalLijst
-		gebruiktemateriaalLijst = opdrachtDetailData.getOpdracht().getGebruiktMateriaalLijst();
-
-		// System.out.println(TAG + "de lijst met gebruikte materialen = " +
-		// gebruiktemateriaalLijst.size());
-		materiaal.setId(dbOpdrachtMateriaal.getId());
-		materiaal.setHoeveelheid(hoeveelheid);
-
-		gebruiktemateriaalLijst.add(materiaal);
-		opdrachtDetailData.getOpdracht().setGebruiktMateriaalLijst(gebruiktemateriaalLijst);
-		session.setAttribute("opdrachtDetailData", opdrachtDetailData);
-
+		
+		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);
 	}
@@ -98,6 +112,23 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet {
 
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String hoeveelheidString = teValideren[0];
+
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+		
+		msg = InputValidatie.geheelGetal(hoeveelheidString);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Straat").concat(msg);
+		}
+		
+		return inputValidatieErrorMsg;
+
 	}
 
 }

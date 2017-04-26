@@ -142,7 +142,7 @@ public class DbGebruikerDao implements ICRUD {
 	public List<DbGebruiker> lees(int[] idLijst){
 		List<DbGebruiker> gebruikerLijst = new ArrayList<DbGebruiker>();
 		
-		String query = "FROM DbGebruiker where id = :id";
+		String query = "FROM DbGebruiker where persoonId = :persoonId";
 		
 		for (int i = 0; i < idLijst.length; i++){
 			Session session = HibernateUtil.openSession();
@@ -154,7 +154,7 @@ public class DbGebruikerDao implements ICRUD {
 				Query q = null;
 				
 				q = session.createQuery(query);
-				q.setParameter("id", idLijst[i]);
+				q.setParameter("persoonId", idLijst[i]);
 				lijst = q.list();
 				if(!lijst.isEmpty()){
 					DbGebruiker gebruiker = lijst.get(0);
@@ -252,5 +252,56 @@ public class DbGebruikerDao implements ICRUD {
 		}
 		
 		return gebruiker;
+	}
+
+	public int aantalMetGebruikersnaam(String gebruikersnaam) {
+		int  aantal = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT COUNT(*) FROM DbGebruiker where gebruikersnaam = :gebruikersnaam";
+		List<DbGebruiker> lijst = new ArrayList<DbGebruiker>();
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("gebruikersnaam", gebruikersnaam);
+			long result = (long) q.uniqueResult();
+			aantal = (int) result;
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+
+		} finally {
+			session.close();
+		}
+		return aantal;
+	}
+
+	public void verwijderWaarPersoonId(int persoonId) {
+		Session session = HibernateUtil.openSession();
+		boolean isGelukt = true;
+		Transaction transaction = null;
+		String query = "DELETE FROM DbGebruiker where persoonId = :persoonId";
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("persoonId", persoonId);
+			q.executeUpdate();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			isGelukt = false;
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		
+		
 	}
 }

@@ -72,7 +72,8 @@
 			<fieldset>
 				<legend id="opdrachtAanspreekNaam">Opdracht ${opdrachtDetailData.aanspreeknaam } </legend>
 				<form action="opdrachtOpslaan" method="post">
-					In opdracht van : ${opdrachtDetailData.opdracht.klantNaam }
+					In opdracht van : ${opdrachtDetailData.opdracht.klantNaam } 
+					<div class="inlogError">${inputValidatieErrorMsg }</div>
 					${opdrachtDetailData.variabelveld1 } <select name="klanten">
 						<option value="${opdrachtDetailData.opdracht.klantNaam }" selected>${opdrachtDetailData.opdracht.klantNaam }</option>
 						<option></option>

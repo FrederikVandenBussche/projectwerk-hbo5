@@ -17,13 +17,15 @@ import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datum;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class BedrijfsgegevensWijzigenServlet
  */
 @WebServlet("/BedrijfsgegevensWijzigenServlet")
-public class BedrijfsgegevensWijzigenServlet extends HttpServlet {
+public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
+	private static final String TAG = "BedrijfsgegevensWijzigenServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -45,57 +47,71 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet {
 		String geboortedatum = request.getParameter("nieuweGeboortedatum").trim();
 		String email = request.getParameter("email").trim();
 		String gebruikersnaam = request.getParameter("gebruikersnaam").trim();
+		
+		String inputValidatieErrorMsg = inputValidatie(
+				new String[]{naam, voornaam, geboortedatum, email, gebruikersnaam});
+		
+		if (inputValidatieErrorMsg.isEmpty()) {
+		
+			HttpSession session = request.getSession();
+			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
 
-		HttpSession session = request.getSession();
-		Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+			Date datum = null;
 
-		Date datum = null;
+			if (!geboortedatum.equals("")) {
+				datum = Datum.creeerDatum(geboortedatum);
+			} else {
+				datum = werkgever.getGeboortedatum();
+			}
 
-		if (!geboortedatum.equals("")) {
-			datum = Datum.creeerDatum(geboortedatum);
+			
+			// DbGebruiker wijzigen
+			if (!werkgever.getEmail().equals(email) || !werkgever.getGebruikersnaam().equals(gebruikersnaam)) {
+
+				DbGebruiker gebruiker = new DbGebruiker();
+				DbGebruikerDao dao = new DbGebruikerDao();
+
+				gebruiker.setId(werkgever.getGebruikerId());
+				gebruiker.setEmail(email);
+				gebruiker.setWachtwoord(werkgever.getWachtwoord());
+				gebruiker.setGebruikersnaam(gebruikersnaam);
+				gebruiker.setBevoegdheidId(werkgever.getBevoegdheidID());
+				
+
+				dao.wijzig(gebruiker);
+
+				werkgever.setEmail(email);
+				werkgever.setGebruikersnaam(gebruikersnaam);
+			}
+
+			// DbPersoon wijzigen
+			if (!werkgever.getNaam().equals(naam) || !werkgever.getVoornaam().equals(voornaam)
+					|| !werkgever.getGeboortedatum().equals(datum)) {
+				;
+				DbPersoon persoon = new DbPersoon();
+				DbPersoonDao dao = new DbPersoonDao();
+
+				persoon.setId(werkgever.getPersoonId());
+				persoon.setNaam(naam);
+				persoon.setVoornaam(voornaam);
+				persoon.setGeboortedatum(datum);
+
+				dao.wijzig(persoon);
+
+				werkgever.setNaam(naam);
+				werkgever.setVoornaam(voornaam);
+				werkgever.setGeboortedatum(datum);
+			}
+
+			session.setAttribute("werkgever", werkgever);
+
+			
 		} else {
-			datum = werkgever.getGeboortedatum();
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
-
-		// DbGebruiker wijzigen
-		if (!werkgever.getEmail().equals(email) || !werkgever.getGebruikersnaam().equals(gebruikersnaam)) {
-
-			DbGebruiker gebruiker = new DbGebruiker();
-			DbGebruikerDao dao = new DbGebruikerDao();
-
-			gebruiker.setId(werkgever.getId());
-			gebruiker.setEmail(email);
-			gebruiker.setWachtwoord(werkgever.getWachtwoord());
-			gebruiker.setGebruikersnaam(gebruikersnaam);
-			gebruiker.setBevoegdheidId(werkgever.getBevoegdheidID());
-
-			dao.wijzig(gebruiker);
-
-			werkgever.setEmail(email);
-			werkgever.setGebruikersnaam(gebruikersnaam);
-		}
-
-		// DbPersoon wijzigen
-		if (!werkgever.getNaam().equals(naam) || !werkgever.getVoornaam().equals(voornaam)
-				|| !werkgever.getGeboortedatum().equals(datum)) {
-			;
-			DbPersoon persoon = new DbPersoon();
-			DbPersoonDao dao = new DbPersoonDao();
-
-			persoon.setId(werkgever.getId());
-			persoon.setNaam(naam);
-			persoon.setVoornaam(voornaam);
-			persoon.setGeboortedatum(datum);
-
-			dao.wijzig(persoon);
-
-			werkgever.setNaam(naam);
-			werkgever.setVoornaam(voornaam);
-			werkgever.setGeboortedatum(datum);
-		}
-
-		session.setAttribute("werkgever", werkgever);
-
+		
+		
+		
 		RequestDispatcher view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 		view.forward(request, response);
 	}
@@ -110,6 +126,70 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet {
 
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String naam = teValideren[0];
+		String voornaam = teValideren[1];
+		String geboortedatum = teValideren[2];
+		String email = teValideren[3];
+		String gebruikersnaam = teValideren[4];
+		
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+		
+		msg = InputValidatie.enkelAlfabetisch(naam);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+		}
+		
+		msg = InputValidatie.enkelAlfabetisch(voornaam);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Voornaam").concat(msg);
+		}
+		
+		if(!geboortedatum.isEmpty()){
+			msg = InputValidatie.correcteDatum(geboortedatum);
+			if (msg!= null ) {
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geboortedatum").concat(msg);
+			} else {
+				Date datum = Datum.creeerDatum(geboortedatum);
+				Date nu = new Date();
+				nu.setYear(nu.getYear() - 18);
+				if (datum.after(nu)){
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geboortedatum: Een bedrijfsleider is ten minsten 18 jaar.");
+				}
+			}
+		}
+		System.out.println(TAG + "datumString: " + geboortedatum);
+		
+		
+		msg = InputValidatie.correctEmailadres(email);
+		if (msg!= null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Email").concat(msg);
+		}
+		
+		msg = InputValidatie.enkelAlfabetisch(gebruikersnaam);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Gebruikersnaam").concat(msg);
+		} else {
+			/*
+			 * 
+			 * 
+			 * controle : een gebruikersnaam is uniek
+			 * 
+			 * 
+			 * 
+			 * 
+			 * 
+			 */
+		}
+		
+		return inputValidatieErrorMsg;
+		
+
 	}
 
 }

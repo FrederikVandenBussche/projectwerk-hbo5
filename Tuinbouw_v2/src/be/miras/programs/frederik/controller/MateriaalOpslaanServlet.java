@@ -15,12 +15,13 @@ import javax.servlet.http.HttpSession;
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class MateriaalOpslaanServlet
  */
 @WebServlet("/MateriaalOpslaanServlet")
-public class MateriaalOpslaanServlet extends HttpServlet {
+public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -44,56 +45,66 @@ public class MateriaalOpslaanServlet extends HttpServlet {
 		String eenheidsmaat = request.getParameter("eenheidsmaat").trim();
 		String eenheidsprijsString = request.getParameter("eenheidsprijs").trim();
 
-		// de Materialenlijst ophalen
-		HttpSession session = request.getSession();
-		ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("lijst");
+		String inputValidatieErrorMsg = inputValidatie(
+				new String[]{naam, soort, eenheidsmaat, eenheidsprijsString});
+				
+		if (inputValidatieErrorMsg.isEmpty()) {
+			// de Materialenlijst ophalen
+			HttpSession session = request.getSession();
+			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("lijst");
 
-		Materiaal materiaal = new Materiaal();
-		MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
+			Materiaal materiaal = new Materiaal();
+			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 
-		double eenheidsprijs = 0;
-		int id = Datatype.stringNaarInt(idString);
-		if (eenheidsprijsString != "") {
-			try {
-				eenheidsprijs = Double.parseDouble(eenheidsprijsString);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			eenheidsprijs = 0;
-		}
-
-		materiaal.setNaam(naam);
-		materiaal.setSoort(soort);
-		materiaal.setEenheidsmaat(eenheidsmaat);
-		materiaal.setEenheidsprijs(eenheidsprijs);
-
-		if (id < 0) {
-			// nieuwMateriaal
-			dao.voegToe(materiaal);
-
-			// de lijst bewerken
-			lijst.add(materiaal);
-
-		} else {
-
-			// indien er iets gewijzigd werd, de wijzigingen opslaan
-
-			ListIterator<Materiaal> it = lijst.listIterator();
-			while (it.hasNext()) {
-				Materiaal m = it.next();
-				if (m.getId() == id) {
-					if (m.isVerschillend(materiaal, m)) {
-						materiaal.setId(id);
-
-						dao.wijzig(materiaal);
-						it.set(materiaal);
-					}
-
+			double eenheidsprijs = 0;
+			int id = Datatype.stringNaarInt(idString);
+			if (eenheidsprijsString != "") {
+				try {
+					eenheidsprijs = Double.parseDouble(eenheidsprijsString);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+			} else {
+				eenheidsprijs = 0;
 			}
 
+			materiaal.setNaam(naam);
+			materiaal.setSoort(soort);
+			materiaal.setEenheidsmaat(eenheidsmaat);
+			materiaal.setEenheidsprijs(eenheidsprijs);
+
+			if (id < 0) {
+				// nieuwMateriaal
+				dao.voegToe(materiaal);
+
+				// de lijst bewerken
+				lijst.add(materiaal);
+
+			} else {
+
+				// indien er iets gewijzigd werd, de wijzigingen opslaan
+
+				ListIterator<Materiaal> it = lijst.listIterator();
+				while (it.hasNext()) {
+					Materiaal m = it.next();
+					if (m.getId() == id) {
+						if (m.isVerschillend(materiaal, m)) {
+							materiaal.setId(id);
+
+							dao.wijzig(materiaal);
+							it.set(materiaal);
+						}
+
+					}
+				}
+
+			}
+		} else {
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+			
 		}
+		
+		
 
 		RequestDispatcher view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 		view.forward(request, response);
@@ -109,6 +120,42 @@ public class MateriaalOpslaanServlet extends HttpServlet {
 
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String naam = teValideren[0];
+		String soort = teValideren[1];
+		String eenheidsmaat = teValideren[2];
+		String eenheidsprijsString = teValideren[3];
+		
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+	
+		msg = InputValidatie.ingevuld(naam);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+		}
+		
+		msg = InputValidatie.enkelAlfabetisch(soort);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Soort").concat(msg);
+		}
+		
+		msg = InputValidatie.ingevuld(eenheidsmaat);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Eenheidsmaat").concat(msg);
+		}
+		
+		msg = InputValidatie.kommagetal(eenheidsprijsString);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Eenheidsprijs").concat(msg);
+		} else if (Datatype.stringNaarDouble(eenheidsprijsString) <= 0){
+			msg = " De Eenheidsprijs werd niet correct ingevuld. ";
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(msg);
+		}
+		return inputValidatieErrorMsg;
 	}
 
 }

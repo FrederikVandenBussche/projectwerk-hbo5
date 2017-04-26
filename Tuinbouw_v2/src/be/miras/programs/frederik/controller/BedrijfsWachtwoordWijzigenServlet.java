@@ -12,12 +12,13 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.model.Werkgever;
+import be.miras.programs.frederik.util.InputValidatie;
 
 /**
  * Servlet implementation class BedrijfsWachtwoordWijzigenServlet
  */
 @WebServlet("/BedrijfsWachtwoordWijzigenServlet")
-public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet {
+public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -38,24 +39,44 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet {
 		String oudWachtwoord = request.getParameter("oud").trim();
 		String nieuwWachtwoord1 = request.getParameter("nieuw1").trim();
 		String nieuwWachtwoord2 = request.getParameter("nieuw2").trim();
+		
+		String inputValidatieErrorMsg = inputValidatie(
+				new String[]{oudWachtwoord, nieuwWachtwoord1, nieuwWachtwoord2});
+		
+		if (inputValidatieErrorMsg.isEmpty()) {
+			HttpSession session = request.getSession();
+			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
 
-		HttpSession session = request.getSession();
-		Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+			DbGebruikerDao dao = new DbGebruikerDao();
 
-		DbGebruikerDao dao = new DbGebruikerDao();
+			int id = werkgever.getGebruikerId();
 
-		int id = werkgever.getId();
+			String daoWachtwoord = (String) dao.leesWachtwoord(id);
 
-		String daoWachtwoord = (String) dao.leesWachtwoord(id);
-
-		if (oudWachtwoord.equals(daoWachtwoord)) {
-			System.out.println("het oud wachtwoord is correct ");
-			if (nieuwWachtwoord1.equals(nieuwWachtwoord2) && nieuwWachtwoord1.length() > 1) {
-				dao.wijzigWachtwoord(id, nieuwWachtwoord1);
-				werkgever.setWachtwoord(nieuwWachtwoord1);
-				session.setAttribute("werkgever", werkgever);
+			if (oudWachtwoord.equals(daoWachtwoord)) {
+				System.out.println("het oud wachtwoord is correct ");
+				if (nieuwWachtwoord1.equals(nieuwWachtwoord2)) {
+					if (nieuwWachtwoord1.length() > 8){
+						dao.wijzigWachtwoord(id, nieuwWachtwoord1);
+						werkgever.setWachtwoord(nieuwWachtwoord1);
+						session.setAttribute("werkgever", werkgever);
+					} else {
+						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het nieuwe wachtwoord moet tenminste 8 karakters lang zijn.");
+					}
+					
+				} else {
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" De twee nieuwe wachtwoorden zijn niet dezelfde.");
+				}
+			} else {
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Wachtwoord niet gekent.");
 			}
+		} else {
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+			
 		}
+
+			
+		
 
 		RequestDispatcher view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 		view.forward(request, response);
@@ -70,6 +91,31 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet {
 		
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
+	}
+
+	@Override
+	public String inputValidatie(String[] teValideren) {
+		String oudWachtwoord = teValideren[0];
+		String nieuwWachtwoord1 = teValideren[1];
+		String nieuwWachtwoord2 = teValideren[2];
+				
+		String inputValidatieErrorMsg = "";
+		
+		String msg = null;
+		
+		msg = InputValidatie.ingevuld(oudWachtwoord);
+		if (msg != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Oud Wachtwoord").concat(msg);
+		}
+		
+		msg = InputValidatie.ingevuld(nieuwWachtwoord1);
+		String msg2 = InputValidatie.ingevuld(nieuwWachtwoord2);
+		if (msg != null || msg2 != null) {
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Gelieve het nieuw paswoord 2 maal in te geven");
+		}
+		
+		return inputValidatieErrorMsg;
+
 	}
 	
 

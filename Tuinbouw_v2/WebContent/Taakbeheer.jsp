@@ -72,7 +72,8 @@
 			Taakbeheer
 			<div id="taakomschrijving">
 				<form action="taakOpslaan" method="post" >
-					Taak: In opdracht van ${opdrachtDetailData.opdracht.klantNaam }
+					Taak: In opdracht van ${opdrachtDetailData.opdracht.klantNaam } 
+					<div class="inlogError">${inputValidatieErrorMsg }</div>
 					<br />
 					Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
 					<br />

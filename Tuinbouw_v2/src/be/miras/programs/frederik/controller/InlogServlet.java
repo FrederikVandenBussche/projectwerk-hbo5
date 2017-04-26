@@ -47,13 +47,16 @@ public class InlogServlet extends HttpServlet {
 		DbBevoegdheidDao dbBevoegdheidDao = new DbBevoegdheidDao();
 
 		DbGebruiker dbGebruiker = dbGebruikerDao.getGebruiker(gebruikersnaam);
-
+		
+		int gebruikerId = Integer.MIN_VALUE;
 		boolean isIngelogd = false;
 		if (dbGebruiker != null && wachtwoord != null) {
 			if (wachtwoord.equals(dbGebruiker.getWachtwoord())) {
 				DbBevoegdheid dbBevoegdheid = (DbBevoegdheid) dbBevoegdheidDao.lees(dbGebruiker.getBevoegdheidId());
 				if (dbBevoegdheid.getRol().equals(rol)) {
 					isIngelogd = true;
+					gebruikerId = dbGebruiker.getId();
+					
 				}
 			}
 		}
@@ -65,7 +68,7 @@ public class InlogServlet extends HttpServlet {
 		 * 
 		 * 
 		 */
-		isIngelogd = true;
+		//isIngelogd = true;
 		/*
 		 * 
 		 * 
@@ -77,6 +80,7 @@ public class InlogServlet extends HttpServlet {
 		if (isIngelogd) {
 			HttpSession session = request.getSession();
 			session.setAttribute("isIngelogd", isIngelogd);
+			session.setAttribute("gebruikerId", gebruikerId);
 
 			RequestDispatcher view = request.getRequestDispatcher("/opdrachtenMenu");
 			view.forward(request, response);
