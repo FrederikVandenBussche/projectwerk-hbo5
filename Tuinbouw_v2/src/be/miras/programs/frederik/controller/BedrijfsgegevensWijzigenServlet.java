@@ -175,16 +175,11 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 		if (msg != null) {
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Gebruikersnaam").concat(msg);
 		} else {
-			/*
-			 * 
-			 * 
-			 * controle : een gebruikersnaam is uniek
-			 * 
-			 * 
-			 * 
-			 * 
-			 * 
-			 */
+			DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
+			int aantalMetGebruikersnaam = dbGebruikerDao.aantalMetGebruikersnaam(gebruikersnaam);
+			if(aantalMetGebruikersnaam > 0){
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat("Deze gebruikersnaam is reeds in gebruik. Gelieve een andere gebruikersnaam te kiezen.");
+			}
 		}
 		
 		return inputValidatieErrorMsg;
