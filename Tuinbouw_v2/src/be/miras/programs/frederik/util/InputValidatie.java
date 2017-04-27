@@ -53,9 +53,6 @@ public class InputValidatie {
 		return msg;
 	}
 	
-	
-
-	
 	public static String geheelGetal(String getal) {
 		String msg = null;
 		if (getal == null || getal.trim().isEmpty() || getal.trim().length() == 0) {

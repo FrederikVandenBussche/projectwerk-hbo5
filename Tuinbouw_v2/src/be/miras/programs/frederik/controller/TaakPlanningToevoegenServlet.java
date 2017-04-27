@@ -22,6 +22,7 @@ import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.InputValidatie;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
@@ -30,8 +31,12 @@ import be.miras.programs.frederik.util.Datatype;
 @WebServlet("/TaakPlanningToevoegenServlet")
 public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
+	
+	private Date startVanOpdracht;
+	private Date eindeVanOpdracht;
 	private String TAG = "TaakPlanningToevoegenServlet: ";
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -50,11 +55,16 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 		int werknemerId = Datatype.stringNaarInt(request.getParameter("werknemer"));
 		String datumString = request.getParameter("datum").trim();
 		
+		HttpSession session = request.getSession();
+		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+		
+		this.startVanOpdracht = opdrachtDetailData.getOpdracht().getStartDatum();
+		this.eindeVanOpdracht = opdrachtDetailData.getOpdracht().getEindDatum();
+		
 		String inputValidatieErrorMsg = inputValidatie(new String[]{datumString});
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
-			HttpSession session = request.getSession();
-			OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+			
 			Taak taak = (Taak) session.getAttribute("taak");
 			HashMap<Integer, String> werknemerMap = (HashMap<Integer, String>) session.getAttribute("werknemerMap");
 
@@ -75,26 +85,23 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			dbWerknemerOpdrachtTaak.setOpdrachtTaakOpdrachtId(opdrachtTaakOpdrachtId);
 			dbWerknemerOpdrachtTaak.setOpdrachtTaakTaakId(opdrachtTaakTaakId);
 			dbWerknemerOpdrachtTaak.setBeginuur(beginuur);
-
+			
 			dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
 
 			// planningLijst aanpassen bij deze taak
 
 			planningLijst = taak.getPlanningLijst();
 
-			System.out.println(TAG + "planningLijst.size = " + planningLijst.size());
-
 			planning.setWerknemer(werknemerMap.get(werknemerId));
 			planning.setBeginuur(beginuur);
 
 			planningLijst.add(planning);
-		} else {
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
+		} else {
+			
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
-
 		
-
 		RequestDispatcher view = request.getRequestDispatcher("/Taakbeheer.jsp");
 		view.forward(request, response);
 	}
@@ -119,17 +126,30 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 		String msg = null;
 		
 		msg = InputValidatie.correcteDatum(datumString);
+		
 		if (msg!= null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geplande datum").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatum).concat(msg);
+		
 		} else {
+			
 			Date datum = Datum.creeerDatum(datumString);
 			Date nu = new Date();
+			if(datum.before(nu)){
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumToekomst);
+			}
 			
-			if (datum.before(nu)){
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" De geplande datum moet in de toekomst liggen.");
+			if (datum.before(this.startVanOpdracht)){
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumNaStartDatumOpdracht
+						+ Datum.datumToString(this.startVanOpdracht) + ". ");
+			}
+			if (datum.after(this.eindeVanOpdracht)){
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumVoorEinddatumOpdracht
+						+ Datum.datumToString(this.eindeVanOpdracht) + ". ");
 			}
 		}
-		return null;
+		
+		return inputValidatieErrorMsg;
 	}
 
+	
 }

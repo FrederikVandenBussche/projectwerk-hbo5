@@ -101,7 +101,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 			Iterator<Object> iter = objectenLijst.iterator();
 
 			while (iter.hasNext()) {
-				System.out.println("New object: id, opdrachtId,taakId, beginuur ");
+				
 				Object[] obj = (Object[]) iter.next();
 				PersoneelbeheerTakenlijstTaak taak = new PersoneelbeheerTakenlijstTaak();
 

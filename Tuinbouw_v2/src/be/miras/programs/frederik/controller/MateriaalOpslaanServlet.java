@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
@@ -135,24 +136,24 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 	
 		msg = InputValidatie.ingevuld(naam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Naam).concat(msg);
 		}
 		
 		msg = InputValidatie.enkelAlfabetisch(soort);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Soort").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Soort).concat(msg);
 		}
 		
 		msg = InputValidatie.ingevuld(eenheidsmaat);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Eenheidsmaat").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Eenheidsmaat).concat(msg);
 		}
 		
 		msg = InputValidatie.kommagetal(eenheidsprijsString);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Eenheidsprijs").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Eenheidsprijs).concat(msg);
 		} else if (Datatype.stringNaarDouble(eenheidsprijsString) <= 0){
-			msg = " De Eenheidsprijs werd niet correct ingevuld. ";
+			msg = InputValidatieStrings.EenheidsprijsNietCorrect;
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(msg);
 		}
 		return inputValidatieErrorMsg;

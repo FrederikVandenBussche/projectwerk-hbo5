@@ -50,6 +50,7 @@ public class TaakToonDetailServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 		RequestDispatcher view = null;
+		
 		if (isIngelogd == null || isIngelogd == false) {
 			view = request.getRequestDispatcher("/logout");
 
@@ -71,13 +72,16 @@ public class TaakToonDetailServlet extends HttpServlet {
 				taak.setId(Integer.MIN_VALUE);
 
 			} else {
+				
 				// het gaat om het wijzigen van een bestaande taak
 				List<Planning> planningLijst = new ArrayList<Planning>();
+				List<Planning> gewerkteUrenLijst = new ArrayList<Planning>();
 				DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 
 				// zoek de taak
 				Opdracht opdracht = opdrachtDetailData.getOpdracht();
 				List<Taak> taakLijst = opdracht.getTaakLijst();
+				
 				Iterator<Taak> it = taakLijst.iterator();
 				while (it.hasNext()) {
 					Taak t = it.next();
@@ -86,7 +90,6 @@ public class TaakToonDetailServlet extends HttpServlet {
 					}
 				}
 
-				System.out.println(TAG + "de taakId = " + id);
 				// planningLijst ophalen
 
 				List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao
@@ -95,19 +98,35 @@ public class TaakToonDetailServlet extends HttpServlet {
 				Iterator<DbWerknemerOpdrachtTaak> wotIt = dbWerknemerOpdrachtTaakLijst.iterator();
 				while (wotIt.hasNext()) {
 					DbWerknemerOpdrachtTaak wot = wotIt.next();
-					Planning planning = new Planning();
-					planning.setId(wot.getId());
-					int werknemerId = wot.getWerknemerId();
-					String werknemerNaam = werknemerMap.get(werknemerId);
-					planning.setWerknemer(werknemerNaam);
-					planning.setBeginuur(wot.getBeginuur());
-					planning.setEinduur(wot.getEinduur());
-					planning.setIsAanwezig(wot.getAanwezig());
+					if (wot.getEinduur() == null) {
+						Planning planning = new Planning();
+						planning.setId(wot.getId());
+						int werknemerId = wot.getWerknemerId();
+						String werknemerNaam = werknemerMap.get(werknemerId);
+						planning.setWerknemer(werknemerNaam);
+						planning.setBeginuur(wot.getBeginuur());
+						planning.setEinduur(wot.getEinduur());
+						planning.setIsAanwezig(wot.getAanwezig());
 
-					planningLijst.add(planning);
+						planningLijst.add(planning);
+
+					} else {
+						
+						Planning gewerkteUren = new Planning();
+						gewerkteUren.setId(wot.getId());
+						int werknemerId = wot.getWerknemerId();
+						String werknemerNaam = werknemerMap.get(werknemerId);
+						gewerkteUren.setWerknemer(werknemerNaam);
+						gewerkteUren.setBeginuur(wot.getBeginuur());
+						gewerkteUren.setEinduur(wot.getEinduur());
+						gewerkteUren.setIsAanwezig(wot.getAanwezig());
+
+						gewerkteUrenLijst.add(gewerkteUren);
+					}
 				}
+				
 				taak.setPlanningLijst(planningLijst);
-
+				taak.setGewerkteUrenLijst(gewerkteUrenLijst);
 			}
 
 			session.setAttribute("taak", taak);
@@ -115,8 +134,8 @@ public class TaakToonDetailServlet extends HttpServlet {
 			session.setAttribute("werknemerMap", werknemerMap);
 
 			view = request.getRequestDispatcher("/Taakbeheer.jsp");
-
 		}
+		
 		view.forward(request, response);
 	}
 
@@ -142,4 +161,5 @@ public class TaakToonDetailServlet extends HttpServlet {
 		return werknemerMap;
 	}
 
+	
 }

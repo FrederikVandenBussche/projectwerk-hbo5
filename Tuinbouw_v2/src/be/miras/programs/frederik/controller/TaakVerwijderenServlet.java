@@ -25,6 +25,7 @@ public class TaakVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String TAG = "TaakVerwijderenServlet: ";
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -49,6 +50,7 @@ public class TaakVerwijderenServlet extends HttpServlet {
 
 		System.out.println(TAG + "de te verwijderen taak : " + id);
 
+		// de taak uit de databank verwijderen
 		taakDaoAdapter.verwijder(id);
 
 		// de taak uit de session verwijderen
@@ -61,12 +63,11 @@ public class TaakVerwijderenServlet extends HttpServlet {
 				it.remove();
 			}
 		}
-
+		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);
 	}
 
-	
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -76,5 +77,6 @@ public class TaakVerwijderenServlet extends HttpServlet {
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
 	}
+	
 	
 }

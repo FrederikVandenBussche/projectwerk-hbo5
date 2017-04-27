@@ -19,6 +19,7 @@ import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
@@ -193,24 +194,24 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 			
 			msg = InputValidatie.enkelAlfabetisch(variabelVeld1);
 			if (msg != null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Voornaam").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Voornaam).concat(msg);
 			}
 			
 			msg = InputValidatie.enkelAlfabetisch(variabelVeld2);
 			if (msg != null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Naam).concat(msg);
 			}
 			
 		} else if (klantSimpleName.equals("DbBedrijf")){
 			
 			msg = InputValidatie.enkelAlfabetisch(variabelVeld1);
 			if (msg != null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Naam).concat(msg);
 			}
 			
 			msg = InputValidatie.geldigBtwNummer(variabelVeld2);
 			if (msg != null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" BTW nummer").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.BtwNummer).concat(msg);
 			}
 		}
 		

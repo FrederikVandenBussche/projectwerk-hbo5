@@ -75,16 +75,20 @@
 					Taak: In opdracht van ${opdrachtDetailData.opdracht.klantNaam } 
 					<div class="inlogError">${inputValidatieErrorMsg }</div>
 					<br />
-					Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
-					<br />
-					naam: 
-					<input type="text"  id="taaknaam" name="taaknaam" value ="${taak.taakNaam }" />
-					<br />
-					opmerking: 
-					<br />
-					<textarea rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
-					<br />
-					<input type="submit" name="submit" value="opslaan" />
+					<fieldset>
+						<legend>
+							Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
+						</legend>
+						<br />
+						naam: 
+						<input type="text"  id="taaknaam" name="taaknaam" value ="${taak.taakNaam }" />
+						<br />
+						opmerking: 
+						<br />
+						<textarea rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
+						<br />
+						<input type="submit" name="submit" value="opslaan" />
+					</fieldset>
 				</form>
 			</div>
 			<div id="planning">
@@ -100,7 +104,7 @@
 								</c:forEach>
 							</select>
 							<br />
-							Plan een nieuwe datum in: (yyyy/mm/dd)
+							Plan een nieuwe datum in: (dd/mm/yyyy)
 							<input type="date" name="datum" />
 							<input type="submit" name="submit" value="Voeg toe" />	
 						</form>
@@ -130,28 +134,30 @@
 				</fieldset>
 				</div>
 			<div id="vooruitgang">
-				<table>
-					<tr>
-						<th>Naam Werknemer </th>
-						<th>Beginuur</th>
-						<th>Einduur</th> <!--  een String -->
+				<fieldset>
+					<legend>Gewerkte uren</legend>
+					<table>
+						<tr>
+							<th>Naam Werknemer </th>
+							<th>Beginuur</th>
+							<th>Einduur</th> <!--  een String -->
 						<th>isAanwezig</th>
 						<th></th>
-					</tr>
-					<c:forEach items="${taak.planningLijst }" var="element">
-						<tr>
-							<td>${element.werknemer }</td>
-							<td>
-								<fmt:formatDate value="${element.beginuur }" pattern="dd/MM/YYYY" />
-							</td>
-							<td>
-								<fmt:formatDate value="${element.einduur }" pattern="dd/MM/YYYY" />
-							</td>
-							<td>${element.isAanwezig }</td>
-							
 						</tr>
-					</c:forEach>
-				</table>
+						<c:forEach items="${taak.gewerkteUrenLijst }" var="element">
+							<tr>
+								<td>${element.werknemer }</td>
+								<td>
+									<fmt:formatDate value="${element.beginuur }" pattern="dd/MM/YYYY HH:mm" />
+								</td>
+								<td>
+									<fmt:formatDate value="${element.einduur }" pattern="dd/MM/YYYY HH:mm" />
+								</td>
+								<td>${element.isAanwezig }</td>
+							</tr>
+						</c:forEach>
+					</table>
+				</fieldset>
 			</div>
 		</div>
 	</div>

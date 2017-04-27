@@ -17,8 +17,9 @@ import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.model.Taak;
 
 public class TaakDaoAdapter implements ICRUD {
-	
+	private final String TAG = "TaakDaoAdapter: ";
 
+	
 	@Override
 	public boolean voegToe(Object o) {
 		Taak taak = (Taak) o;
@@ -40,7 +41,6 @@ public class TaakDaoAdapter implements ICRUD {
 			dbTaak.setId(dbTaakId);
 		}
 		
-
 		//nieuwe DbVooruitgang toevoegen
 		dbVooruitgang.setPercentage(0);
 		// een statusId van 1 == "Niet gestart"
@@ -57,13 +57,11 @@ public class TaakDaoAdapter implements ICRUD {
 		dbOpdrachtTaak.setOpmerking(taak.getOpmerking());
 		dbOpdrachtTaakDao.voegToe(dbOpdrachtTaak);
 		
-		
 		return false;
 	}
 
 	@Override
 	public Object lees(int id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -97,11 +95,9 @@ public class TaakDaoAdapter implements ICRUD {
 			} else {
 				//nieuw toevoegen
 				dbTaakDao.voegToe(dbTaak);
-			}
-			
+			}	
 		}
-		
-		
+				
 		int dbOpdrachtId = taak.getOpdrachtId();
 		int dbTaakId = dbTaak.getId();
 		String dbOpmerking = taak.getOpmerking();
@@ -111,29 +107,24 @@ public class TaakDaoAdapter implements ICRUD {
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public boolean verwijder(int taakId) {
 				
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbTaakDao dbTaakDao = new DbTaakDao();
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		
-		DbOpdrachtTaak dbOpdrachtTaak = (DbOpdrachtTaak) dbOpdrachtTaakDao.lees(id);
+		DbOpdrachtTaak dbOpdrachtTaak = (DbOpdrachtTaak) dbOpdrachtTaakDao.leesWaarTaakId(taakId);
+		int opdrachtTaakId = dbOpdrachtTaak.getId();
+		dbWerknemerOpdrachtTaakDao.verwijderWaarTaakId(opdrachtTaakId);
+		dbOpdrachtTaakDao.verwijder(opdrachtTaakId);
 		
-		/*
-		 * verwijder de DbTaak als ze enkel in deze dbOpdrachtTaak wordt gebruikt 
-		 */
-		int dbTaakId = dbOpdrachtTaak.getTaakId();
-		
-		dbWerknemerOpdrachtTaakDao.verwijderWaarTaakId(dbTaakId);
-		
-		dbOpdrachtTaakDao.verwijder(id);
-		dbVooruitgangDao.verwijder(dbOpdrachtTaak.getVooruitgangId());
-				
-		if (dbOpdrachtTaakDao.hoeveelMetTaakId(dbTaakId) <= 0) {
-			dbTaakDao.verwijder(dbTaakId);
+		// verwijder de DbTaak als ze enkel in deze dbOpdrachtTaak wordt gebruikt 
+		long aantal = dbOpdrachtTaakDao.hoeveelMetTaakId(taakId);
+		if (aantal <= 0){
+			dbTaakDao.verwijder(taakId);
 		}
-		
+		dbVooruitgangDao.verwijder(dbOpdrachtTaak.getVooruitgangId());
 		
 		return false;
 	}
@@ -171,8 +162,7 @@ public class TaakDaoAdapter implements ICRUD {
 			String opmerking = dbOpdrachtTaak.getOpmerking();
 			int vooruitgangPercentage = dbVooruitgang.getPercentage();
 			String status = dbStatus.getNaam();
-			
-			
+	
 			taak.setId(taakId);
 			taak.setOpdrachtId(opdrachtId);
 			taak.setTaakNaam(taakNaam);
@@ -184,8 +174,14 @@ public class TaakDaoAdapter implements ICRUD {
 			taakLijst.add(taak);
 		}
 		
-		
 		return taakLijst;
 	}
 
+	public int geefMaxId() {
+		DbTaakDao dbTaakDao = new DbTaakDao();
+		int maxId = dbTaakDao.geefMaxId();
+		return maxId;
+	}
+	
+	
 }

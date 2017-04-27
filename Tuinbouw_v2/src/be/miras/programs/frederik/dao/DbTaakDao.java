@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbTaak;
 
 
@@ -205,6 +206,32 @@ public class DbTaakDao implements ICRUD {
 		}
 		
 		return naam;
+	}
+
+	public int geefMaxId() {
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT MAX(id) FROM DbTaak";
+		List<Integer> lijst = new ArrayList<Integer>();
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			lijst = q.list();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		int id = 0;
+		if (!lijst.isEmpty()) {
+			id = lijst.get(0);
+		}
+		return id;
 	}
 
 }

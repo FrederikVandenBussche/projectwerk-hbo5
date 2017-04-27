@@ -28,6 +28,7 @@ import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.GoogleApis;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 import be.miras.programs.frederik.util.Datatype;
 
@@ -37,7 +38,7 @@ import be.miras.programs.frederik.util.Datatype;
 @WebServlet("/OpdrachtOpslaanServlet")
 public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
-	//private String TAG = "OpdrachtOpslaanServlet: ";
+	private String TAG = "OpdrachtOpslaanServlet: ";
 	private int id;
 
 
@@ -398,12 +399,12 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 		
 		msg = InputValidatie.enkelAlfabetisch(klantNaam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam opdrachtgever").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.NaamOpdrachtgever).concat(msg);
 		}
 		
 		msg = InputValidatie.ingevuld(opdrachtNaam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Opdracht naam").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.OpdrachtNaam).concat(msg);
 		}
 		
 		if (this.id < 0 || 
@@ -412,23 +413,23 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			//inputvalidatie voor aanmaak van een nieuwe opdracht
 			msg = InputValidatie.correcteDatum(startDatumString);
 			if (msg!= null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" StartDatum").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.StartDatum).concat(msg);
 			} else {
 				Date datum = Datum.creeerDatum(startDatumString);
 				Date nu = new Date();
 				if (datum.before(nu)){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" De startdatum dient in de toekomst te liggen.");
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.StartDatumToekomst);
 				}
 			}
 			
 			msg = InputValidatie.correcteDatum(eindDatumString);
 			if (msg!= null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" EindDatum").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.EindDatum).concat(msg);
 			} else {
 				Date startdatum = Datum.creeerDatum(startDatumString);
 				Date einddatum = Datum.creeerDatum(eindDatumString);
 				if (einddatum.before(startdatum)){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" De einddatum dient na de startdatum te liggen.");
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.EindDatumNaStartDatum);
 				}
 			}
 				
@@ -451,11 +452,11 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			if (!startDatumString.trim().isEmpty() && eindDatumString.isEmpty()){
 				msg = InputValidatie.correcteDatum(startDatumString);
 				if (msg != null){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" StartDatum").concat(msg);
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.StartDatum).concat(msg);
 				} else {
 					Date startDatum = Datum.creeerDatum(startDatumString);
 					if ( startDatum.after(vorigeEindDatum)){
-						msg = " De startdatum mag niet na de einddatum zijn.";
+						msg = InputValidatieStrings.StartDatumNietNaEindDatum;
 						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(msg);
 					}
 				}
@@ -464,12 +465,12 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			if (startDatumString.trim().isEmpty() && !eindDatumString.trim().isEmpty()){
 				msg = InputValidatie.correcteDatum(eindDatumString);
 				if (msg != null){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" EindDatum").concat(msg);
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.EindDatum).concat(msg);
 				} else {
 					Date eindDatum = Datum.creeerDatum(eindDatumString);
 				
 					if ( eindDatum.before(vorigeBeginDatum)){
-						msg = " De einddatum mag niet voor de startdatum zijn. ";
+						msg = InputValidatieStrings.EinddatumNietVoorStartDatum;
 						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(msg);
 					}
 				}

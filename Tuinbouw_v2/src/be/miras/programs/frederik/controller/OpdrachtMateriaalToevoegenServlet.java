@@ -18,6 +18,7 @@ import be.miras.programs.frederik.dbo.DbOpdrachtMateriaal;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
@@ -124,7 +125,7 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 		
 		msg = InputValidatie.geheelGetal(hoeveelheidString);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Straat").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.HoeveelheidGeheelGetal).concat(msg);
 		}
 		
 		return inputValidatieErrorMsg;

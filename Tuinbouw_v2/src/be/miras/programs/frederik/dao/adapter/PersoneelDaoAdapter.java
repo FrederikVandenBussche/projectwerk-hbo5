@@ -20,7 +20,7 @@ import be.miras.programs.frederik.dbo.DbWerknemer;
 import be.miras.programs.frederik.model.Personeel;
 
 public class PersoneelDaoAdapter implements ICRUD{
-	private String TAG = "PersoneelDaoAdapter: ";
+	//private String TAG = "PersoneelDaoAdapter: ";
 	
 	@Override
 	public boolean voegToe(Object o) {
@@ -33,26 +33,18 @@ public class PersoneelDaoAdapter implements ICRUD{
 		DbWerknemer dbwerknemer = new DbWerknemer();
 		DbGebruiker dbgebruiker = new DbGebruiker();
 		
-		System.out.println(TAG + "ik zal een persoon toevoegen");
-		
 		dbpersoon.setId(personeel.getPersoonId());
 		dbpersoon.setNaam(personeel.getNaam());
 		dbpersoon.setVoornaam(personeel.getVoornaam());
 		dbpersoon.setGeboortedatum(personeel.getGeboortedatum());
 		dbPersoonDao.voegToe(dbpersoon);
 
-		System.out.println(TAG + "Persoon is toegevoegd" );
-		
-		
 		int persoonId = dbPersoonDao.zoekMaxId();
 
-		System.out.println(TAG + "De nieuwe persoon id = " + persoonId);
 		personeel.setPersoonId(persoonId);
 		
 		String gebruikersnaam = creeerGebruikersnaam(personeel, dbGebruikerDao);
 		
-		
-				
 		dbgebruiker.setPersoonId(persoonId);
 		dbgebruiker.setEmail(personeel.getEmail());
 		dbgebruiker.setBevoegdheidId(2);
@@ -60,20 +52,13 @@ public class PersoneelDaoAdapter implements ICRUD{
 		
 		dbGebruikerDao.voegToe(dbgebruiker);
 
-		System.out.println(TAG + "gebruiker is toegevoegd" );
-		
 		dbwerknemer.setLoon(personeel.getLoon());
 		dbwerknemer.setAanwervingsdatum(personeel.getAanwervingsdatum());
 		dbwerknemer.setPersoonId(persoonId);
 		dbWerknemerDao.voegToe(dbwerknemer);
 
-		System.out.println(TAG + "werknemer is toegevoegd");
-		
-		
 		return true;
 	}
-
-	
 
 	@Override
 	public Object lees(int id) {
@@ -131,7 +116,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 			
 			Personeel personeel = new Personeel();
 			personeel.setWerknemerId(dbwerknemer.getId());
-			System.out.println(TAG + "(iterator), werknemersId = " + dbwerknemer.getId());
 			personeel.setPersoonId(dbwerknemer.getPersoonId());
 			personeel.setLoon(dbwerknemer.getLoon());
 			personeel.setAanwervingsdatum(dbwerknemer.getAanwervingsdatum());
@@ -157,7 +141,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 				DbPersoon dbpersoon = dbPersoonIt.next();
 		
 				if(personeel.getPersoonId() == dbpersoon.getId()){
-					System.out.println(TAG + "de persoonId = " + personeel.getPersoonId());
 					personeel.setVoornaam(dbpersoon.getVoornaam());
 					personeel.setNaam(dbpersoon.getNaam());
 					personeel.setGeboortedatum(dbpersoon.getGeboortedatum());
@@ -171,16 +154,10 @@ public class PersoneelDaoAdapter implements ICRUD{
 				if(personeel.getPersoonId() == dbgebruiker.getPersoonId()){
 					
 					personeel.setEmail(dbgebruiker.getEmail());
-					personeel.setGebruikerId(dbgebruiker.getId());
-					
-				}
-				
+					personeel.setGebruikerId(dbgebruiker.getId());	
+				}	
 			}
 		}
-		
-
-		
-		
 	
 		List<Object> objectLijst = new ArrayList<Object>(personeelLijst);
 		return objectLijst;
@@ -199,10 +176,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 		DbPersoon dbpersoon = new DbPersoon();
 		DbGebruiker dbgebruiker = new DbGebruiker();
 		
-		System.out.println(TAG + "de personeelsId = " + personeel.getPersoonId());
-		System.out.println(TAG + "de werknemersId = " + personeel.getWerknemerId());
-		System.out.println(TAG + " de gebrukerId = " + personeel.getGebruikerId());
-		
 		DbPersoon oudeDbPersoon = (DbPersoon) dbPersoonDao.lees(personeel.getPersoonId());
 		
 		dbpersoon.setId(personeel.getPersoonId());
@@ -210,19 +183,13 @@ public class PersoneelDaoAdapter implements ICRUD{
 		dbpersoon.setVoornaam(personeel.getVoornaam());
 		dbpersoon.setGeboortedatum(personeel.getGeboortedatum());
 		dbPersoonDao.wijzig(dbpersoon);
-		
-		System.out.println(TAG + "de persoon is gewijzigd. " + dbpersoon.getId());
-		
+			
 		dbwerknemer.setId(personeel.getWerknemerId()); 
 		dbwerknemer.setLoon(personeel.getLoon());
 		dbwerknemer.setAanwervingsdatum(personeel.getAanwervingsdatum());
 		dbwerknemer.setPersoonId(personeel.getPersoonId());
 		dbWerknemerDao.wijzig(dbwerknemer);
-		
-		System.out.println(TAG + "de werknemer is gewijzigd. " + dbwerknemer.getId());
-		
-		System.out.println(TAG + "de gebruiker met id : " + personeel.getGebruikerId());
-		
+				
 		if (!oudeDbPersoon.getVoornaam().equals(personeel.getVoornaam()) ||
 				!oudeDbPersoon.getNaam().equals(personeel.getNaam())){
 			String gebruikersnaam = creeerGebruikersnaam(personeel, dbGebruikerDao);
@@ -236,8 +203,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 		
 		dbGebruikerDao.wijzig(dbgebruiker);
 		
-		System.out.println(TAG + "de gebruiker is gewijzigd" + dbgebruiker.getId());
-
 		return true;
 	}
 
@@ -264,7 +229,7 @@ public class PersoneelDaoAdapter implements ICRUD{
 	private String creeerGebruikersnaam(Personeel personeel, DbGebruikerDao dbGebruikerDao) {
 		String gebruikersnaam = personeel.getVoornaam().concat(".").concat(personeel.getNaam());
 		int aantalKeer = dbGebruikerDao.aantalMetGebruikersnaam(gebruikersnaam);
-		System.out.println(TAG + "aantal keren dat deze gebruikersnaam voorkomt = " + aantalKeer);
+
 		int nr = 1;
 		while (aantalKeer > 0){
 			gebruikersnaam = gebruikersnaam.concat(String.valueOf(nr));
@@ -273,4 +238,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 		}
 		return gebruikersnaam;
 	}
+	
+	
 }

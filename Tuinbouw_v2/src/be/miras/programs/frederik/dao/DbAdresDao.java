@@ -101,7 +101,6 @@ public class DbAdresDao implements ICRUD {
 	}
 
 	public int zoekMaxId() {
-		DbAdres dbAdres = new DbAdres();
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "SELECT MAX(id) FROM DbAdres";

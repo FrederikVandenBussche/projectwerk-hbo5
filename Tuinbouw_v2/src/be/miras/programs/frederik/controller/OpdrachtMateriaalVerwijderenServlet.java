@@ -25,6 +25,7 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String TAG = "OpdrachtMateriaalVerwijderenServlet: ";
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -41,7 +42,6 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
-		System.out.println(TAG + "de id = " + id);
 
 		HttpSession session = request.getSession();
 		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
@@ -60,7 +60,6 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 			if (m.getId() == id) {
 				it.remove();
 			}
-
 		}
 
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
@@ -79,4 +78,5 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

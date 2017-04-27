@@ -71,7 +71,7 @@ public class FacturatiebeheerServlet extends HttpServlet {
 
 			}
 
-			request.setAttribute("klantMap", klantMap);
+			session.setAttribute("klantMap", klantMap);
 			session.setAttribute("klantlijst", klantlijst);
 
 			view = request.getRequestDispatcher("/Facturatie.jsp");

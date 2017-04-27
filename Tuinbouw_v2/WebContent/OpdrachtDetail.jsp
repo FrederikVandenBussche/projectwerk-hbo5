@@ -174,8 +174,11 @@
 								var="materiaal">
 								<option value="${materiaal.id }">${materiaal.naam }</option>
 							</c:forEach>
-						</select> Hoeveelheid: <input type="number" name="hoeveelheid" /> <input
-							type="submit" name="submit" value="Voeg toe" />
+						</select> 
+						Hoeveelheid: 
+						<input type="number" name="hoeveelheid" />
+						${materiaal.eenheidsmaat }
+						<input type="submit" name="submit" value="Voeg toe" />
 					</form>
 				</fieldset>
 				<fieldset id="gebruiktMateriaal">

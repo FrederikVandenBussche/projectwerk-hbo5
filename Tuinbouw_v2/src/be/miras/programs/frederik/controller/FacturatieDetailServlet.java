@@ -2,7 +2,6 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -45,8 +44,9 @@ import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.model.Verplaatsing;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;
-import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.GoogleApis;
+import be.miras.programs.frederik.util.InputValidatieStrings;
+
 
 /**
  * Servlet implementation class FacturatieDetailServlet
@@ -54,6 +54,8 @@ import be.miras.programs.frederik.util.GoogleApis;
 @WebServlet("/FacturatieDetailServlet")
 public class FacturatieDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	//private final String TAG = "FacturatieDetailServlet: ";
+	
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -74,11 +76,13 @@ public class FacturatieDetailServlet extends HttpServlet {
 		if (isIngelogd == null || isIngelogd == false ){
 			RequestDispatcher view = request.getRequestDispatcher("/logout");
 			view.forward(request, response);
+		
 		} else {
 			
-		
 		// geselecteerde klantId;
 		int klantId =  Datatype.stringNaarInt(request.getParameter("geselecteerdeKlant"));
+		
+		int gebruikerId = (int) session.getAttribute("gebruikerId");
 		
 		Factuur factuur = new Factuur();
 		
@@ -87,8 +91,6 @@ public class FacturatieDetailServlet extends HttpServlet {
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		DbStatusDao dbStatusDao = new DbStatusDao();
-				
-		
 		
 		//klantlijst ophalen
 		List<DbKlant> klantlijst = (List<DbKlant>) session.getAttribute("klantlijst");
@@ -114,6 +116,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 		// er is een klant-adreslijst nodig
 		List<Adres> adresLijst = adresAdapter.leesWaarKlantId(klantId);
 		HashMap<Integer, String> adresMap = new HashMap<Integer, String>();
+		
 		Iterator<Adres> adresLijstIterator = adresLijst.iterator();
 		while(adresLijstIterator.hasNext()){
 			Adres a = adresLijstIterator.next();
@@ -124,7 +127,8 @@ public class FacturatieDetailServlet extends HttpServlet {
 		
 		// adresgegevens van tuinbouwbedrijf
 		WerkgeverDaoAdapter werkgeverDaoAdapter = new WerkgeverDaoAdapter();
-		Werkgever werkgever = (Werkgever) werkgeverDaoAdapter.lees(0);
+		Werkgever werkgever = (Werkgever) werkgeverDaoAdapter.lees(gebruikerId);
+		
 		Adres bedrijfAdres = werkgever.getAdreslijst().get(0);
 		factuur.setBedrijfsAdres(bedrijfAdres);
 		factuur.setBedrijfsEmail(werkgever.getEmail());
@@ -164,7 +168,6 @@ public class FacturatieDetailServlet extends HttpServlet {
 					// er is ten minste 1 opdracht_taak niet afgewerkt
 					isAfgewerkt = false;
 				}
-
 			}
 			
 			if (isAfgewerkt) {
@@ -222,13 +225,11 @@ public class FacturatieDetailServlet extends HttpServlet {
 						
 						planning.setAantalKm(aantalKm);
 						planningLijst.add(planning);
-
 					}
 					
 					taak.setPlanningLijst(planningLijst);
 					
-					taakLijst.add(taak);
-					
+					taakLijst.add(taak);	
 				}
 				
 				opdracht.setTaakLijst(taakLijst);
@@ -326,7 +327,6 @@ public class FacturatieDetailServlet extends HttpServlet {
 					int aantalVerplaatsingen = teFacturerenVerplaatsing.getAantalVerplaatsingen();
 					aantalVerplaatsingen += verplaatsing.getAantalVerplaatsingen();
 					teFacturerenVerplaatsing.setAantalVerplaatsingen(aantalVerplaatsingen);
-		
 				}
 			}
 		
@@ -336,8 +336,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 				nieuweVerplaatsing.setOpdrachtId(verplaatsing.getOpdrachtId());
 				nieuweVerplaatsing.setAantalKm(verplaatsing.getAantalKm());
 				nieuweVerplaatsing.setAantalVerplaatsingen(2);
-				teFacturerenVerplaatsingLijst.add(nieuweVerplaatsing);
-				
+				teFacturerenVerplaatsingLijst.add(nieuweVerplaatsing);	
 			}
 		}
 		factuur.setVerplaatsingLijst(teFacturerenVerplaatsingLijst);		
@@ -346,15 +345,19 @@ public class FacturatieDetailServlet extends HttpServlet {
 		factuur.setVervalDatum(vervalDatum);
 		factuur.setOpdrachtLijst(opdrachtLijst);
 		
+		RequestDispatcher view = null;
+		if (factuur.getOpdrachtLijst().isEmpty()){
+			String factuurmessage = InputValidatieStrings.FactuurMessage;
+			request.setAttribute("factuurmessage", factuurmessage);
+			
+			view = request.getRequestDispatcher("/Facturatie.jsp");
+		} else {
+			session.setAttribute("adresMap", adresMap);
+			session.setAttribute("factuur", factuur);
+			
+			view = request.getRequestDispatcher("/FacturatieDetail.jsp");
+		}
 		
-	
-		
-		session.setAttribute("adresMap", adresMap);
-		session.setAttribute("factuur", factuur);
-		// button : genereer PDF
-		// markeer de opdracht als 'gefactureerd' (Vooruitgang.statusId
-		
-		RequestDispatcher view = request.getRequestDispatcher("/FacturatieDetail.jsp");
 		view.forward(request, response);
 		}
 	}
@@ -373,4 +376,5 @@ public class FacturatieDetailServlet extends HttpServlet {
 		return datum;
 	}
 
+	
 }

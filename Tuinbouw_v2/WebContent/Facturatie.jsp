@@ -75,7 +75,9 @@
 					<br />
 					<input type="submit" name="submit" value="Bevestig" />
 				</form>
-				
+				<div class = "inlogError">
+					${factuurmessage }
+				</div>
 			</fieldset>
 		</div>
 	</div>

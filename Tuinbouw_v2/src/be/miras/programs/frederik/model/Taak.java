@@ -11,6 +11,7 @@ public class Taak implements Ivergelijk {
 	private int vooruitgangPercentage;
 	private String status;
 	private List<Planning> planningLijst;
+	private List<Planning> gewerkteUrenLijst;
 	
 	public int getId() {
 		return id;
@@ -74,6 +75,20 @@ public class Taak implements Ivergelijk {
 
 	public void setPlanningLijst(List<Planning> planningLijst) {
 		this.planningLijst = planningLijst;
+	}
+	
+	/**
+	 * @return the gewerkteUrenLijst
+	 */
+	public List<Planning> getGewerkteUrenLijst() {
+		return gewerkteUrenLijst;
+	}
+
+	/**
+	 * @param gewerkteUrenLijst the gewerkteUrenLijst to set
+	 */
+	public void setGewerkteUrenLijst(List<Planning> gewerkteUrenLijst) {
+		this.gewerkteUrenLijst = gewerkteUrenLijst;
 	}
 
 	@Override

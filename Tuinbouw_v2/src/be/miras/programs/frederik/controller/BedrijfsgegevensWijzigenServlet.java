@@ -17,6 +17,7 @@ import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datum;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
@@ -142,24 +143,24 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 		
 		msg = InputValidatie.enkelAlfabetisch(naam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Naam).concat(msg);
 		}
 		
 		msg = InputValidatie.enkelAlfabetisch(voornaam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Voornaam").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Voornaam).concat(msg);
 		}
 		
 		if(!geboortedatum.isEmpty()){
 			msg = InputValidatie.correcteDatum(geboortedatum);
 			if (msg!= null ) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geboortedatum").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeboorteDatum).concat(msg);
 			} else {
 				Date datum = Datum.creeerDatum(geboortedatum);
 				Date nu = new Date();
 				nu.setYear(nu.getYear() - 18);
 				if (datum.after(nu)){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geboortedatum: Een bedrijfsleider is ten minsten 18 jaar.");
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeboortedatumBedrijfsleider);
 				}
 			}
 		}

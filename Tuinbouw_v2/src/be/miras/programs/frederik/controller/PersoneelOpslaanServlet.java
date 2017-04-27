@@ -18,6 +18,7 @@ import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.InputValidatie;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**
  * Servlet implementation class PersoneelOpslaanServlet
@@ -178,22 +179,22 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 		// inputvalidatie
 		msg = InputValidatie.enkelAlfabetisch(voornaam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Voornaam").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Voornaam).concat(msg);
 		}
 		
 		msg = InputValidatie.enkelAlfabetisch(naam);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Naam").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Naam).concat(msg);
 		}
 		
 		msg = InputValidatie.kommagetal(loonString);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Loon").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Loon).concat(msg);
 		}
 		
 		msg = InputValidatie.correctEmailadres(email);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Email").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Email).concat(msg);
 		}
 		
 		this.geboortedatumString = null;
@@ -202,12 +203,12 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 				(this.id > 0 && !nieuweGeboortedatumString.trim().isEmpty())){
 			msg = InputValidatie.correcteDatum(nieuweGeboortedatumString);
 			if (msg!= null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geboortedatum").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeboorteDatum).concat(msg);
 			} else {
 				Date datum = Datum.creeerDatum(nieuweGeboortedatumString);
 				Date nu = new Date();
 				if (datum.after(nu)){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Geboortedatum moet in het verleden liggen.");
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeboortedatumInVerleden);
 				} else {
 					this.geboortedatumString = nieuweGeboortedatumString;
 				}
@@ -219,13 +220,13 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			
 			msg = InputValidatie.correcteDatum(nieuweAanwervingsdatumString);
 			if (msg!= null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Aanwervingsdatum").concat(msg);
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Aanwervingsdatum).concat(msg);
 			} else {
 				Date datum = Datum.creeerDatum(nieuweAanwervingsdatumString);
 				Date nu = new Date();
 				
 				if (datum.after(nu)){
-					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Aanwervingsdatum mag niet in de toekomst liggen.");
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.AanwervingsdatumNietInToekomst);
 				} else {
 					this.aanwervingsdatumString = nieuweAanwervingsdatumString;
 				}

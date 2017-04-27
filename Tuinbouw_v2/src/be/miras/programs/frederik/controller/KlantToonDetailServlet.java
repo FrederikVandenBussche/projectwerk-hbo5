@@ -37,8 +37,9 @@ import be.miras.programs.frederik.util.GoogleApis;
 @WebServlet("/KlantParticulierToonDetailsServlet")
 public class KlantToonDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "KlantToonDatailServlet: ";
+	private String TAG = "KlantToonDetailServlet: ";
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -120,6 +121,7 @@ public class KlantToonDetailServlet extends HttpServlet {
 
 				// de klant met de corresponderende id opzoeken.
 				if (klant.getClass().getSimpleName().equals("DbParticulier")) {
+					
 					Iterator<DbParticulier> it = particulierLijst.iterator();
 					while (it.hasNext()) {
 						DbParticulier particulier = it.next();
@@ -132,6 +134,7 @@ public class KlantToonDetailServlet extends HttpServlet {
 						}
 					}
 				} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
+					
 					Iterator<DbBedrijf> iterator = bedrijfLijst.iterator();
 					while (iterator.hasNext()) {
 						DbBedrijf bedrijf = iterator.next();
@@ -177,10 +180,7 @@ public class KlantToonDetailServlet extends HttpServlet {
 					String opdrachtNaam = opdracht.getNaam();
 
 					opdrachtMap.put(opdrachtId, opdrachtNaam);
-
-					System.out.println(TAG + "opdrachtId voor deze klant= " + opdrachtId);
 				}
-
 			}
 
 			session.setAttribute("aanspreeknaam", aanspreeknaam);
@@ -195,8 +195,8 @@ public class KlantToonDetailServlet extends HttpServlet {
 			session.setAttribute("opdrachtMap", opdrachtMap);
 
 			view = this.getServletContext().getRequestDispatcher("/KlantDetail.jsp");
-
 		}
+		
 		view.forward(request, response);
 	}
 
@@ -232,10 +232,10 @@ public class KlantToonDetailServlet extends HttpServlet {
 			adres.setPlaats(dbGemeente.getNaam());
 
 			adreslijst.add(adres);
-
 		}
 
 		return adreslijst;
 	}
 
+	
 }

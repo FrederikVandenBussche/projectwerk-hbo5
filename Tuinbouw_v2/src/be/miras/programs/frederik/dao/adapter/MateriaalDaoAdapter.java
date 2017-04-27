@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 import be.miras.programs.frederik.dao.DbMateriaalDao;
 import be.miras.programs.frederik.dao.DbOpdrachtMateriaalDao;
 import be.miras.programs.frederik.dao.DbTypeMateriaalDao;
@@ -15,7 +14,8 @@ import be.miras.programs.frederik.dbo.DbTypeMateriaal;
 import be.miras.programs.frederik.model.Materiaal;
 
 public class MateriaalDaoAdapter implements ICRUD {
-
+		
+	
 	@Override
 	public boolean voegToe(Object o) {
 		Materiaal materiaal = (Materiaal) o;
@@ -48,7 +48,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 	@Override
 	public Object lees(int id) {
-
 		return null;
 	}
 
@@ -146,6 +145,7 @@ public class MateriaalDaoAdapter implements ICRUD {
 	}
 
 	public List<Materiaal> leesOpdrachtMateriaal(int opdrachtId) {
+
 		List<Materiaal> lijst = new ArrayList<Materiaal>();
 
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
@@ -159,12 +159,12 @@ public class MateriaalDaoAdapter implements ICRUD {
 		// opdrachtId
 		Iterator<DbOpdrachtMateriaal> it = dbOpdrachtMateriaalLijst.iterator();
 		while (it.hasNext()) {
+			DbOpdrachtMateriaal om = it.next();
+					
 			DbMateriaal dbMateriaal = new DbMateriaal();
 			Materiaal materiaal = new Materiaal();
 
-			DbOpdrachtMateriaal om = it.next();
-
-			dbMateriaal = (DbMateriaal) dbMateriaalDao.lees(om.getId());
+			dbMateriaal = (DbMateriaal) dbMateriaalDao.lees(om.getMateriaalId());
 
 			materiaal.setId(dbMateriaal.getId());
 			materiaal.setNaam(dbMateriaal.getNaam());
@@ -178,8 +178,8 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 			lijst.add(materiaal);
 		}
-
 		return lijst;
 	}
 
+	
 }

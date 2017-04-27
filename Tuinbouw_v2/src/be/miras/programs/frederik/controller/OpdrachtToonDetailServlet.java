@@ -37,6 +37,7 @@ import be.miras.programs.frederik.util.Datatype;
 public class OpdrachtToonDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -154,7 +155,6 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 
 			staticmap = GoogleApis.urlBuilderStaticMap(adres);
 			googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
-
 		}
 
 		taakLeeslijst(id, opdracht);
@@ -169,7 +169,6 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		OpdrachtDetailData opdrachtDetailData = new OpdrachtDetailData(aanspreeknaam, variabelveld1, variabelveld2,
 				buttonNaam, opdracht, klantNaamMap, adresString, adresMap, materiaalLijst, staticmap, googlemap);
 
-		
 		session.setAttribute("opdrachtDetailData", opdrachtDetailData);
 		request.setAttribute("id", id);
 
@@ -177,6 +176,12 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	/**
+	 * @param opdrachtId int
+	 * @param opdracht int
+	 * 
+	 *  voegt een takenlijst toe aan de opdracht
+	 */
 	private void taakLeeslijst(int opdrachtId, Opdracht opdracht) {
 		// lees de takenlijst die bij deze opdracht hoort.
 		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
@@ -186,4 +191,5 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		opdracht.setTaakLijst(taakLijst);
 	}
 
+	
 }

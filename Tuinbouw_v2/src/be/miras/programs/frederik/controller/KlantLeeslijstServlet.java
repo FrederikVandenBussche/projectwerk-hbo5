@@ -24,6 +24,7 @@ public class KlantLeeslijstServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private String TAG = "KlantLeeslijstServlet: ";
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -39,16 +40,13 @@ public class KlantLeeslijstServlet extends HttpServlet{
 			throws ServletException, IOException {
 		response.setContentType("text/html");
 
-		
-
 		HttpSession session = request.getSession();
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
-		System.out.println(TAG + "isIngelogd" + isIngelogd);
 		RequestDispatcher view = null;
 		
 		if (isIngelogd == null || isIngelogd == false) {
+		
 			view = request.getRequestDispatcher("/logout");
-
 		} else {
 
 			DbKlantDao dbKlantDao = new DbKlantDao();
@@ -60,12 +58,10 @@ public class KlantLeeslijstServlet extends HttpServlet{
 			session.setAttribute("bedrijfLijst", bedrijfLijst);
 
 			view = request.getRequestDispatcher("/Klantbeheer.jsp");
-
 		}
+		
 		view.forward(request, response);
-
 	}
-
 
 
 }

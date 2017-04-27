@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.model.Werkgever;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
@@ -105,13 +106,13 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 		
 		msg = InputValidatie.ingevuld(oudWachtwoord);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Oud Wachtwoord").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.OudWachtwoord).concat(msg);
 		}
 		
 		msg = InputValidatie.ingevuld(nieuwWachtwoord1);
 		String msg2 = InputValidatie.ingevuld(nieuwWachtwoord2);
 		if (msg != null || msg2 != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Gelieve het nieuw paswoord 2 maal in te geven");
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.NieuwWachtwoord);
 		}
 		
 		return inputValidatieErrorMsg;

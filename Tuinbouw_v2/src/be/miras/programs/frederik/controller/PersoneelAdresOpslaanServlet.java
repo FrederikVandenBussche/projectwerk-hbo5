@@ -17,6 +17,7 @@ import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.GoogleApis;
 import be.miras.programs.frederik.util.InputValidatie;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**
  * Servlet implementation class AdresOpslaanServlet
@@ -132,27 +133,23 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 		
 		msg = InputValidatie.enkelAlfabetisch(straat);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Straat").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Straat).concat(msg);
 		}
 		
 		msg = InputValidatie.geheelGetal(nummerString);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Huisnummer").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Huisnummer).concat(msg);
 		}
 		
-		msg = InputValidatie.ingevuld(nummerString);
-		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Bus").concat(msg);
-		}
-		
+				
 		msg = InputValidatie.geheelGetal(postcodeString);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Postcode").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Postcode).concat(msg);
 		}
 		
 		msg = InputValidatie.enkelAlfabetisch(plaats);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Plaats").concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Plaats).concat(msg);
 		}
 		
 
