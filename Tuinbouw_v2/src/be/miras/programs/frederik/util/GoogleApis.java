@@ -15,8 +15,7 @@ import org.json.simple.parser.ParseException;
 import be.miras.programs.frederik.model.Adres;
 
 public class GoogleApis {
-	final static private String TAG = "GoogleApis: ";
-
+	
 	final static private String basisUrl = "https://maps.googleapis.com/maps/api/";
 	final static private String geocode = "geocode/";
 	final static private String format = "json?";
@@ -59,7 +58,6 @@ public class GoogleApis {
 
 	public static Adres zoekAdres (double lat, double lng){
 		String url = urlBuilder(lat, lng);
-		System.out.println(TAG + "url = " + url);
 		String jsonString = executePost(url);
 		Adres adres = haalAdres(jsonString);
 		
@@ -75,16 +73,16 @@ public class GoogleApis {
 	}
 
 	private static String urlBuilder(Adres adres) {
-
+		
 		String straat = adres.getStraat();
 		///een spatie in de straatnaam dient vervangen te worden door '%20'
 		char[] straatCharArray = straat.toCharArray();
 		straat = "";
 		for (int i = 0; i < straatCharArray.length; i++){
 			if(Character.isWhitespace(straatCharArray[i])){
-				straat.concat("%20");
+				straat = straat.concat("%20");
 			} else {
-				straat.concat(String.valueOf(straatCharArray[i]));
+				straat = straat.concat(String.valueOf(straatCharArray[i]));
 			}
 		}
 		
@@ -133,7 +131,6 @@ public class GoogleApis {
 		String url = basisUrl + staticmap + adresString + staticmap_zoom 
 				+ staticmap_size + staticmap_maptype + 
 				staticmap_marker + adresString + STATICMAP_API_KEY; 
-		System.out.println(TAG + "staticmap url: " + url);
  		return url;
 	}
 	
@@ -209,8 +206,6 @@ public class GoogleApis {
 				Double lat = (Double) obj4.get("lat");
 				latlng[0] = lat;
 				latlng[1] = lng;
-				System.out.println(TAG + "lat = " + latlng[0]);
-				System.out.println(TAG + "lng = " + latlng[1]);
 			}
 
 		} catch (ParseException e) {
@@ -227,7 +222,6 @@ public class GoogleApis {
 			Object resultObject = parser.parse(jsonString);
 			
 			if (resultObject instanceof JSONObject) {
-				System.out.println(TAG + "is instance of jsonobject");
 				JSONObject obj = (JSONObject) resultObject;
 				JSONArray array = (JSONArray) obj.get("results");
 				JSONObject obj2 = (JSONObject) array.get(0);

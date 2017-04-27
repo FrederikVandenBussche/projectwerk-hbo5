@@ -68,7 +68,8 @@ public class InlogServlet extends HttpServlet {
 		 * 
 		 * 
 		 */
-		//isIngelogd = true;
+		isIngelogd = true;
+		gebruikerId = 1;
 		/*
 		 * 
 		 * 

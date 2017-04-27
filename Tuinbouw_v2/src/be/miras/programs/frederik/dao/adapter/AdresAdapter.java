@@ -60,6 +60,14 @@ public class AdresAdapter implements ICRUD {
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see be.miras.programs.frederik.dao.ICRUD#lees(int)
+	 */
+	/**
+	 * 	@param id de id
+	 *  @return het adres met de geparameteriseerde adres_id
+	 */
 	@Override
 	public Object lees(int id) {
 		Adres adres = new Adres();
@@ -74,6 +82,7 @@ public class AdresAdapter implements ICRUD {
 		int dbGemeenteId = dbAdres.getGemeenteId();
 		DbGemeente dbGemeente = (DbGemeente) dbGemeenteDao.lees(dbGemeenteId);
 		
+		adres.setId(id);
 		adres.setStraat(dbStraat.getNaam());
 		adres.setNummer(dbAdres.getHuisnummer());
 		adres.setBus(dbAdres.getBus());
@@ -131,7 +140,7 @@ public class AdresAdapter implements ICRUD {
 		return maxId;
 	}
 	
-	public Object leesWaarAdresId(int klantAdresId) {
+	public Adres leesWaarKlantAdresId(int klantAdresId) {
 		Adres adres = new Adres();
 		
 		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();

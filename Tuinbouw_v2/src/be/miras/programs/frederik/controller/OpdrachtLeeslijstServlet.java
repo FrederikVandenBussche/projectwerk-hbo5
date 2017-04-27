@@ -70,6 +70,7 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 			Opdracht opdracht = new Opdracht();
 			
 			int klantId = dbOpdracht.getKlantId();
+			int klantAdresId = dbOpdracht.getKlantAdresId();
 			
 			DbKlant dbKlant = (DbKlant) dbKlantDao.lees(klantId);
 			String naam = null;
@@ -91,6 +92,7 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 			
 			opdracht.setId(id);
 			opdracht.setklantId(klantId);
+			opdracht.setKlantAdresId(klantAdresId);
 			opdracht.setKlantNaam(naam);
 			opdracht.setOpdrachtNaam(opdrachtNaam);
 			opdracht.setStartDatum(startDatum);

@@ -76,4 +76,15 @@ public class DbOpdracht {
 		this.einddatum = einddatum;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "DbOpdracht [id=" + id + ", klantId=" + klantId + ", klantAdresId=" + klantAdresId + ", naam=" + naam
+				+ ", latitude=" + latitude + ", longitude=" + longitude + ", startdatum=" + startdatum + ", einddatum="
+				+ einddatum + "]";
+	}
+
+	
 }

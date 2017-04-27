@@ -18,6 +18,7 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbOpdracht opdracht = (DbOpdracht)o;
+						
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(opdracht);
@@ -223,6 +224,34 @@ public class DbOpdrachtDao implements ICRUD {
 
 		return lijst;
 		
+	}
+
+	public int geefKlantAdresId(int id) {
+		int klantAdresId = Integer.MIN_VALUE;
+		List<Integer> lijst = new ArrayList<Integer>();
+		String query = "SELECT klantAdresId FROM DbOpdracht where id = :id"; 
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			transaction.commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()){
+			klantAdresId = lijst.get(0);
+		}
+		return klantAdresId;
 	}
 
 }

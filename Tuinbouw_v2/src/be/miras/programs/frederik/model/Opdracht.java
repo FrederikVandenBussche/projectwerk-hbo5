@@ -7,6 +7,7 @@ public class Opdracht implements Ivergelijk {
 
 	private int id;
 	private int klantId;
+	private int klantAdresId;
 	private String klantNaam;
 	private String opdrachtNaam;
 	private Date startDatum;
@@ -31,6 +32,22 @@ public class Opdracht implements Ivergelijk {
 
 	public void setklantId(int klantId) {
 		this.klantId = klantId;
+	}
+	
+	
+
+	/**
+	 * @return the klantAdresId
+	 */
+	public int getKlantAdresId() {
+		return klantAdresId;
+	}
+
+	/**
+	 * @param klantAdresId the klantAdresId to set
+	 */
+	public void setKlantAdresId(int klantAdresId) {
+		this.klantAdresId = klantAdresId;
 	}
 
 	public String getKlantNaam() {

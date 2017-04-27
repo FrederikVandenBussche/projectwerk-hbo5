@@ -3,7 +3,6 @@ package be.miras.programs.frederik.util;
 import java.util.Date;
 
 public class Datum {
-	private static final String TAG = "util.Datum.java: ";
 
 	public static int converteerMaand(String maandString) {
 		int maand = 0;
@@ -76,7 +75,6 @@ public class Datum {
 						(datumString.subSequence(4, 5).equals("-") &&
 								datumString.substring(7, 8).equals("-")
 								&& datumString.length() == 10)) {
-					System.out.println(TAG + "dendien!");
 					// Er is reeds gevalideerd dat de datum van het type yyyy/mm/dd is
 					dag = Datatype.stringNaarInt(datumString.substring(8, 10));
 					maand = Datatype.stringNaarInt(datumString.substring(5, 7)) - 1;
@@ -97,7 +95,6 @@ public class Datum {
 																					// 31
 			}
 			Date datum = new Date(jaar, maand, dag);
-			System.out.println(TAG + "String: " + datumString + " geconverteerd naar datum: " + datum);
 			return datum;
 		} else {
 			return null;

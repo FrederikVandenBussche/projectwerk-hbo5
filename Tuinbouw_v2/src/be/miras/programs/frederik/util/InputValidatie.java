@@ -21,8 +21,7 @@ import org.hibernate.validator.internal.constraintvalidators.EmailValidator;
  *
  */
 public class InputValidatie {
-	private static final String TAG = "InputValidatie.java ";
-
+	
  	public static String ingevuld(String tekst){
 		String msg = null;
 		if (tekst == null || tekst.trim().isEmpty() || tekst.trim().length() == 0){
@@ -124,7 +123,6 @@ public class InputValidatie {
 	}
 
 	public static String correcteDatum(String datum) {
-		System.out.println(TAG + "De ingevoerde datum: " + datum);
 		String msg = null;
 		if (datum == null || datum.trim().isEmpty() || datum.trim().length() == 0) {
 			msg = " is niet ingevuld.";
@@ -141,9 +139,6 @@ public class InputValidatie {
 					msg = errorMsg;
 				}
 
-				System.out.println(datum.substring(0, 2));
-				System.out.println(datum.substring(3, 5));
-				System.out.println(datum.substring(6, 10));
 				if (Datatype.stringNaarInt(datum.substring(0, 2)) > 31 // meer
 																		// dan
 																		// 31
@@ -177,9 +172,7 @@ public class InputValidatie {
 						|| !Character.isDigit(array[8]) || !Character.isDigit(array[9])) {
 					msg = errorMsg;
 				}
-				System.out.println(datum.substring(0, 4));
-				System.out.println(datum.substring(5, 7));
-				System.out.println(datum.substring(8, 10));
+				
 				if (Datatype.stringNaarInt(datum.substring(8, 10)) > 31 // meer
 																		// dan
 																		// 31

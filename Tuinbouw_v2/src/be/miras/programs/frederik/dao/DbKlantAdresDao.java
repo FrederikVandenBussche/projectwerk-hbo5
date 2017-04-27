@@ -148,7 +148,7 @@ public class DbKlantAdresDao implements ICRUD {
 	public void verwijder(int klantId, int adresId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-		String query = "DELETE FROM DbKlantAdres where id = :id and adresId = :adresId";
+		String query = "DELETE FROM DbKlantAdres where klantId = :id and adresId = :adresId";
 		try {
 			transaction = session.getTransaction();
 			session.beginTransaction();
@@ -167,7 +167,6 @@ public class DbKlantAdresDao implements ICRUD {
 		}
 		
 	}
-
 	
 	public List<Integer> leesAlleAdresId() {
 		List<Integer> lijst = new ArrayList<Integer>();
@@ -220,5 +219,35 @@ public class DbKlantAdresDao implements ICRUD {
 		}
 		
 		return eersteAdresId;
+	}
+
+	public int geefId(int klantId, int adresId){
+		int id = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT id FROM DbKlantAdres where klantId = :klantId AND adresId = :adresId";
+		List<Integer> lijst = new ArrayList<Integer>();
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("klantId", klantId);
+			q.setParameter("adresId", adresId);
+			lijst = q.list();
+			session.getTransaction().commit();
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			id = lijst.get(0);
+		}
+		
+		return id;
 	}
 }

@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbKlantAdresDao;
 import be.miras.programs.frederik.dao.DbKlantDao;
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.adapter.AdresAdapter;
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
@@ -143,9 +144,12 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 				adresMap.put(adresId, adres.toString());
 			}
 
-			double lat = opdracht.getLatitude();
-			double lng = opdracht.getLongitude();
-			Adres adres = GoogleApis.zoekAdres(lat, lng);
+			//double lat = opdracht.getLatitude();
+			//double lng = opdracht.getLongitude();
+			//Adres adres = GoogleApis.zoekAdres(lat, lng);
+			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+			int klantAdresId = dbOpdrachtDao.geefKlantAdresId(id);
+			Adres adres = adresAdapter.leesWaarKlantAdresId(klantAdresId);
 			adresString = adres.toString();
 
 			staticmap = GoogleApis.urlBuilderStaticMap(adres);
@@ -165,6 +169,7 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		OpdrachtDetailData opdrachtDetailData = new OpdrachtDetailData(aanspreeknaam, variabelveld1, variabelveld2,
 				buttonNaam, opdracht, klantNaamMap, adresString, adresMap, materiaalLijst, staticmap, googlemap);
 
+		
 		session.setAttribute("opdrachtDetailData", opdrachtDetailData);
 		request.setAttribute("id", id);
 

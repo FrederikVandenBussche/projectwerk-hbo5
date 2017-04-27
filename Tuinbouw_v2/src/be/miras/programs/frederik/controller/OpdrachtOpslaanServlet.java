@@ -37,7 +37,7 @@ import be.miras.programs.frederik.util.Datatype;
 @WebServlet("/OpdrachtOpslaanServlet")
 public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
-	private String TAG = "OpdrachtOpslaanServlet: ";
+	//private String TAG = "OpdrachtOpslaanServlet: ";
 	private int id;
 
 
@@ -71,7 +71,8 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 		RequestDispatcher view = null;
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
-			String adresString = request.getParameter("adressen").trim();
+						
+			String adresKeuze = request.getParameter("adressen").trim();
 
 			HttpSession session = request.getSession();
 			OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
@@ -89,29 +90,24 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 
 			// hashmap met klantnamen
 			Map<Integer, String> klantNaamMap = opdrachtDetailData.getKlantNaamMap();
-			int klantId = Integer.MIN_VALUE;
+			int teWijzigenKlantId = Integer.MIN_VALUE;
 			for (int i : klantNaamMap.keySet()) {
 				if (klantNaamMap.get(i).equals(klantNaam)) {
-					klantId = i;
+					teWijzigenKlantId = i;
 				}
 			}
 
 			// hashmap met adressen
 			Map<Integer, String> adresMap = opdrachtDetailData.getAdresMap();
-
-			System.out.println(TAG + "De grootte van de adresMap bij deze klant: " + adresMap.size());
-
-			int klantAdresId = Integer.MIN_VALUE;
+			int teWijzigenAdresId = Integer.MIN_VALUE;
 			for (int i : adresMap.keySet()) {
-				System.out.println(TAG + "De adresMap: " + adresMap.get(i));
-				if (adresMap.get(i).equals(adresString)) {
-					klantAdresId = i;
+				if (adresMap.get(i).equals(adresKeuze)) {
+					teWijzigenAdresId = i;
 				}
 			}
-			System.out.println(TAG + "KlantIdAdres: " + klantAdresId);
-
+			
 			opdracht.setId(this.id);
-			opdracht.setklantId(klantId);
+			opdracht.setklantId(teWijzigenKlantId);
 			opdracht.setKlantNaam(klantNaam);
 			if (opdrachtNaam == null || opdrachtNaam.isEmpty()) {
 				opdrachtNaam = "onbekend";
@@ -125,15 +121,16 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			}
 
 			if (this.id < 0) {
-				// een nieuwe opdracht toevoegen
+				/*
+				 * een nieuwe opdracht toevoegen
+				 */
 				System.out.println("Een nieuwe opdracht toevoegen");
 
 				DbKlantAdresDao dkad = new DbKlantAdresDao();
-				DbKlantAdres dbKlantAdres = (DbKlantAdres) dkad.lees(klantId);
+				DbKlantAdres dbKlantAdres = (DbKlantAdres) dkad.lees(teWijzigenKlantId);
 
-				klantAdresId = dbKlantAdres.getId();
-				System.out.println(TAG + "de klantId = " + klantId);
-				System.out.println(TAG + "het klantAdresId = " + klantAdresId);
+				int klantAdresId = dbKlantAdres.getId();
+				
 				if (klantAdresId <= 0) {
 					errorMsg = "Kan geen opdracht toevoegen aan deze klant " + " omdat er nog geen adres bekent is. <br />"
 							+ "Oplossing : voeg een adres toe aan deze klant en probeer opnieuw";
@@ -142,22 +139,22 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 					DbOpdracht dbOpdracht = new DbOpdracht();
 					AdresAdapter adresAdapter = new AdresAdapter();
 
-					dbOpdracht.setKlantId(klantId);
+					dbOpdracht.setKlantId(teWijzigenKlantId);
 					dbOpdracht.setKlantAdresId(klantAdresId);
 					dbOpdracht.setNaam(opdrachtNaam);
 					dbOpdracht.setStartdatum(beginDatum);
 					dbOpdracht.setEinddatum(eindDatum);
 
-					Adres adres = (Adres) adresAdapter.leesWaarAdresId(klantAdresId);
+					Adres adres = (Adres) adresAdapter.leesWaarKlantAdresId(klantAdresId);
 
 					// aanmaak van adresMap<adresId, adresString>
-					List<Integer> adresIdLijst = dbKlantAdresDao.leesLijst(klantId);
+					List<Integer> adresIdLijst = dbKlantAdresDao.leesLijst(teWijzigenKlantId);
 
 					Iterator<Integer> adresIdIter = adresIdLijst.iterator();
 					while (adresIdIter.hasNext()) {
-						int adresId = adresIdIter.next();
-						Adres a = (Adres) adresAdapter.lees(adresId);
-						adresMap.put(adresId, a.toString());
+						int adresIdIt = adresIdIter.next();
+						Adres a = (Adres) adresAdapter.lees(adresIdIt);
+						adresMap.put(adresIdIt, a.toString());
 					}
 
 					opdrachtDetailData.setAdresMap(adresMap);
@@ -190,7 +187,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 					// de nieuwe opdracht toevoegen aan de opdrachtDetailData
 					// die gebruikt wordt om te presenteren in OpdrachtDetail.jsp
 					opdrachtDetailData.setAanspreeknaam("voor " + klantNaam);
-					opdrachtDetailData.setAdresString(adresString);
+					opdrachtDetailData.setAdresString(adres.toString());
 					opdrachtDetailData.setButtonNaam("Wijzigen opslaan");
 					opdrachtDetailData.setVariabelveld1(". Opdrachtgever wijzigen: ");
 					opdrachtDetailData.setVariabelveld2(", wijzigen : ");
@@ -203,52 +200,89 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			} else {
 				// het betreft een bestaande opdracht
 				// indien er iets gewijzigd werd, de wijzigingen opslaan
-				System.out.println("Een bestaande opdracht wijzigen");
+				System.out.println(TAG + "Een bestaande opdracht wijzigen");
 
 				boolean isVerschillend = false;
 				double latitude = 0;
 				double longitude = 0;
 				AdresAdapter adresAdapter = new AdresAdapter();
 
+				// Haal de dbOpdracht op die te wijzigen is.
 				DbOpdracht dbOpdrachtTeWijzigen = (DbOpdracht) dbOpdrachtDao.lees(this.id);
 
-				System.out.println(TAG + "de id van de opdracht = " + this.id);
-
-				System.out.println(TAG + "klantAdresId = " + dbOpdrachtTeWijzigen.getKlantAdresId());
-
-				if (dbOpdrachtTeWijzigen.getKlantId() != klantId) {
-					dbOpdrachtTeWijzigen.setKlantId(klantId);
+				/*
+				 * indien de klant gewijzigd werd
+				 */
+				if (teWijzigenKlantId > 0 && dbOpdrachtTeWijzigen.getKlantId() != teWijzigenKlantId) {
+					
+					dbOpdrachtTeWijzigen.setKlantId(teWijzigenKlantId);
 
 					// opnieuw aanmaken van adresMap<adresId, adresString>
 					adresMap.clear();
+					
+					List<Integer> adresIdLijst = dbKlantAdresDao.leesLijst(teWijzigenKlantId);
 
-					List<Integer> adresIdLijst = dbKlantAdresDao.leesLijst(klantId);
-
+					Adres eersteAdresUitAdreslijst = null;
+					
 					Iterator<Integer> adresIdIter = adresIdLijst.iterator();
 					while (adresIdIter.hasNext()) {
-						int adresId = adresIdIter.next();
-						Adres a = (Adres) adresAdapter.lees(adresId);
-						adresMap.put(adresId, a.toString());
+						int adresIdIt = adresIdIter.next();
+						Adres a = (Adres) adresAdapter.lees(adresIdIt);
+						
+						adresMap.put(adresIdIt, a.toString());
+						
+						// bij het wijzigen van een klant wordt initieel het
+						// eerste adres als opdrachtAdres gekozen.
+						if (eersteAdresUitAdreslijst == null){
+							eersteAdresUitAdreslijst = a;
+						}
 					}
-
 					opdrachtDetailData.setAdresMap(adresMap);
-
+					
+					// bij het wijzigen van een klant wordt initieel het
+					// eerste adres uit de lijst als opdrachtAdres gekozen.
+					opdrachtDetailData.setAdresString(eersteAdresUitAdreslijst.toString());
+					
+					//de opdracht.klantAdresId aanpassen naar de KlantAdres_Id met
+					// de juiste klant_id en het juiste adres_id
+					int klantAdresId = dbKlantAdresDao.geefId(teWijzigenKlantId, eersteAdresUitAdreslijst.getId());
+					opdrachtDetailData.getOpdracht().setKlantAdresId(klantAdresId);
+					dbOpdrachtTeWijzigen.setKlantAdresId(klantAdresId);
+					//latlng aanpassen
+					double[] latlng = GoogleApis.zoeklatlng(eersteAdresUitAdreslijst);
+					latitude = latlng[0];
+					longitude = latlng[1];
+					dbOpdrachtTeWijzigen.setLatitude(latitude);
+					dbOpdrachtTeWijzigen.setLongitude(longitude);
+					
+					//googlemaps - staticmap aanpassen
+					String staticmap = GoogleApis.urlBuilderStaticMap(eersteAdresUitAdreslijst);
+					opdrachtDetailData.setStaticmap(staticmap);
+					 
 					opdrachtDetailData.setAanspreeknaam(klantNaam);
-
+					
 					isVerschillend = true;
 				}
-
+				
+				/*
+				 * indien het adres gewijzigd werd
+				 */
+				int klantId = opdrachtDetailData.getOpdracht().getKlantId();
+				// ik heb het adresId, ik heb het klantId
+				int klantAdresId = dbKlantAdresDao.geefId(klantId, teWijzigenAdresId);
 				if (dbOpdrachtTeWijzigen.getKlantAdresId() != klantAdresId && klantAdresId >= 0) {
 					if (klantAdresId < 0) {
 						DbKlantAdresDao dkad = new DbKlantAdresDao();
-						DbKlantAdres dbKlantAdres = (DbKlantAdres) dkad.lees(klantId);
+						DbKlantAdres dbKlantAdres = (DbKlantAdres) dkad.lees(teWijzigenKlantId);
 						klantAdresId = dbKlantAdres.getAdresId();
 					}
-					Adres adres = (Adres) adresAdapter.lees(klantAdresId);
-
-					opdrachtDetailData.setAdresString(adresString);
+					Adres adres = (Adres) adresAdapter.lees(teWijzigenAdresId);
+										
+					opdrachtDetailData.setAdresString(adresKeuze);
+					opdrachtDetailData.getOpdracht().setKlantAdresId(klantAdresId);
 					
-					System.out.println(TAG + "adres: " + adres.toString());
+					dbOpdrachtTeWijzigen.setKlantAdresId(klantAdresId);
+					
 					String staticmap = GoogleApis.urlBuilderStaticMap(adres);
 					String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 					
@@ -259,32 +293,50 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 					latitude = latlng[0];
 					longitude = latlng[1];
 
+					opdrachtDetailData.getOpdracht().setLongitude(longitude);
+					opdrachtDetailData.getOpdracht().setLatitude(latitude);
+					
 					dbOpdrachtTeWijzigen.setLongitude(longitude);
 					dbOpdrachtTeWijzigen.setLatitude(latitude);
-
+					
 					isVerschillend = true;
 				}
-				System.out.println(TAG + "opdrachtNaam: :::::::::::::" + dbOpdrachtTeWijzigen.getNaam());
+				
 				if (!dbOpdrachtTeWijzigen.getNaam().equals(opdrachtNaam)) {
 					dbOpdrachtTeWijzigen.setNaam(opdrachtNaam);
+					
 					isVerschillend = true;
 				}
 
 				if (beginDatum != null && !beginDatum.equals(dbOpdrachtTeWijzigen.getStartdatum())) {
 					dbOpdrachtTeWijzigen.setStartdatum(beginDatum);
+					
 					isVerschillend = true;
+				} else {
+					beginDatum = dbOpdrachtTeWijzigen.getStartdatum();
 				}
 				if (eindDatum != null && !eindDatum.equals(dbOpdrachtTeWijzigen.getEinddatum())) {
 					dbOpdrachtTeWijzigen.setEinddatum(eindDatum);
+					
 					isVerschillend = true;
+				} else {
+					eindDatum = dbOpdrachtTeWijzigen.getEinddatum();
 				}
+				
+				/*
+				 * indien er iets gewijzigd werd in de opdrachtgegevens
+				 */
 				if (isVerschillend) {
+					
+					// wijzig databank
 					dbOpdrachtDao.wijzig(dbOpdrachtTeWijzigen);
+					
+					// wijzig de opdracht in de session
 					ListIterator<Opdracht> it = opdrachtLijst.listIterator();
 					while (it.hasNext()) {
 						Opdracht o = it.next();
 						if (o.getId() == this.id) {
-							o.setklantId(klantId);
+							o.setklantId(teWijzigenKlantId);
 							o.setKlantNaam(klantNaam);
 							o.setOpdrachtNaam(opdrachtNaam);
 							o.setStartDatum(beginDatum);
@@ -295,21 +347,19 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 						}
 					}
 				}
-
 			}
 
+			// enkel gebruikt indien klant geen adres heeft
 			if (errorMsg == null || errorMsg.isEmpty()) {
 
 				session.setAttribute("opdrachtDetailData", opdrachtDetailData);
 
-				view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
-				
+				view = request.getRequestDispatcher("/OpdrachtDetail.jsp");				
 			} else {
 
 				request.setAttribute("msg", errorMsg);
 
-				view = request.getRequestDispatcher("/ErrorPage.jsp");
-				
+				view = request.getRequestDispatcher("/ErrorPage.jsp");				
 			}
 			
 		} else {
@@ -318,12 +368,6 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 		}
 		
 		view.forward(request, response);
-		
-		
-
-
-		
-
 	}
 
 	/**
@@ -338,6 +382,9 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 		view.forward(request, response);
 	}
 
+	/* (non-Javadoc)
+	 * @see be.miras.programs.frederik.controller.IinputValidatie#inputValidatie(java.lang.String[])
+	 */
 	@Override
 	public String inputValidatie(String[] teValideren) {
 		String klantNaam = teValideren[0];
@@ -428,10 +475,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 				}
 			}
 			// mogelijkheid 4 ==> zie if ( id < 0)
-			
-			
-			
-			
+
 		}
 		
 		return inputValidatieErrorMsg;

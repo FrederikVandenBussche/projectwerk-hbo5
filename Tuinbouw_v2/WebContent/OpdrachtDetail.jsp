@@ -72,8 +72,8 @@
 			<fieldset>
 				<legend id="opdrachtAanspreekNaam">Opdracht ${opdrachtDetailData.aanspreeknaam } </legend>
 				<form action="opdrachtOpslaan" method="post">
-					In opdracht van : ${opdrachtDetailData.opdracht.klantNaam } 
 					<div class="inlogError">${inputValidatieErrorMsg }</div>
+					In opdracht van : ${opdrachtDetailData.opdracht.klantNaam } 
 					${opdrachtDetailData.variabelveld1 } <select name="klanten">
 						<option value="${opdrachtDetailData.opdracht.klantNaam }" selected>${opdrachtDetailData.opdracht.klantNaam }</option>
 						<option></option>
@@ -107,8 +107,8 @@
 					</div>
 					Kies een ander adres uit de adreslijst van
 					${opdrachtDetailData.opdracht.klantNaam } <br /> <input
-						type="submit" name="submit" value="Adreslijst herladen" /> <select
-						name="adressen">
+						type="submit" name="submit" value="Adreslijst herladen" /> 
+						<select	name="adressen">
 						<option value="" selected>Wijzig adres</option>
 						<c:forEach items="${opdrachtDetailData.adresMap.values() }"
 							var="adresString">
