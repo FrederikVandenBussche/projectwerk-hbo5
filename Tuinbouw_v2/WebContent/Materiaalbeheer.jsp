@@ -72,12 +72,16 @@
 				<legend>Nieuw materiaal/wijzig materiaal</legend>
 					<form action="materiaalOpslaan" method="post" >
 						<input type="hidden" name="id" value="${materiaal.id }" />
-						Soort: <input type="text" name="soort" value="${materiaal.soort }" />
-						Eenheidsmaat: <input type="text" name="eenheidsmaat" value="${materiaal.eenheidsmaat }" />
+						<label for = "soort"> Soort: </label> 
+						<input type="text" name="soort" value="${materiaal.soort }" />
+						<label for = "eenheidsmaat"> Eenheidsmaat: </label>
+						<input type="text" name="eenheidsmaat" value="${materiaal.eenheidsmaat }" />
 						<br />
-						Naam: <input type="text" name="naam" value="${materiaal.naam }" />
-						Eenheidsprijs: <input type="number" step="0.01" pattern="[0-9]+([\.,][0-9]+)?" name="eenheidsprijs" value="${materiaal.eenheidsprijs }" />
-						
+						<label for = "naam"> Naam: </label>
+						<input type="text" name="naam" value="${materiaal.naam }" />
+						<label for = "eenheidsprijs"> Eenheidsprijs: </label>
+						<input type="number" step="0.01" pattern="[0-9]+([\.,][0-9]+)?" 
+							name="eenheidsprijs" value="${materiaal.eenheidsprijs }" />
 						<input type="submit" name="submit" value="opslaan" />
 						<br />
 						

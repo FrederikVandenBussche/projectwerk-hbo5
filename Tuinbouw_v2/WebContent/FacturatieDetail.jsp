@@ -74,7 +74,7 @@
 					<legend>Klantgegevens</legend>
 					Klantnaam: ${factuur.klantNaam }.
 					<br />
-					Verzend de factuur naar het adres: 
+					<label for = "adres"> Verzend de factuur naar het adres: </label> 
 					<select name="adres">
 						<c:forEach items="${adresMap }" var="adres">
 							<option value="${adres.key }">

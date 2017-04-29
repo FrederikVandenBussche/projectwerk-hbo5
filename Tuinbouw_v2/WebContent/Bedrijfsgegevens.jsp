@@ -72,20 +72,22 @@
 			<form action="bedrijfsgegevensWijzigen" method="post">
 				<fieldset>
 					<legend>Gegevens</legend>
-					naam:
+					<label for = "naam"> naam: </label>
 					<input type="text" name="naam" value="${werkgever.naam }"/>
-					voornaam:
+					<label for = "voornaam"> voornaam: </label>
 					<input type="text" name="voornaam" value="${werkgever.voornaam }"/>
 					<br />
-					Geboortedatum
-					<fmt:formatDate value="${werkgever.geboortedatum }" pattern="dd/MM/yyyy" />
-					wijzigen: 
+					<label for = "nieuweGeboortedatum">
+						Geboortedatum
+						<fmt:formatDate value="${werkgever.geboortedatum }" pattern="dd/MM/yyyy" />
+						wijzigen:
+					</label> 
 					<input type="date" name="nieuweGeboortedatum" >
 					<br>
-					email:
+					<label for = "email" > email: </label>
 					<input type="email" name="email" value="${werkgever.email }" />
 					<br />
-					gebruikersnaam:
+					<label for = "gebruikersnaam"> gebruikersnaam: </label>
 					<input type="text" name="gebruikersnaam" value="${werkgever.gebruikersnaam }"/>
 					
 					<br />
@@ -95,13 +97,13 @@
 			<form action="bedrijfWachtwoordWijzigen" method="post">
 				<fieldset>
 					<legend>Wijzig wachtwoord</legend>
-					Oud wachtwoord: 
+					<label for = "oud"> Oud wachtwoord: </label> 
 					<input type="password" name="oud" />
 					<br />
-					Nieuw wachtwoord:
+					<label for = "nieuw1"> Nieuw wachtwoord: </label>
 					<input type="password" name="nieuw1" />
 					<br />
-					Nieuw wachtwoord:
+					<label for = "nieuw2"> Nieuw wachtwoord: </label>
 					<input type="password" name="nieuw2" />
 					<br />
 					<input type="submit" name="submit" value="Wijzig wachtwoord" />
@@ -141,12 +143,17 @@
 					<div>
 						<form action="bedrijfsGegevensAdresOpslaan" method="post">
 							<div>
-								straat: <input type="text" name="straat" />
-								nr: <input type="number" name="nr" size="5" />
-								bus: <input type="text" name="bus" size="5" />
+								<label for = "straat" > straat: </label>
+								<input type="text" name="straat" />
+								<label for = "nr"> nr: </label>
+								<input type="number" name="nr" size="5" />
+								<label for "bus"> bus: </label>
+								<input type="text" name="bus" size="5" />
 								<br />
-								postcode: <input type="number" name="postcode" size="5" />
-								plaats: <input type="text" name="plaats" />	
+								<label for = "postcode"> postcode: </label>
+								<input type="number" name="postcode" size="5" />
+								<label for = "plaats"> plaats: </label>
+								<input type="text" name="plaats" />	
 							</div>
 							<input type="hidden" name="bedrijfsnaam" value="${bedrijfsnaam }" />
 							<br />

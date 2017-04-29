@@ -80,10 +80,10 @@
 							Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
 						</legend>
 						<br />
-						naam: 
+						<label for = "taaknaam">naam: </label> 
 						<input type="text"  id="taaknaam" name="taaknaam" value ="${taak.taakNaam }" />
 						<br />
-						opmerking: 
+						<label for = "opmerking">opmerking: </label>
 						<br />
 						<textarea rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
 						<br />
@@ -95,7 +95,7 @@
 				<fieldset>
 					<legend>Planning</legend>
 						<form action="taakPlanningToevoegen" method="post">
-							Voeg een nieuwe werknemer toe : 
+							<label for = "werknemer">Voeg een nieuwe werknemer toe : </label>
 							<select name = "werknemer">
 								<c:forEach items="${werknemerMap }" var="werknemer">
 									<option value="${werknemer.key }">
@@ -104,7 +104,7 @@
 								</c:forEach>
 							</select>
 							<br />
-							Plan een nieuwe datum in: (dd/mm/yyyy)
+							<label for = "datum">Plan een nieuwe datum in: (dd/mm/yyyy) </label>
 							<input type="date" name="datum" />
 							<input type="submit" name="submit" value="Voeg toe" />	
 						</form>

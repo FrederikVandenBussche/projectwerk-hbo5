@@ -154,10 +154,6 @@ public class GoogleApis {
 			connection.setRequestMethod("POST");
 			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
-			// connection.setRequestProperty("Content-Length",
-			// Integer.toString(urlParameters.getBytes().length));
-			// connection.setRequestProperty("Content-Language", "en-US");
-
 			connection.setUseCaches(false);
 			connection.setDoOutput(true);
 
@@ -197,15 +193,26 @@ public class GoogleApis {
 
 			if (resultObject instanceof JSONObject) {
 				JSONObject obj = (JSONObject) resultObject;
-				JSONArray array = (JSONArray) obj.get("results");
-				JSONObject obj2 = (JSONObject) array.get(0);
-				JSONObject obj3 = (JSONObject) obj2.get("geometry");
-				JSONObject obj4 = (JSONObject) obj3.get("location");
-
-				Double lng = (Double) obj4.get("lng");
-				Double lat = (Double) obj4.get("lat");
-				latlng[0] = lat;
-				latlng[1] = lng;
+				if (obj.containsKey("results")){
+					JSONArray array = (JSONArray) obj.get("results");
+					if (array.size() > 0){
+						JSONObject obj2 = (JSONObject) array.get(0);
+						if (obj2.containsKey("geometry")){
+							JSONObject obj3 = (JSONObject) obj2.get("geometry");
+							if (obj3.containsKey("location")){
+								JSONObject obj4 = (JSONObject) obj3.get("location");
+								if (obj4.containsKey("lng") && obj4.containsKey("lat")){
+									
+									Double lng = (Double) obj4.get("lng");
+									Double lat = (Double) obj4.get("lat");
+									
+									latlng[0] = lat;
+									latlng[1] = lng;	
+								}	
+							}
+						}
+					}
+				}
 			}
 
 		} catch (ParseException e) {
@@ -223,24 +230,30 @@ public class GoogleApis {
 			
 			if (resultObject instanceof JSONObject) {
 				JSONObject obj = (JSONObject) resultObject;
-				JSONArray array = (JSONArray) obj.get("results");
-				JSONObject obj2 = (JSONObject) array.get(0);
-				JSONArray array2 = (JSONArray) obj2.get("address_components");
-				JSONObject street_number = (JSONObject) array2.get(0);
-				JSONObject route = (JSONObject) array2.get(1);
-				JSONObject locality = (JSONObject) array2.get(2);
-				JSONObject postal_code = (JSONObject) array2.get(6);
-				String key = "long_name";
-				String straat = (String) route.get(key);
-				String huisnummer = (String) street_number.get(key);
-				String postcode = (String) postal_code.get(key);
-				String plaats = (String) locality.get(key);
-
-				adres.setStraat(straat);
-				adres.setNummer(Datatype.stringNaarInt(huisnummer));
-				adres.setPostcode(Datatype.stringNaarInt(postcode));
-				adres.setPlaats(plaats);
-
+				if (obj.containsKey("results")){
+					JSONArray array = (JSONArray) obj.get("results");
+					if (array.size() > 0){
+						JSONObject obj2 = (JSONObject) array.get(0);
+						if (obj2.containsKey("address_components")){
+							JSONArray array2 = (JSONArray) obj2.get("address_components");
+							if (array2.size() > 5){
+								JSONObject street_number = (JSONObject) array2.get(0);
+								JSONObject route = (JSONObject) array2.get(1);
+								JSONObject locality = (JSONObject) array2.get(2);
+								JSONObject postal_code = (JSONObject) array2.get(6);
+								String key = "long_name";
+								String straat = (String) route.get(key);
+								String huisnummer = (String) street_number.get(key);
+								String postcode = (String) postal_code.get(key);
+								String plaats = (String) locality.get(key);
+								adres.setStraat(straat);
+								adres.setNummer(Datatype.stringNaarInt(huisnummer));
+								adres.setPostcode(Datatype.stringNaarInt(postcode));
+								adres.setPlaats(plaats);
+							}
+						}
+					}
+				}
 			}
 
 		} catch (ParseException e) {

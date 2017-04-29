@@ -68,32 +68,42 @@
 			</div>
 		</div>
 		<div id="content">
-			<div id="personeelAanspreekNaam">Gegevens van ${aanspreeknaam}: </div>
+			<div id="personeelAanspreekNaam">Gegevens van ${aanspreeknaam}:
+			</div>
 			<div class="inlogError">${inputValidatieErrorMsg }</div>
-			
+
 			<form action="personeelslidOpslaan" method="post">
 				<input type="hidden" name="id" value="${id}" />
 				<fieldset>
 					<legend>Gegevens</legend>
-					Voornaam: <input type="text" name="voornaam"
-						value="${personeelslid.voornaam }" /> Naam: <input type="text"
-						name="naam" value="${personeelslid.naam }" /> <br /> Loon: <input
-						type="number" name="loon" value="${personeelslid.loon }" />
-					email: <input type="email" name="email"
-						value="${personeelslid.email }" /> <br /> Geboortedatum
-					<fmt:formatDate value="${personeelslid.geboortedatum }"
-						pattern="dd/MM/yyyy" />
-					wijzigen: <input type="date" name="nieuweGeboortedatum"> <br />
-					Aanwervingsdatum
-					<fmt:formatDate value="${personeelslid.aanwervingsdatum }"
-						pattern="dd/MM/yyyy" />
-					wijzigen: <input type="date" name="nieuweAanwervingsdatum">
+					<label for="voornaam">Voornaam: </label> 
+					<input type="text" name="voornaam" value="${personeelslid.voornaam }" />
+					<label for = "naam"> Naam: </label>
+					<input type="text" name="naam" value="${personeelslid.naam }" />
+					<br />
+					<label for = "loon"> Loon: </label>
+					<input type="number" name="loon" value="${personeelslid.loon }" />
+					<label for = "email"> email: </label>
+					<input type="email" name="email" value="${personeelslid.email }" />
+					<br />
+					<label for = "nieuweGeboortedatum">
+						Geboortedatum
+						<fmt:formatDate value="${personeelslid.geboortedatum }" pattern="dd/MM/yyyy" />
+						wijzigen: 
+					</label>
+					<input type="date" name="nieuweGeboortedatum">
+					<br />
+					<label for = "nieuweAanwervingsdatum">
+						Aanwervingsdatum
+						<fmt:formatDate value="${personeelslid.aanwervingsdatum }" pattern="dd/MM/yyyy" />
+						wijzigen: 
+					</label>
+					<input type="date" name="nieuweAanwervingsdatum">
 					<br />
 				</fieldset>
 
-				<input type="hidden" name="geboortedatum"
-					value="${personeelslid.geboortedatum }" /> <input type="hidden"
-					name="aanwervingsdatum" value="${personeelslid.aanwervingsdatum }" />
+				<input type="hidden" name="geboortedatum" value="${personeelslid.geboortedatum }" />
+				<input type="hidden" name="aanwervingsdatum" value="${personeelslid.aanwervingsdatum }" />
 				<input type="submit" name="opslaan_btn" value="${buttonNaam }" />
 			</form>
 
@@ -127,17 +137,24 @@
 						<div>
 							<form action="personeelAdresOpslaan" method="post">
 								<div>
-									straat: <input type="text" name="straat" /> nr: <input
-										type="number" name="nr" size="5" /> bus: <input type="text"
-										name="bus" size="5" /> <br /> postcode: <input type="number"
-										name="postcode" size="5" /> plaats: <input type="text"
-										name="plaats" />
+									<label for = "straat"> straat: </label>
+									<input type="text" name="straat" />
+									<label for = "nr"> nr: </label>
+									<input type="number" name="nr" size="5" /> 
+									<label for = "bus"> bus: </label>
+									<input type="text" name="bus" size="5" />
+									<br /> 
+									<label for = "postode"> postcode: </label>
+									<input type="number" name="postcode" size="5" />
+									<label for = "plaats"> plaats: </label>
+									<input type="text" name="plaats" />
 								</div>
 								<input type="hidden" name="buttonNaam" value="${buttonNaam }" />
-								<input type="hidden" name="aanspreeknaam"
-									value="${aanspreeknaam}" /> <input type="hidden"
-									name="personeel_id" value="${id}" /> <br /> <br /> <input
-									type="submit" name="submit" value="Voeg nieuw adres toe" /> <br />
+								<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" /> 
+								<input type="hidden" name="personeel_id" value="${id}" /> 
+								<br /> 
+								<br /> 
+								<input type="submit" name="submit" value="Voeg nieuw adres toe" /> <br />
 								<br /> <br /> <br />
 							</form>
 
@@ -147,14 +164,11 @@
 			</fieldset>
 			<div id="personeelVerwijderen">
 				<form action="personeelslidVerwijderen" method="post">
-
-					<input type="hidden" name="id" value="${id}" /> <input
-						type="submit" name="verwijder_btn"
-						value="Verwijder dit personeelslid" />
+					<input type="hidden" name="id" value="${id}" /> 
+					<input type="submit" name="verwijder_btn" value="Verwijder dit personeelslid" />
 				</form>
 			</div>
 		</div>
 	</div>
-
 </body>
 </html>

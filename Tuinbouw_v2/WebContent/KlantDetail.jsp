@@ -80,12 +80,11 @@
 				<input type="hidden" name="variabelVeldnaam1" value="${variabelVeldnaam1 }" />
 				<fieldset>
 					<legend>Gegevens</legend>
-					${variabelVeldnaam1 } :
+					<label for = "variabelVeld1"> ${variabelVeldnaam1 } : </label>
 					<input type="text" name="variabelVeld1" value="${variabelVeld1 }" />
-					${variabelVeldnaam2 } :
+					<label for = "variabelVeld2"> ${variabelVeldnaam2 } : </label>
 					<input type="text" name="variabelVeld2" value="${variabelVeld2 }" />
 					<br />
-					
 					<input type="submit" name="submit" value="opslaan" />
 				</fieldset>
 			</form>
@@ -93,8 +92,7 @@
 			<fieldset id="adressen">
 				<legend>Adressen</legend>
 				<div>
-				
-				<div class="adresLijst">
+					<div class="adresLijst">
 						<c:forEach items="${klant.adreslijst}" var="element">
 							<div>
 								<form action="klantAdresVerwijderen" method="post">
@@ -129,12 +127,17 @@
 						<div>
 							<form action="klantAdresOpslaan" method="post">
 								<div>
-									straat: <input type="text" name="straat" />
-									nr: <input type="number" name="nr" size="5" />
-									bus: <input type="text" name="bus" size="5" />
+									<label for = "straat"> straat: </label> 
+									<input type="text" name="straat" />
+									<label for = "nr"> nr: </label> 
+									<input type="number" name="nr" size="5" />
+									<label for = "bus"> bus: </label>
+									<input type="text" name="bus" size="5" />
 									<br />
-									postcode: <input type="number" name="postcode" size="5" />
-									plaats: <input type="text" name="plaats" />	
+									<label for = "postcode"> postcode: </label> 
+									<input type="number" name="postcode" size="5" />
+									<label for = "plaats"> plaats: </label> 
+									<input type="text" name="plaats" />	
 								</div>
 								<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" />
 								<input type="hidden" name="klant_id" value="${id}" />
@@ -157,7 +160,7 @@
 				<fieldset id="exportatie">
 					<legend>Exporteer alle prestaties bij deze klant</legend>
 					<form action="exporteerPrestaties" method="get">
-						Exporteer opdracht: 
+						<label for = "opdracht"> Exporteer opdracht: </label>
 						<select name = "opdracht">
 							<option value="0">Alle opdrachten</option>
 							<c:forEach items="${opdrachtMap }" var="element">
@@ -167,18 +170,15 @@
 							</c:forEach>
 						</select>
 						<br />
-						Begindatum:
+						<label for = "begindatum0"> Begindatum: </label>
 						<input type="date" name="begindatum" />
 						<br />
-						Einddatum: 
+						<label for = "einddatum"> Einddatum: </label>
 						<input type="date" name="einddatum"/>
 						<input type="submit" name="submit" value="Exporteer" />
 					</form>
 				</fieldset>
-			
-			
 		</div>
 	</div>
-
 </body>
 </html>
