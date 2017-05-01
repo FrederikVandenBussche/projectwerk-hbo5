@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -23,13 +24,14 @@ import be.miras.programs.frederik.util.GoogleApis;
 
 
 public class GenereerXls {
+	private static final Logger LOGGER = Logger.getLogger(GenereerXls.class);
 
+	
 	public void genereer(String dest, ExcelData excelData) {
 		
 		File file = new File(dest);
 		file.getParentFile().mkdirs();
-		createXls(dest, excelData);
-		
+		createXls(dest, excelData);		
 	}
 
 	private void createXls(String dest, ExcelData excelData) {
@@ -42,9 +44,7 @@ public class GenereerXls {
 		vetFont.setBold(true);
 		HSSFCellStyle vetStyle = workbook.createCellStyle();
 		vetStyle.setFont(vetFont);
-		
-		
-		
+			
 		HSSFRow rowhead = sheet.createRow(0);
 		HSSFCell cell = rowhead.createCell(0);
 		cell.setCellValue(excelData.getKlantNaam());
@@ -142,8 +142,7 @@ public class GenereerXls {
 				planningTitelsRij.createCell(2).setCellValue("datum");
 				planningTitelsRij.createCell(3).setCellValue("beginuur");
 				planningTitelsRij.createCell(4).setCellValue("einduur");
-				planningTitelsRij.createCell(5).setCellValue("aantal uren");
-				
+				planningTitelsRij.createCell(5).setCellValue("aantal uren");	
 				
 				rijenteller ++;
 				
@@ -167,38 +166,22 @@ public class GenereerXls {
 					}
 					planningDataRij.createCell(5).setCellValue(planning.getAantalUren());
 					
-					
-					rijenteller ++;
-					
-					
-					
-				}
-				
-				
-				
-							
-			}
-			
-			
-			
+					rijenteller ++;		
+				}				
+			}	
 		}
-		
-		
-		
 		HSSFRow row = sheet.createRow(1);
 	
-		
 		FileOutputStream fileOut;
 		try {
 			fileOut = new FileOutputStream(dest);
 			workbook.write(fileOut);
 		    fileOut.close();
 		} catch (IOException e) {
-			
 			e.printStackTrace();
+			LOGGER.error("IOException: ", e);
 		}
-       
-		
 	}
 
+	
 }

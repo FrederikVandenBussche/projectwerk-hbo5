@@ -3,6 +3,8 @@ package be.miras.programs.frederik.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,7 +12,9 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbKlantAdres;
 
 public class DbKlantAdresDao implements ICRUD {
-	private String TAG = "DbKlantAdresDao: ";
+	//private String TAG = "DbKlantAdresDao: ";
+	
+	private static final Logger LOGGER = Logger.getLogger(DbKlantAdresDao.class);
 	
 	@Override
 	public boolean voegToe(Object o) {
@@ -23,12 +27,13 @@ public class DbKlantAdresDao implements ICRUD {
 			session.beginTransaction();
 			session.save(klantAdres);
 			session.getTransaction().commit();
-		} catch (Exception e){
+		} catch (HibernateException e){
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}	
@@ -49,12 +54,12 @@ public class DbKlantAdresDao implements ICRUD {
 			q.setParameter("id", klantId);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -83,12 +88,13 @@ public class DbKlantAdresDao implements ICRUD {
 			session.beginTransaction();
 			session.saveOrUpdate(klantAdres);
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -108,12 +114,13 @@ public class DbKlantAdresDao implements ICRUD {
 			q.setParameter("id", klantId);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -133,11 +140,12 @@ public class DbKlantAdresDao implements ICRUD {
 			q.setParameter("id", klantId);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -157,11 +165,12 @@ public class DbKlantAdresDao implements ICRUD {
 			q.setParameter("adresId", adresId);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -181,11 +190,12 @@ public class DbKlantAdresDao implements ICRUD {
 			
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -205,12 +215,12 @@ public class DbKlantAdresDao implements ICRUD {
 			q.setParameter("id", id);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -235,12 +245,12 @@ public class DbKlantAdresDao implements ICRUD {
 			q.setParameter("adresId", adresId);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}

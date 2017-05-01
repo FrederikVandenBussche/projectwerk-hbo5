@@ -3,6 +3,8 @@ package be.miras.programs.frederik.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -11,6 +13,7 @@ import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 
 
 public class DbWerknemerOpdrachtTaakDao implements ICRUD {
+	private static final Logger LOGGER = Logger.getLogger(DbWerknemerOpdrachtTaakDao.class);
 
 	@Override
 	public boolean voegToe(Object o) {
@@ -23,12 +26,13 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			session.beginTransaction();
 			session.save(dwot);
 			session.getTransaction().commit();
-		} catch (Exception e){
+		} catch (HibernateException e){
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}	
@@ -49,12 +53,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			q.setParameter("id", id);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -78,11 +82,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -103,12 +108,13 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			session.beginTransaction();
 			session.saveOrUpdate(dwot);
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -128,12 +134,13 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			q.setParameter("id", id);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -153,11 +160,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			q.setParameter("taakId", taakId);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -176,11 +184,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			q.setParameter("opdrachtId", opdrachtId);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -197,11 +206,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			q.setParameter("taakId", taakId);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -222,11 +232,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			q.setParameter("werknemerId", werknemerId);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}

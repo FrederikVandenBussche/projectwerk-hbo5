@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -11,8 +13,8 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbTaak;
 
-
 public class DbTaakDao implements ICRUD {
+	private static final Logger LOGGER = Logger.getLogger(DbTaakDao.class);
 
 	@Override
 	public boolean voegToe(Object o) {
@@ -25,12 +27,13 @@ public class DbTaakDao implements ICRUD {
 			session.beginTransaction();
 			session.save(taak);
 			session.getTransaction().commit();
-		} catch (Exception e){
+		} catch (HibernateException e){
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}	
@@ -51,12 +54,12 @@ public class DbTaakDao implements ICRUD {
 			q.setParameter("id", id);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -80,11 +83,12 @@ public class DbTaakDao implements ICRUD {
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -105,12 +109,13 @@ public class DbTaakDao implements ICRUD {
 			session.beginTransaction();
 			session.saveOrUpdate(taak);
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -130,12 +135,13 @@ public class DbTaakDao implements ICRUD {
 			q.setParameter("id", id);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -158,11 +164,12 @@ public class DbTaakDao implements ICRUD {
 			q.setParameter("naam", naam);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -193,11 +200,12 @@ public class DbTaakDao implements ICRUD {
 			q.setParameter("id", taakId);
 			lijst = q.list();
 			transaction.commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -219,11 +227,12 @@ public class DbTaakDao implements ICRUD {
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}

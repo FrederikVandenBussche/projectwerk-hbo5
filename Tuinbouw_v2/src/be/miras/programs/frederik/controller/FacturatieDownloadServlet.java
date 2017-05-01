@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import be.miras.programs.frederik.dao.adapter.AdresAdapter;
 import be.miras.programs.frederik.export.Factuur;
 import be.miras.programs.frederik.export.GenereerPdf;
@@ -30,6 +32,7 @@ import be.miras.programs.frederik.util.Datatype;
 public class FacturatieDownloadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = "FacturatieDownloadServlet: ";
+	private static final Logger LOGGER = Logger.getLogger(FacturatieDownloadServlet.class);
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -91,8 +94,9 @@ public class FacturatieDownloadServlet extends HttpServlet {
 			while (-1 != (bytesRead = bufferedInputStream.read(buff, 0, buff.length))) {
 				bufferedOutputStream.write(buff, 0, bytesRead);
 			}
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Genereer PDF file: " + e);
 		} finally {
 			if (bufferedInputStream != null)
 				bufferedInputStream.close();

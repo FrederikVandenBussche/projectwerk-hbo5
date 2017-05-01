@@ -1,5 +1,6 @@
 package be.miras.programs.frederik.dao;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -15,6 +16,8 @@ import org.hibernate.service.ServiceRegistryBuilder;
 public class HibernateUtil {
 
 	private static final SessionFactory sessionFactory;
+	
+	private static final Logger LOGGER = Logger.getLogger(SessionFactory.class);
 
 	/*
 	 * Een static methode zonder naam heet een 'Static Initialization Block'
@@ -32,6 +35,7 @@ public class HibernateUtil {
 			sessionFactory = configuration.buildSessionFactory(sr);
 		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed." + ex);
+			LOGGER.error("Throwable: ", ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}

@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import be.miras.programs.frederik.dao.DbOpdrachtTaakDao;
 import be.miras.programs.frederik.dao.DbPersoonDao;
 import be.miras.programs.frederik.dao.DbStatusDao;
@@ -45,6 +47,7 @@ import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.Datum;
+import be.miras.programs.frederik.util.ExceptieLogger;
 
 /**
  * Servlet implementation class ExporteerPrestatiesServlet
@@ -53,6 +56,8 @@ import be.miras.programs.frederik.util.Datum;
 public class ExporteerPrestatiesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String TAG = "ExporteerPrestatiesServlet: ";
+	private static final Logger LOGGER = Logger.getLogger(ExporteerPrestatiesServlet.class);
+
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -237,6 +242,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 
 			BufferedInputStream  bufferedInputStream = null; 
 			BufferedOutputStream bufferedOutputStream = null;
+			
 			try {
 
 			    InputStream inputStream=new FileInputStream(file);
@@ -249,9 +255,10 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			        bufferedOutputStream.write(buff, 0, bytesRead);
 			    }
 			} 
-			catch(Exception e)
+			catch(IOException e)
 			{
 			    e.printStackTrace();
+			    LOGGER.error("Genereer Excell file: " , e);
 			} finally {
 			    if (bufferedInputStream != null)
 					bufferedInputStream.close();

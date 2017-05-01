@@ -23,7 +23,7 @@ import be.miras.programs.frederik.dbo.DbParticulier;
 public class KlantLeeslijstServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private String TAG = "KlantLeeslijstServlet: ";
-
+	
 	
 	/**
 	 * @see HttpServlet#HttpServlet()

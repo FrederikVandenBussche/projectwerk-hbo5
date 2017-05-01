@@ -5,6 +5,7 @@ public class Inloggegevens implements Ivergelijk {
 	private String gebruikersnaam;
 	private String paswoord;
 
+	
 	public int getId() {
 		return id;
 	}
@@ -34,13 +35,12 @@ public class Inloggegevens implements Ivergelijk {
 		boolean isVerschillend = true;
 		Inloggegevens i1 = (Inloggegevens) o;
 		Inloggegevens i2 = (Inloggegevens) p;
-		
-		if (i1.getGebruikersnaam().equals(i2.getGebruikersnaam())
-				&& i1.getPaswoord().equals(i2.getPaswoord())
-				) {
+
+		if (i1.getGebruikersnaam().equals(i2.getGebruikersnaam()) && i1.getPaswoord().equals(i2.getPaswoord())) {
 			isVerschillend = false;
 		}
 		return isVerschillend;
 	}
 
+	
 }

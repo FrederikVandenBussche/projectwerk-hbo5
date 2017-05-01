@@ -3,6 +3,8 @@ package be.miras.programs.frederik.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,24 +12,27 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbAdres;
 
 public class DbAdresDao implements ICRUD {
+	private static final Logger LOGGER = Logger.getLogger(DbAdresDao.class);
 
 	@Override
 	public boolean voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		boolean isGelukt = true;
 		Transaction transaction = null;
+		
 		try {
 			DbAdres adres = (DbAdres) o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(adres);
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -49,12 +54,12 @@ public class DbAdresDao implements ICRUD {
 			q.setParameter("id", id);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -88,12 +93,13 @@ public class DbAdresDao implements ICRUD {
 			q.setParameter("id", id);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -111,11 +117,12 @@ public class DbAdresDao implements ICRUD {
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -139,12 +146,12 @@ public class DbAdresDao implements ICRUD {
 			q.setParameter("straatId", straatId);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}
@@ -168,12 +175,12 @@ public class DbAdresDao implements ICRUD {
 			q.setParameter("gemeenteId", gemeenteId);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}

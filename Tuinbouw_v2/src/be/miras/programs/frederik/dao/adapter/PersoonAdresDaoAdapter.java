@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -23,6 +25,7 @@ import be.miras.programs.frederik.model.Adres;
 
 public class PersoonAdresDaoAdapter implements ICRUD {
 	String TAG = "AdresDaoAdapter ";
+	private static final Logger LOGGER = Logger.getLogger(PersoonAdresDaoAdapter.class);
 	
 	@Override
 	public boolean voegToe(Object o) {
@@ -99,11 +102,12 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			q.setParameter("id",  id);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e){
+		} catch (HibernateException e){
 			if (transaction != null){
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException:  ", e);
 		} finally {
 			session.close();
 		}
@@ -226,12 +230,13 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 		} finally {
 			session.close();
 		}

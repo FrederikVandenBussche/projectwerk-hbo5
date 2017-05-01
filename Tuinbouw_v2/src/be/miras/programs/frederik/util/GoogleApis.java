@@ -2,11 +2,13 @@ package be.miras.programs.frederik.util;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,6 +17,7 @@ import org.json.simple.parser.ParseException;
 import be.miras.programs.frederik.model.Adres;
 
 public class GoogleApis {
+	private static String TAG = "GoogleApis: ";
 	
 	final static private String basisUrl = "https://maps.googleapis.com/maps/api/";
 	final static private String geocode = "geocode/";
@@ -24,28 +27,23 @@ public class GoogleApis {
 	final static private String API_KEY = "&key=AIzaSyBPFvaC4_cZTBqOPB0HWnyP56P6iC1VFv8";
 	
 	// constanten voor het berekenen van een afstand tussen 2 locaties
-	//basisUrl
 	final static private String distancematrix = "distancematrix/" ;
-	//format
 	final static private String distance_units = "units=metric"; //metric = km, imperial = miles
 	final static private String distance_origins = "&origins=";
-	//eerste adres
 	final static private String distance_destinations = "&destinations=";
-	// tweede adres
 	final static private String DISTANCE_MATRIX_API_KEY ="&key=AIzaSyAUnPw4QSRquDQOT11dKrytCR_wnVnO6wk";
 
 	//constanten voor het tonen van een static map
-	//besisurl
 	final static private String staticmap = "staticmap?center=";
-	// het adres die in het center van de map moet staan
 	final static private String staticmap_zoom = "&zoom=13";
 	final static private String staticmap_size = "&size=300x150";
 	final static private String staticmap_maptype = "&maptype=roadmap";
 	final static private String staticmap_marker = "&markers=color:red%7C";
-	//lat,lng van de marker
 	final static private String STATICMAP_API_KEY = "&key=AIzaSyBnD0Uzz6p4FovJQX6jUdGgR3IxI4OMqVQ";
 	
 	final static private String googleMaps = "https://maps.google.com/?q=";
+	
+	private static final Logger LOGGER = Logger.getLogger(GoogleApis.class);
 	
 	
 	public static double[] zoeklatlng(Adres adres) {
@@ -66,8 +64,18 @@ public class GoogleApis {
 	
 	public static double berekenAantalKilometers(Adres adres1, Adres adres2){
 		String url = urlBuilder(adres1, adres2);
-		String jsonString = executePost(url);
-		double aantalKilometer = haalAantalKilometers(jsonString);
+		
+		double aantalKilometer = 0;
+		try {
+			String jsonString = executePost(url);
+			System.out.println(TAG + "jsonStrng = " + jsonString);
+			aantalKilometer = haalAantalKilometers(jsonString);
+		} catch (Exception e){
+			e.printStackTrace();
+			LOGGER.error("IOException : ", e);
+		}
+		
+		
 		
 		return aantalKilometer;
 	}
@@ -174,8 +182,9 @@ public class GoogleApis {
 			}
 			rd.close();
 			return response.toString();
-		} catch (Exception e) {
+		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("Exception", e);
 			return null;
 		} finally {
 			if (connection != null) {
@@ -216,8 +225,8 @@ public class GoogleApis {
 			}
 
 		} catch (ParseException e) {
-
 			e.printStackTrace();
+			LOGGER.error("ParseException", e);
 		}
 		return latlng;
 	}
@@ -255,10 +264,10 @@ public class GoogleApis {
 					}
 				}
 			}
-
 		} catch (ParseException e) {
 
 			e.printStackTrace();
+			LOGGER.error("ParseException: ", e);
 		}
 		return adres;
 	}
@@ -285,6 +294,7 @@ public class GoogleApis {
 		} catch (ParseException e) {
 
 			e.printStackTrace();
+			LOGGER.error("ParseException", e);
 		}
 		return aantalKilometer;
 	}

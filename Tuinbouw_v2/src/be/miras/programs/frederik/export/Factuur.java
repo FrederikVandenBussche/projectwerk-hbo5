@@ -18,6 +18,7 @@ public class Factuur {
 	private String bedrijfsEmail;
 	private List<Verplaatsing> verplaatsingLijst; 
 
+	
 	public Factuur() {
 		super();
 	}
@@ -94,8 +95,5 @@ public class Factuur {
 		this.verplaatsingLijst = verplaatsingLijst;
 	}
 
-	
-	
-	
 
 }

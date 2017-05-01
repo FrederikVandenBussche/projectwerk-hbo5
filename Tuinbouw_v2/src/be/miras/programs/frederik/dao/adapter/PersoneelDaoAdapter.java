@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -20,6 +22,7 @@ import be.miras.programs.frederik.dbo.DbWerknemer;
 import be.miras.programs.frederik.model.Personeel;
 
 public class PersoneelDaoAdapter implements ICRUD{
+	private static final Logger LOGGER = Logger.getLogger(PersoneelDaoAdapter.class);
 	//private String TAG = "PersoneelDaoAdapter: ";
 	
 	@Override
@@ -75,11 +78,12 @@ public class PersoneelDaoAdapter implements ICRUD{
 			q.setParameter("id", id);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException: ", e);
 
 		} finally {
 			session.close();

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.itextpdf.kernel.color.DeviceGray;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -25,7 +27,9 @@ import be.miras.programs.frederik.model.Verplaatsing;
 import be.miras.programs.frederik.util.Datum;
 
 public class GenereerPdf {
+	private static final Logger LOGGER = Logger.getLogger(GenereerPdf.class);
 
+	
 	public void genereer(String dest, Factuur factuur) {
 		File file = new File(dest);
 		file.getParentFile().mkdirs();
@@ -33,8 +37,8 @@ public class GenereerPdf {
 			createPdf(dest, factuur);
 		} catch (IOException e) {
 			e.printStackTrace();
+			LOGGER.error("IOException: ", e); 	
 		}
-
 	}
 
 	private void createPdf(String dest, Factuur factuur) throws IOException {
@@ -318,4 +322,5 @@ public class GenereerPdf {
 		document.close();
 	}
 
+	
 }

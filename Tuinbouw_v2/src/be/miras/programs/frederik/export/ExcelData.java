@@ -6,6 +6,7 @@ import be.miras.programs.frederik.model.Opdracht;
 
 public class ExcelData {
 
+	
 	private String klantNaam;
 	private List<Opdracht> opdrachtLijst;
 
@@ -29,4 +30,5 @@ public class ExcelData {
 		this.opdrachtLijst = opdrachtLijst;
 	}
 
+	
 }

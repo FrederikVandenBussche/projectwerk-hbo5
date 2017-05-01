@@ -3,6 +3,8 @@ package be.miras.programs.frederik.dao.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,6 +12,7 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dao.HibernateUtil;
 
 public class WachtwoordDaoAdapter {
+	private static final Logger LOGGER = Logger.getLogger(WachtwoordDaoAdapter.class);
 	
 	
 	public Object lees(){
@@ -25,11 +28,12 @@ public class WachtwoordDaoAdapter {
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
+			LOGGER.error("HibernateException" , e);
 
 		} finally {
 			session.close();
@@ -56,12 +60,13 @@ public class WachtwoordDaoAdapter {
 			q.setParameter("paswoord", paswoord);
 			q.executeUpdate();
 			session.getTransaction().commit();
-		} catch (Exception e) {
+		} catch (HibernateException e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			isGelukt = false;
 			e.printStackTrace();
+			LOGGER.error("HibernateException", e);
 		} finally {
 			session.close();
 		}

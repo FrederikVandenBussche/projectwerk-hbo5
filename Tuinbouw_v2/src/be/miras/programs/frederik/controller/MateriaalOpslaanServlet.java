@@ -59,12 +59,9 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 
 			double eenheidsprijs = 0;
 			int id = Datatype.stringNaarInt(idString);
+			
 			if (eenheidsprijsString != "") {
-				try {
-					eenheidsprijs = Double.parseDouble(eenheidsprijsString);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				eenheidsprijs = Datatype.stringNaarDouble(eenheidsprijsString);
 			} else {
 				eenheidsprijs = 0;
 			}
