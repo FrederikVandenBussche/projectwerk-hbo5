@@ -82,7 +82,7 @@
 					<input type="text" name="naam" value="${personeelslid.naam }" />
 					<br />
 					<label for = "loon"> Loon: </label>
-					<input type="number" name="loon" value="${personeelslid.loon }" />
+					<input type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name="loon" value="${personeelslid.loon }" />
 					<label for = "email"> email: </label>
 					<input type="email" name="email" value="${personeelslid.email }" />
 					<br />

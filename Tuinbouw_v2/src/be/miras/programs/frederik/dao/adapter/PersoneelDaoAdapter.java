@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.apache.log4j.Logger;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -77,13 +76,16 @@ public class PersoneelDaoAdapter implements ICRUD{
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
-			session.getTransaction().commit();
-		} catch (HibernateException e) {
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
 			if (transaction != null) {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("HibernateException: ", e);
+			LOGGER.error("Exception: ", e);
 
 		} finally {
 			session.close();

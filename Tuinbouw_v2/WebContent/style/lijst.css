@@ -22,12 +22,29 @@ th, td {
 }
 
 tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: #eeeeee;
 }
 
 .celinhoud {
-	 height: em;
     overflow: hidden;
+}
+
+td > form {
+    margin: 0px;
+}
+
+td > form > input{
+    height: 3em;
+    margin: 0px;
+    width: 100px;
+}
+
+td > form > input:hover{
+    background-color: #909090;
+}
+
+tr:nth-child(even) > td > form > input:hover {
+    background-color: #909090;
 }
 
 .adresLijst, .horizontaleDivs {
@@ -58,4 +75,6 @@ tr:nth-child(even) {
 progress {
 	width: 5em;
 }
+
+
 

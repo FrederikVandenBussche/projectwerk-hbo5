@@ -1,4 +1,7 @@
 @CHARSET "ISO-8859-1";
+body{
+    background-color: #efefef;
+}
 
 #container{
 	margin-top: 100px;
@@ -7,7 +10,20 @@
 
 label, input {
    	display: inline-block;
-   	width: 150px;
+   	width: 400px;
+    margin-bottom: 20px;
+    
 }
 
+input {
+    border: 2px solid #dddddd;
+}
 
+#submit {
+    background-color: #FFFFFF;
+    height: 3em;
+}
+
+#submit:hover {
+    background-color: #dddddd; 
+}

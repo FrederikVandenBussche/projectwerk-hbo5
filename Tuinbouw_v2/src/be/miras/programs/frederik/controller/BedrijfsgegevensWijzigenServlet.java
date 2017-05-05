@@ -13,8 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.DbPersoonDao;
+import be.miras.programs.frederik.dao.DbWerkgeverDao;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
+import be.miras.programs.frederik.dbo.DbWerkgever;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.InputValidatieStrings;
@@ -27,6 +29,7 @@ import be.miras.programs.frederik.util.InputValidatie;
 public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
 	private static final String TAG = "BedrijfsgegevensWijzigenServlet: ";
+	private Werkgever werkgever;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -49,13 +52,15 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 		String email = request.getParameter("email").trim();
 		String gebruikersnaam = request.getParameter("gebruikersnaam").trim();
 		
+		HttpSession session = request.getSession();
+		werkgever = (Werkgever) session.getAttribute("werkgever");
+		
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{naam, voornaam, geboortedatum, email, gebruikersnaam});
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
 		
-			HttpSession session = request.getSession();
-			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+			
 
 			Date datum = null;
 
@@ -77,6 +82,7 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				gebruiker.setWachtwoord(werkgever.getWachtwoord());
 				gebruiker.setGebruikersnaam(gebruikersnaam);
 				gebruiker.setBevoegdheidId(werkgever.getBevoegdheidID());
+				gebruiker.setPersoonId(werkgever.getPersoonId());
 				
 
 				dao.wijzig(gebruiker);
@@ -172,16 +178,20 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Email").concat(msg);
 		}
 		
-		msg = InputValidatie.enkelAlfabetisch(gebruikersnaam);
-		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Gebruikersnaam").concat(msg);
+		if (gebruikersnaam.isEmpty()){
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GebruikersNaamInGeven);
 		} else {
 			DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 			int aantalMetGebruikersnaam = dbGebruikerDao.aantalMetGebruikersnaam(gebruikersnaam);
-			if(aantalMetGebruikersnaam > 0){
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat("Deze gebruikersnaam is reeds in gebruik. Gelieve een andere gebruikersnaam te kiezen.");
-			}
+				if(aantalMetGebruikersnaam > 0){
+					if (!this.werkgever.getGebruikersnaam().equals(gebruikersnaam)){
+						
+						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GebruikersNaamInGebruik);
+					}	
+				}
 		}
+		
+		
 		
 		return inputValidatieErrorMsg;
 		

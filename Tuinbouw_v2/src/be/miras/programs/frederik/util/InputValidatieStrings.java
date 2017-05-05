@@ -46,6 +46,8 @@ public class InputValidatieStrings {
 	public static final String NieuwWachtwoord = " Gelieve het nieuw wachtwoord 2 maal in te geven. ";
 	
 	public static final String GeboortedatumBedrijfsleider = " Geboortedatum: Een bedrijfsleider is ten minsten 18 jaar.";
+	public static final String GebruikersNaamInGeven = " Gelieve een gebruikersnaam in te geven";
+	public static final String GebruikersNaamInGebruik = " Deze gebruikersnaam is reeds in gebruik. Gelieve een andere gebruikersnaam te kiezen. ";
 	
 	//public static final String = " ";
 	
