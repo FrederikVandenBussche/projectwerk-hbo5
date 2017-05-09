@@ -66,7 +66,7 @@ public class PersoneelToonDetailServlet extends HttpServlet {
 
 			// de lijst met personeel uit de session halen
 			HttpSession session = request.getSession();
-			ArrayList<Personeel> lijst = (ArrayList<Personeel>) session.getAttribute("lijst");
+			ArrayList<Personeel> lijst = (ArrayList<Personeel>) session.getAttribute("personeelLijst");
 
 			// het personeelslid met de corresponderende id opzoeken.
 			Iterator<Personeel> it = lijst.iterator();

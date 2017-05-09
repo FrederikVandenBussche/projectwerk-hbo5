@@ -42,8 +42,16 @@ public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres_id"));
 
 		PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
-		adao.verwijder(adresId);
+		Thread thread = new Thread(new Runnable(){
 
+			@Override
+			public void run() {
+				adao.verwijder(adresId);
+
+			}
+		});
+		thread.start();
+		
 		HttpSession session = request.getSession();
 		Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
 

@@ -77,7 +77,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 
 			HttpSession session = request.getSession();
 			OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
-			List<Opdracht> opdrachtLijst = (List<Opdracht>) session.getAttribute("lijst");
+			List<Opdracht> opdrachtLijst = (List<Opdracht>) session.getAttribute("opdrachtLijst");
 
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();

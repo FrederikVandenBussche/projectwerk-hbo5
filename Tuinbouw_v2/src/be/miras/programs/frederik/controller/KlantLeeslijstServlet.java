@@ -49,13 +49,24 @@ public class KlantLeeslijstServlet extends HttpServlet{
 			view = request.getRequestDispatcher("/logout");
 		} else {
 
+			
 			DbKlantDao dbKlantDao = new DbKlantDao();
+			
+			Thread thread = new Thread(new Runnable(){
 
-			List<DbParticulier> particulierLijst = (ArrayList<DbParticulier>) (Object) dbKlantDao.leesAlleParticulier();
-			List<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
+				@Override
+				public void run() {
+					List<DbParticulier> particulierLijst = (ArrayList<DbParticulier>) (Object) dbKlantDao.leesAlleParticulier();
+					List<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
 
-			session.setAttribute("particulierLijst", particulierLijst);
-			session.setAttribute("bedrijfLijst", bedrijfLijst);
+					session.setAttribute("particulierLijst", particulierLijst);
+					session.setAttribute("bedrijfLijst", bedrijfLijst);
+					
+				}
+			});
+			thread.start();
+
+			
 
 			view = request.getRequestDispatcher("/Klantbeheer.jsp");
 		}

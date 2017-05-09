@@ -46,18 +46,29 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 			view = request.getRequestDispatcher("/logout");
 
 		} else {
-
+			
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-			List<Materiaal> lijst = new ArrayList<Materiaal>();
+			
 			Materiaal m = new Materiaal();
 
-			lijst = (List<Materiaal>) (Object) dao.leesAlle();
+			
+			Thread thread = new Thread(new Runnable(){
 
-			// indien nieuw materiaal : id = -1
+				@Override
+				public void run() {
+					List<Materiaal> lijst = new ArrayList<Materiaal>();
+					
+					lijst = (List<Materiaal>) (Object) dao.leesAlle();
+					
+					session.setAttribute("materiaalLijst", lijst);
+				}
+			});
+			thread.start();
+			
+			// voor nieuw materiaal : id = -1
 			m.setId(-1);
 
 			session.setAttribute("materiaal", m);
-			session.setAttribute("lijst", lijst);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 

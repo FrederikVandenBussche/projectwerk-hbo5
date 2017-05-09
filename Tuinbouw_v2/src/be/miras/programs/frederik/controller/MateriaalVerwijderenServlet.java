@@ -41,7 +41,7 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 		HttpSession session = request.getSession();
-		ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("lijst");
+		ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
 
 		ListIterator<Materiaal> it = lijst.listIterator();
 		while (it.hasNext()) {

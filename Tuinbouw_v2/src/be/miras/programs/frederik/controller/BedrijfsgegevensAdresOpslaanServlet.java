@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
+import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
+import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;
@@ -25,6 +29,7 @@ import be.miras.programs.frederik.util.InputValidatie;
 @WebServlet("/BedrijfsgegevensAdresOpslaanServlet")
 public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
+	private static final Logger LOGGER = Logger.getLogger(DbGebruikerDao.class);
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -67,21 +72,36 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			adres.setPlaats(plaats);
 			adres.setPersoonId(werkgever.getPersoonId());
 
-			adao.voegToe(adres);
-			int maxId = adao.geefMaxId();
-			adres.setId(maxId);
+			
+			Thread thread = new Thread(new Runnable(){
 
-			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
-			adres.setStaticmap(staticmap);
+				@Override
+				public void run() {
+					
+					adao.voegToe(adres);
+					
+					int maxId = adao.geefMaxId();
+					
+					adres.setId(maxId);
+					
+					String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+					adres.setStaticmap(staticmap);
 
-			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
-			adres.setGooglemap(googlemap);
+					String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
+					adres.setGooglemap(googlemap);
+					
+					ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
+					adreslijst.add(adres);
+					werkgever.setAdreslijst(adreslijst);
 
-			ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
-			adreslijst.add(adres);
-			werkgever.setAdreslijst(adreslijst);
+					session.setAttribute("werkgever", werkgever);
 
-			session.setAttribute("werkgever", werkgever);
+				}
+				
+			});
+			thread.start();
+
+			
 
 			
 		} else {

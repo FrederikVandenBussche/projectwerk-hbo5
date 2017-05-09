@@ -89,7 +89,7 @@
 					</tr>
 					</thead>
 					<tbody>
-					<c:forEach items="${lijst}" var="element">
+					<c:forEach items="${personeelLijst}" var="element">
 						<tr>
 							<td>${element.voornaam}</td>
 							<td>${element.naam}</td>

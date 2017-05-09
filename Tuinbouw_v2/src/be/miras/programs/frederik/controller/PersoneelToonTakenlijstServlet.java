@@ -19,9 +19,6 @@ import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbTaakDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
 import be.miras.programs.frederik.dbo.DbKlant;
-import be.miras.programs.frederik.dbo.DbOpdracht;
-import be.miras.programs.frederik.dbo.DbTaak;
-import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.model.PersoneelbeheerTakenlijstTaak;
 import be.miras.programs.frederik.util.Datatype;
@@ -62,7 +59,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 
 			System.out.println(TAG + "de persoonId = " + persoonId);
 
-			List<Personeel> personeelLijst = (ArrayList<Personeel>) session.getAttribute("lijst");
+			List<Personeel> personeelLijst = (ArrayList<Personeel>) session.getAttribute("personeelLijst");
 
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();

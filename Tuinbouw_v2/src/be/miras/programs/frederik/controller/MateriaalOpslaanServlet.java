@@ -52,7 +52,7 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		if (inputValidatieErrorMsg.isEmpty()) {
 			// de Materialenlijst ophalen
 			HttpSession session = request.getSession();
-			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("lijst");
+			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
 
 			Materiaal materiaal = new Materiaal();
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();

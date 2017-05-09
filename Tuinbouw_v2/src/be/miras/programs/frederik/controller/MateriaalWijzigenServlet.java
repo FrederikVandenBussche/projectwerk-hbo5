@@ -50,7 +50,7 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 
 			int id = Datatype.stringNaarInt(request.getParameter("id"));
 
-			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("lijst");
+			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
 
 			Materiaal materiaal = new Materiaal();
 

@@ -99,7 +99,7 @@
 				</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${lijst }" var="element">
+				<c:forEach items="${materiaalLijst }" var="element">
 					<tr>
 						<td>${element.soort }</td>
 						<td>${element.naam }</td>

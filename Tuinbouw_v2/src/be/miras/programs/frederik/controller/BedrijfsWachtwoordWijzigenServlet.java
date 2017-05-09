@@ -58,7 +58,14 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 				System.out.println("het oud wachtwoord is correct ");
 				if (nieuwWachtwoord1.equals(nieuwWachtwoord2)) {
 					if (nieuwWachtwoord1.length() > 8){
-						dao.wijzigWachtwoord(id, nieuwWachtwoord1);
+						Thread thread = new Thread(new Runnable(){
+
+							@Override
+							public void run() {
+								dao.wijzigWachtwoord(id, nieuwWachtwoord1);
+								
+							}
+						});
 						werkgever.setWachtwoord(nieuwWachtwoord1);
 						session.setAttribute("werkgever", werkgever);
 					} else {
@@ -69,15 +76,12 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" De twee nieuwe wachtwoorden zijn niet dezelfde.");
 				}
 			} else {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Wachtwoord niet gekent.");
+				
+				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het oude wachtwoord niet gekend.");
 			}
-		} else {
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
-			
-		}
+		} 
 
-			
-		
+		request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 
 		RequestDispatcher view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 		view.forward(request, response);

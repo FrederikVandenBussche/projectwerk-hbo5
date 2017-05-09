@@ -84,7 +84,7 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		dbOpdrachtDao.verwijder(opdrachtId);
 
 		// de opdracht uit de session verwijderen
-		List<Opdracht> opdrachtLijst = (List<Opdracht>) session.getAttribute("lijst");
+		List<Opdracht> opdrachtLijst = (List<Opdracht>) session.getAttribute("opdrachtLijst");
 		ListIterator<Opdracht> it = opdrachtLijst.listIterator();
 		while (it.hasNext()) {
 			Opdracht o = it.next();

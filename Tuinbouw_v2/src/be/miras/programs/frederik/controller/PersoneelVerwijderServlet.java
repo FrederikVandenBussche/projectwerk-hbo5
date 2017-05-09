@@ -62,7 +62,7 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 
 		lijst = (List<Personeel>) (Object) pdao.leesAlle();
 
-		session.setAttribute("lijst", lijst);
+		session.setAttribute("personeelLijst", lijst);
 
 		RequestDispatcher view = request.getRequestDispatcher("/Personeelsbeheer.jsp");
 		view.forward(request, response);

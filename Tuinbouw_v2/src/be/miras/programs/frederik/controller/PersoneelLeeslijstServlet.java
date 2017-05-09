@@ -47,11 +47,20 @@ public class PersoneelLeeslijstServlet extends HttpServlet {
 		} else {
 
 			PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
-			List<Personeel> lijst = new ArrayList<Personeel>();
+			
 
-			lijst = (List<Personeel>) (Object) dao.leesAlle();
+			Thread thread = new Thread(new Runnable(){
 
-			session.setAttribute("lijst", lijst);
+				@Override
+				public void run() {
+					List<Personeel> personeelLijst = new ArrayList<Personeel>();
+					personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
+
+					session.setAttribute("personeelLijst", personeelLijst);
+					
+				}
+			});
+			thread.start();
 
 			view = request.getRequestDispatcher("/Personeelsbeheer.jsp");
 

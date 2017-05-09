@@ -13,10 +13,8 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.DbPersoonDao;
-import be.miras.programs.frederik.dao.DbWerkgeverDao;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
-import be.miras.programs.frederik.dbo.DbWerkgever;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.InputValidatieStrings;
@@ -84,8 +82,16 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				gebruiker.setBevoegdheidId(werkgever.getBevoegdheidID());
 				gebruiker.setPersoonId(werkgever.getPersoonId());
 				
+				Thread thread = new Thread(new Runnable(){
 
-				dao.wijzig(gebruiker);
+					@Override
+					public void run() {
+						
+						dao.wijzig(gebruiker);	
+					}	
+				});
+				thread.start();
+				
 
 				werkgever.setEmail(email);
 				werkgever.setGebruikersnaam(gebruikersnaam);
@@ -103,7 +109,15 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				persoon.setVoornaam(voornaam);
 				persoon.setGeboortedatum(datum);
 
-				dao.wijzig(persoon);
+				Thread thread = new Thread(new Runnable(){
+
+					@Override
+					public void run() {
+						dao.wijzig(persoon);
+						
+					}
+				});
+				thread.start();
 
 				werkgever.setNaam(naam);
 				werkgever.setVoornaam(voornaam);
@@ -170,8 +184,6 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				}
 			}
 		}
-		System.out.println(TAG + "datumString: " + geboortedatum);
-		
 		
 		msg = InputValidatie.correctEmailadres(email);
 		if (msg!= null) {

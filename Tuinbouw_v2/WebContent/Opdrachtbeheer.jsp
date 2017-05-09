@@ -84,7 +84,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${lijst }" var="element">
+						<c:forEach items="${opdrachtLijst }" var="element">
 							<tr>
 								<td>${element.klantNaam } </td>
 								<td>${element.opdrachtNaam } </td>

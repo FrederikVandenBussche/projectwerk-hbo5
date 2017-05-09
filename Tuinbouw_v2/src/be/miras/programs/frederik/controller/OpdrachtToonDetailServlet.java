@@ -56,7 +56,7 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 		HttpSession session = request.getSession();
-		ArrayList<Opdracht> opdrachtLijst = (ArrayList<Opdracht>) session.getAttribute("lijst");
+		ArrayList<Opdracht> opdrachtLijst = (ArrayList<Opdracht>) session.getAttribute("opdrachtLijst");
 
 		// bovenaan de content wordt de aanspreektitel van de
 		// opdrachtgever weergegeven

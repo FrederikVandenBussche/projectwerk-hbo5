@@ -58,14 +58,23 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 			
 			int gebruikerId = (int) session.getAttribute("gebruikerId");
 			
-			WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
-			Werkgever werkgever = new Werkgever();
+			Thread thread = new Thread(new Runnable() {
 
-			System.out.println(TAG + "GebruikerId= " + gebruikerId);
-			werkgever = (Werkgever) wDao.lees(gebruikerId);
+				@Override
+				public void run() {
+					WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+					Werkgever werkgever = new Werkgever();
 
-			System.out.println(TAG + "de werkgeversvoornaam: " + werkgever.getVoornaam());
-			session.setAttribute("werkgever", werkgever);
+					System.out.println(TAG + "GebruikerId= " + gebruikerId);
+					werkgever = (Werkgever) wDao.lees(gebruikerId);
+
+					System.out.println(TAG + "de werkgeversvoornaam: " + werkgever.getVoornaam());
+					session.setAttribute("werkgever", werkgever);
+				}
+				
+			});
+			thread.start();
+			
 
 			view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 

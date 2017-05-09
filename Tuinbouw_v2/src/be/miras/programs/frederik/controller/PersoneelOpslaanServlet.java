@@ -88,21 +88,21 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 
 			if (this.id < 0) {
 				// nieuw Personeelslid toevoegen
-				List<Personeel> lijst = new ArrayList<Personeel>();
+				List<Personeel> personeelLijst = new ArrayList<Personeel>();
 
 				dao.voegToe(personeel);
 
 				// de lijst opnieuw ophalen
 
-				lijst = (List<Personeel>) (Object) dao.leesAlle();
+				personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
 
 				HttpSession session = request.getSession();
-				session.setAttribute("lijst", lijst);
+				session.setAttribute("personeelLijst", personeelLijst);
 
 			} else {
 				// indien er iets gewijzigd werd, de wijzigingen opslaan
 				HttpSession session = request.getSession();
-				ArrayList<Personeel> lijst = (ArrayList<Personeel>) session.getAttribute("lijst");
+				ArrayList<Personeel> lijst = (ArrayList<Personeel>) session.getAttribute("personeelLijst");
 
 				// Je kan geen elementen wijzigen in Iterator
 				// Dit kan wel in een ListIterator
