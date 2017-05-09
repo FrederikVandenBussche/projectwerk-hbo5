@@ -7,10 +7,10 @@
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-	
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -67,40 +67,42 @@
 			</div>
 		</div>
 		<div id="content">
-			Mijn opdrachten
+			<br />
 			<form action="opdrachtToonDetail" method="get">
 				<!--  if(id == -1){ nieuwe opdracht} -->
 				<input type="hidden" name="id" value="-1" />
-				<input type="submit" name="submit" value="Voeg nieuwe opdracht toe" />
+				<input type="submit" class = "btn btn-default btn-block active"  name="submit" value="Voeg nieuwe opdracht toe" />
 			</form>
 			<div class="groteTabel">
-				<table>
-					<tr>
-						<th>klant</th>
-						<th>opdracht</th>
-						<th>start datum</th>
-						<th>einddatum</th>
-					</tr>
-					<c:forEach items="${lijst }" var="element">
+				<table class = "table table-striped table-hover">
+					<thead>
 						<tr>
-							<td>${element.klantNaam } </td>
-							<td>${element.opdrachtNaam } </td>
-							<td>
-								<fmt:formatDate value="${element.startDatum }" pattern="dd/MM/YYYY" />
-							</td>
-							<td>
-								<fmt:formatDate value="${element.eindDatum }" pattern="dd/MM/YYYY" /> 
-							</td>
-							<td>
-								<form action="opdrachtToonDetail" method="get" >
-									<input type="hidden" name="id" value="${element.id }" />
-									<input type="submit" name="submit" value="meer..." />
-								</form>
-							</td>
+							<th>klant</th>
+							<th>opdracht</th>
+							<th>start datum</th>
+							<th>einddatum</th>
 						</tr>
-					</c:forEach>
-					
-					
+					</thead>
+					<tbody>
+						<c:forEach items="${lijst }" var="element">
+							<tr>
+								<td>${element.klantNaam } </td>
+								<td>${element.opdrachtNaam } </td>
+								<td>
+									<fmt:formatDate value="${element.startDatum }" pattern="dd/MM/YYYY" />
+								</td>
+								<td>
+									<fmt:formatDate value="${element.eindDatum }" pattern="dd/MM/YYYY" /> 
+								</td>
+								<td>
+									<form action="opdrachtToonDetail" method="get" >
+										<input type="hidden" name="id" value="${element.id }" />
+										<input type="submit" class = "btn btn-default" name="submit" value="meer..." />
+									</form>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
 				</table>
 			</div>
 		</div>

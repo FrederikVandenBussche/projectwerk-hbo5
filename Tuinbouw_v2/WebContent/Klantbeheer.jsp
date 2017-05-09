@@ -7,11 +7,10 @@
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-	
-	
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -66,82 +65,90 @@
 			</div>
 		</div>
 		<div id="content">
-			Klantbeheer.
 			<br />	
-			<div class="horizontaleDivs">
-				<div id="particuliereLijst" class="groteTabel">
-					<fieldset>
-					<legend>Lijst met particuliere klanten.</legend>
-					<div>
-					<form action="klantToonDetail" method="get">
-						<!--  if(id == -1){nieuwe klant} -->
-						<input type="hidden" name="id" value="-1" />
-						<input type="submit" name="particulier" value="Voeg particuliere klant toe" />
-					</form>	
-				</div>
-					
-					<br />
-					<table>
-						<tr>
-							<th>Naam</th>
-							<th>Voornaam</th>
-							<th>Details</th>
-						</tr>
-
-						<c:forEach items="${particulierLijst}" var="element">
+			<ul id = "myTab" class = "nav nav-tabs">
+        	    <li class = "active">
+        	        <a href = "#particulier" data-toggle = "tab">
+        	            Lijst met particuliere klanten
+        	        </a>
+        	    </li>
+        	    <li><a href = "#bedrijf" data-toggle = "tab">Lijst met bedrijf klanten</a></li>	
+        	</ul>
+	        <div id = "myTabContent" class = "tab-content">
+	            <div class = "tab-pane fade in active" id = "particulier">
+	            	<br />
+	                <div id="particuliereLijst" class="groteTabel">
+						<div>
+							<form action="klantToonDetail" method="get">
+								<!--  if(id == -1){nieuwe klant} -->
+								<input type="hidden" name="id" value="-1" />
+								<input type="submit" class = "btn btn-default btn-block active" name="particulier" value="Voeg particuliere klant toe" />
+							</form>	
+						</div>
+						<br />
+						<table class="table table-striped table-hover">
+							<thead>
 							<tr>
-								<td>${element.naam }</td>
-								<td>${element.voornaam }</td>
-								<td>
-									<form action="klantToonDetail" method="get">
-										<input type="hidden" name="id" value="${element.id }" />
-										<input type="submit" name="particulier" value="meer..."/>
-									</form>
-								</td>
+								<th>Naam</th>
+								<th>Voornaam</th>
+								<th>Details</th>
 							</tr>
-						</c:forEach>
-					</table>
-					</fieldset>
-				</div>
-				<div id="bedrijfLijst" class="groteTabel">
-				<fieldset>
-				<legend>Lijst met bedrijf klanten.</legend>
-					<div>
-					<form action="klantToonDetail" method="get">
-						<!--  if(id == -1){nieuwe klant} -->
-						<input type="hidden" name="id" value="-1" />
-						
-						<input type="submit" name="bedrijf" value="Voeg bedrijf klant toe" />
-					</form>	
-				</div>
-					<br />
-					<table>
-						<tr>
-							<th>Bedrijfnaam</th>
-							<th>Btw Nummer</th>
-							<th>Details</th>
-						</tr>
-						<c:forEach items="${bedrijfLijst }" var="element">
-							<tr>
-								<td>${element.bedrijfnaam }</td>
-								<td>${element.btwNummer }</td>
-								<td>
-									<form action="klantToonDetail" method="get">
-										<input type="hidden" name="id" value="${element.id }" />
-										<input type="submit" name="bedrijf" value="meer..."/>
-									</form>
-								</td>
-							</tr>
-						</c:forEach>
-					</table>
-					</fieldset>
-				</div>
-				
-				</div>
-			</div>
-			
+							</thead>
+							<tbody>
+								<c:forEach items="${particulierLijst}" var="element">
+									<tr>
+										<td>${element.naam }</td>
+										<td>${element.voornaam }</td>
+										<td>
+											<form action="klantToonDetail" method="get">
+												<input type="hidden" name="id" value="${element.id }" />
+												<input type="submit"  class = "btn btn-default" name="particulier" value="meer..."/>
+											</form>
+										</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+    	        </div>
+           		<div class = "tab-pane fade" id = "bedrijf">
+          			<div id="bedrijfLijst" class="groteTabel">
+						<br />
+						<div>
+							<form action="klantToonDetail" method="get">
+								<!--  if(id == -1){nieuwe klant} -->
+								<input type="hidden" name="id" value="-1" />
+								<input type="submit" class = "btn btn-default btn-block active" name="bedrijf" value="Voeg bedrijf klant toe" />
+							</form>	
+						</div>
+						<br />
+						<table class ="table table-striped table-hover">
+							<thead>
+								<tr>
+									<th>Bedrijfnaam</th>
+									<th>Btw Nummer</th>
+									<th>Details</th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${bedrijfLijst }" var="element">
+									<tr>
+										<td>${element.bedrijfnaam }</td>
+										<td>${element.btwNummer }</td>
+										<td>
+											<form action="klantToonDetail" method="get">
+												<input type="hidden" name="id" value="${element.id }" />
+												<input type="submit" class = "btn btn-default" name="bedrijf" value="meer..."/>
+											</form>
+										</td>
+									</tr>
+								</c:forEach>
+							</tbody>
+						</table>
+					</div>
+            	</div>
+        	</div>
 		</div>
 	</div>
-
 </body>
 </html>

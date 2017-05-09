@@ -8,8 +8,7 @@
 function setup(){
     
     var aantalDivs = $(".adresLijst").children().size();
-    
-    
+        
     var adresKnoppen = [];
     
     var volgnummer = 1;
@@ -17,7 +16,7 @@ function setup(){
     	
     	// een button maken voor het eerste adres
         
-        var button = $('<input type="button" id="adresDiv' + volgnummer + '" class="adresKnop actief" value="adres ' + volgnummer  + '" />');
+        var button = $('<input type="button" class = "btn btn-default active btn-xs adresKnop" id="adresDiv' + volgnummer + '" class="adresKnop actief" value="adres ' + volgnummer  + '" />');
             adresKnoppen.push(button);
         
     }
@@ -27,7 +26,7 @@ function setup(){
         for(var i = 1; i < aantalDivs - 1 ; i++){
             $(".adresLijst >div:eq(" + i + ")").hide();
             volgnummer += 1 ;
-            var button = $('<input type="button" id="adresDiv' + volgnummer + '" class="adresKnop" value="adres ' + volgnummer  + '" />');
+            var button = $('<input type="button" class = "btn btn-default active btn-xs adresKnop" id="adresDiv' + volgnummer + '" class="adresKnop" value="adres ' + volgnummer  + '" />');
             adresKnoppen.push(button);
         
         }
@@ -37,7 +36,7 @@ function setup(){
     	 //'nieuw adres' formulier verbergen
         $(".adresLijst >div:eq(" + volgnummer + ")").hide();
         volgnummer += 1;
-        var button = $('<input type="button" id="adresDiv' + volgnummer + '" class="adresKnop" value="Voeg nieuw adres toe" />');
+        var button = $('<input type="button" id="adresDiv' + volgnummer + '" class="btn btn-default btn-xs adresKnop" value="Voeg nieuw adres toe" />');
         adresKnoppen.push(button);
     }
    
@@ -57,7 +56,6 @@ function setup(){
 */
 function correctAdresTonen(){
     var geklikt = this.id;
-    
     
     $(".adresKnop.actief").removeClass("actief");
     $(this).addClass("actief");

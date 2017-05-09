@@ -7,8 +7,9 @@
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 	
 </head>
@@ -66,19 +67,18 @@
 			</div>
 		</div>
 		<div id="content">
-			<div>
-				Mijn personeel
-			</div>
+			<br />
 			<div>
 				<form action = "personeelToonDetail" method="get">
 					<!--  if(id == -1){nieuw personeelslid} -->
 					<input type="hidden" name="id" value="-1" />
-					<input type="submit" name="submit" value="Voeg een nieuw personeelslid toe" />
+					<input type="submit" class = "btn btn-default btn-block active" name="submit" value="Voeg een nieuw personeelslid toe" />
 				</form>
 			</div>
 			
 			<div class="groteTabel">
-				<table>
+				<table class = "table table-striped table-hover">
+					<thead>
 					<tr>
 						<th>Voornaam</th>
 						<th>Familienaam</th>
@@ -87,6 +87,8 @@
 						<th>takenlijst</th>
 						<th>Details</th>
 					</tr>
+					</thead>
+					<tbody>
 					<c:forEach items="${lijst}" var="element">
 						<tr>
 							<td>${element.voornaam}</td>
@@ -99,19 +101,18 @@
 								<form action="personeelToonTakenlijst" method="get">
 									<input type="hidden" name="id" value=${element.persoonId}></input>
 									<input type="hidden" name="werknemerId" value=${element.werknemerId } ></input>
-									<input type="submit" name="submit" value="takenlijst" />
+									<input type="submit" class = "btn btn-default" name="submit" value="takenlijst..." />
 								</form>
 							</td>
 							<td>
 								<form action="personeelToonDetail" method="get">
 									<input type="hidden" name="id" value=${element.persoonId}></input>
-									<input type="submit" name="submit" value="meer..." />
+									<input type="submit" class = "btn btn-default" name="submit" value="meer..." />
 								</form>
 							</td>
 						</tr>
 					</c:forEach>
-					
-					
+					</tbody>
 				</table>
 			</div>
 		</div>

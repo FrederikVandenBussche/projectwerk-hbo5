@@ -14,37 +14,8 @@ table{
     width: 100%;	
 }
 
-
-
-th, td {
-	text-align: left;
-	padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #eeeeee;
-}
-
 .celinhoud {
     overflow: hidden;
-}
-
-td > form {
-    margin: 0px;
-}
-
-td > form > input{
-    height: 3em;
-    margin: 0px;
-    width: 100px;
-}
-
-td > form > input:hover{
-    background-color: #909090;
-}
-
-tr:nth-child(even) > td > form > input:hover {
-    background-color: #909090;
 }
 
 .adresLijst, .horizontaleDivs {
@@ -65,9 +36,8 @@ tr:nth-child(even) > td > form > input:hover {
 	
 .adresLijst > div {
 	display: inline-block;
-	border: 1px solid black;
-	height: 170px;
-	width : 650px;
+	/*height: 170px;
+	width : 650px;*/
 	padding: 5px;
 	margin-right: 10px;
 }

@@ -2,15 +2,16 @@
 	pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Tuinbouwbedrijf Hitek</title>
-<link rel="stylesheet" type="text/css" href="style/style.css">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Tuinbouwbedrijf Hitek</title>
+		<link rel="stylesheet" type="text/css" href="style/style.css">
+		<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+        <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+        <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-	
-</head>
+		<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	</head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -65,12 +66,13 @@
 			</div>
 		</div>
 		<div id="content">
-			Personeel takenlijst <br />
+			<br />
 			<fieldset>
 				<legend> Takenlijst van ${personeelsnaam } </legend>
 
 				<div class="groteTabel">
-					<table>
+					<table class = "table table-striped table-hover">
+						<thead>
 						<tr>
 							<th>Datum</th>
 							<th>Klant</th>
@@ -78,6 +80,8 @@
 							<th>Taak</th>
 							<th></th>
 						</tr>
+						</thead>
+						<tbody>
 						<c:forEach items="${takenLijst }" var="element">
 							<tr>
 								<td><fmt:formatDate value="${element.datum }"
@@ -89,11 +93,12 @@
 									<form action="personeelbeheerTaakVerwijderen" method="post">
 										<input type="hidden" name="id"
 											value="${element.dbWerknemerOpdrachtTaakId }"></input> <input
-											type="submit" name="submit" value="Verwijder" />
+											type="submit" class = "btn btn-default" name="submit" value="Verwijder" />
 									</form>
 								</td>
 							</tr>
 						</c:forEach>
+						</tbody>
 					</table>
 				</div>
 			</fieldset>

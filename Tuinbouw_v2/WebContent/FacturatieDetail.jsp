@@ -7,8 +7,9 @@
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 	
 	
@@ -67,36 +68,45 @@
 			</div>
 		</div>
 		<div id="content">
-			Facturatie
-			
+			<br />
 			<form action="genereerPdf" method = "post" target="_blank" >
-				<fieldset>
-					<legend>Klantgegevens</legend>
-					Klantnaam: ${factuur.klantNaam }.
-					<br />
-					<label for = "adres"> Verzend de factuur naar het adres: </label> 
-					<select name="adres">
-						<c:forEach items="${adresMap }" var="adres">
-							<option value="${adres.key }">
-								${adres.value }
-							</option>
-						</c:forEach>
-					</select>	
-				</fieldset>
-				
-				<fieldset>
+				Klantnaam: ${factuur.klantNaam }.
+				<br />
+				<label for = "adres"> Verzend de factuur naar het adres: </label> 
+				<select name="adres">
+					<c:forEach items="${adresMap }" var="adres">
+						<option value="${adres.key }">
+							${adres.value }
+						</option>
+					</c:forEach>
+				</select>	
+				<ul id = "myTab" class = "nav nav-tabs">
+            <li class = "active">
+                <a href = "#werkuren" data-toggle = "tab">
+                    Overzicht werkuren
+                </a>
+            </li>
+            <li><a href = "#verplaatsingen" data-toggle = "tab">Overzicht verplaatsingskosten</a></li>
+            <li><a href = "#materialen" data-toggle = "tab">Overzicht gebruikte materialen</a></li>	
+        </ul>
+
+        <div id = "myTabContent" class = "tab-content">
+            <div class = "tab-pane fade in active" id = "werkuren">
+                <fieldset>
 					<legend>Overzicht werkuren</legend>
 					<c:forEach items="${factuur.opdrachtLijst }" var="opdracht">
 						Opdracht: ${opdracht.opdrachtNaam }.
 						
 						<div class="tabel">
-							<table>
+							<table class = "table table-striped table-hover">
+								<thead>
 								<tr>
 									<th>Taak</th>
 									<th>Datum</th>
-									<th>&#x23; uren</th>
-															
+									<th>&#x23; uren</th>						
 								</tr>
+								</thead>
+								<tbody>
 								<c:forEach items="${opdracht.taakLijst }" var="taak">
 									<tr>
 										<td>${taak.taakNaam }</td>
@@ -115,21 +125,25 @@
 										</tr>
 									</c:forEach>
 								</c:forEach>
+								</tbody>
 							</table>
 						</div>
 					</c:forEach>
 				</fieldset>
-				
-				<fieldset>
+            </div>
+            <div class = "tab-pane fade" id = "verplaatsingen">
+                <fieldset>
 					<legend>Overzicht verplaatsingskosten</legend>
 					<div class="tabel">
-						<table>
+						<table class = 'table table-striped table-hover'>
+							<thead>
 							<tr>
 								<th>Dag	</th>
 								<th>aantalKm</th>
-								<th>aantal verplaatsingen</th>
-													
+								<th>aantal verplaatsingen</th>					
 							</tr>
+							</thead>
+							<tbody>
 							<c:forEach items="${factuur.verplaatsingLijst }" var="verplaatsing">
 								<tr>
 									<td>
@@ -140,14 +154,17 @@
 									
 								</tr>
 							</c:forEach>
+							</tbody>
 						</table>
 					</div>
 				</fieldset>
-				
-				<fieldset>
+            </div>
+             <div class = "tab-pane fade" id = "materialen">
+                <fieldset>
 					<legend>Overzicht gebruikte materialen</legend>
 					<div class="tabel">
-						<table>
+						<table class = "table table-striped table-hover">
+							<thead>
 							<tr>
 								<th>soort</th>
 								<th>naam</th>
@@ -156,6 +173,8 @@
 								<th>eenheidsprijs</th>
 								<th></th>
 							</tr>
+							</thead>
+							<tbody>
 							<c:forEach items="${factuur.opdrachtLijst }" var="opdracht">
 								<c:forEach items="${opdracht.gebruiktMateriaalLijst }" var="materiaal">
 									<tr>
@@ -167,10 +186,18 @@
 									</tr>								
 								</c:forEach>
 							</c:forEach>
+							</tbody>
 						</table>
 					</div>
 				</fieldset>
-				<input type="submit" name="submit" value="download als pdf" />
+            </div>
+        </div>
+				
+				
+				
+				
+				
+				<input type="submit" class = "btn btn-primary btn-lg btn-block" name="submit" value="download als pdf" />
 			</form>
 		</div>
 	</div>

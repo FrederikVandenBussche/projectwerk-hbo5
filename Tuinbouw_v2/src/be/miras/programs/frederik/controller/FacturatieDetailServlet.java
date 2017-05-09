@@ -287,7 +287,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 									&& verplaatsing.getWerknemerId() == werknemerId
 									&& verplaatsing.getOpdrachtId() == opdrachtId){
 								reedsVerplaatst = true;
-								int aantal = verplaatsing.getAantalVerplaatsingen() + 2;
+								int aantal = verplaatsing.getAantalVerplaatsingen();
 								verplaatsing.setAantalVerplaatsingen(aantal);
 							}	
 						}
@@ -306,7 +306,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 			}
 			
 		}
-		// er is een lijst met alle verplaatsingen appart
+		// er is een lijst met alle verplaatsingen apart
 		// een lijst met alle verplaatsingen per werknemer is nodig
 		List<Verplaatsing> teFacturerenVerplaatsingLijst = new ArrayList<Verplaatsing>();
 		

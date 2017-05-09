@@ -3,18 +3,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Tuinbouwbedrijf Hitek</title>
-<link rel="stylesheet" type="text/css" href="style/style.css">
-<link rel="stylesheet" type="text/css" href="style/lijst.css">
-
-<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-<script type="text/javascript" src="script/nieuweOpdracht.js"></script>
-
-
-
-
+		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+		<title>Tuinbouwbedrijf Hitek</title>
+		<link rel="stylesheet" type="text/css" href="style/style.css">
+		<link rel="stylesheet" type="text/css" href="style/lijst.css">
+		<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+        <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+        <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+		<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+		<script type="text/javascript" src="script/nieuweOpdracht.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -72,7 +69,7 @@
 			<fieldset>
 				<legend id="opdrachtAanspreekNaam">Opdracht ${opdrachtDetailData.aanspreeknaam } </legend>
 				<form action="opdrachtOpslaan" method="post">
-					<div class="inlogError">${inputValidatieErrorMsg }</div>
+					<div class="invulError">${inputValidatieErrorMsg }</div>
 					In opdracht van : ${opdrachtDetailData.opdracht.klantNaam } 
 					<label for = "klanten">	${opdrachtDetailData.variabelveld1 }</label> 
 					<select name="klanten">
@@ -120,7 +117,7 @@
 					Kies een ander adres uit de adreslijst van
 					${opdrachtDetailData.opdracht.klantNaam } 
 					<br /> 
-					<input type="submit" name="submit" value="Adreslijst herladen" /> 
+					<input type="submit" class = "btn btn-default active" name="submit" value="Adreslijst herladen" /> 
 					<select	name="adressen">
 						<option value="" selected>Wijzig adres</option>
 						<c:forEach items="${opdrachtDetailData.adresMap.values() }" var="adresString">
@@ -129,22 +126,33 @@
 					</select> 
 					<br /> 
 					<input type="hidden" name="id" value="${opdrachtDetailData.opdracht.id }" /> 
-					<input type="submit" name="submit" value="${opdrachtDetailData.buttonNaam }" />
+					<input type="submit" class = "btn btn-default btn-block active" name="submit" value="${opdrachtDetailData.buttonNaam }" />
 				</form>
 			</fieldset>
-			<div class="horizontaleDivs">
-				<div id="voegNieuweTaakToe">
+			
+			<ul id = "myTab" class = "nav nav-tabs">
+            <li class = "active">
+                <a href = "#taken" data-toggle = "tab">
+                    Taken
+                </a>
+            </li>
+            <li><a href = "#materialen" data-toggle = "tab">Materialen</a></li>	
+        </ul>
+
+        <div id = "myTabContent" class = "tab-content">
+            <div class = "tab-pane fade in active" id = "taken">
+            	<br />
+                <div id="voegNieuweTaakToe">
 					<form action="taakToonDetail" method="get">
 						<!--  voor een nieuwe taak is de id voorlopig -1 -->
 						<input type="hidden" name="id" value="-1" /> 
-						<input type="submit" name="submit" value="Voeg een nieuwe taak toe" />
+						<input type="submit" class = "btn btn-default btn-block active" name="submit" value="Voeg een nieuwe taak toe" />
 					</form>
 				</div>
-			</div>
-
-			<fieldset id="takenlijst">
+				<fieldset id="takenlijst">
 				<legend>Takenlijst</legend>
-				<table>
+				<table class = "table table-striped table-hover">
+					<thead>
 					<tr>
 						<th>Naam</th>
 						<th>vooruitgang</th>
@@ -153,35 +161,37 @@
 						<th></th>
 						<th></th>
 					</tr>
+					</thead>
+					<tbody>
 					<c:forEach items="${opdrachtDetailData.opdracht.taakLijst }"
 						var="element">
 						<tr>
 							<td>${element.taakNaam }</td>
 							<td class="progressbar">
-								<progress value="${element.vooruitgangPercentage } " max="100"></progress>
+								<progress class = "progress" value="${element.vooruitgangPercentage } " max="100"></progress>
 							</td>
 							<td>${element.status }</td>
 							<td>${fn:substring(element.opmerking, 0, 20 ) }</td>
 							<td>
 								<form action="taakToonDetail" method="get">
 									<input type="hidden" name="id" value="${element.id }" /> 
-									<input type="submit" name="submit" value="Details" />
+									<input type="submit" class = "btn btn-default" name="submit" value="Details" />
 								</form>
 							</td>
 							<td>
 								<form action="taakVerwijderen" method="post">
 									<input type="hidden" name="id" value="${element.id }" /> 
-									<input type="submit" name="submit" value="Verwijderen" />
+									<input type="submit" class = "btn btn-default" name="submit" value="Verwijderen" />
 								</form>
 							</td>
 						</tr>
 					</c:forEach>
+					</tbody>
 				</table>
 			</fieldset>
-			<div class="horizontaleDivs">
-				<fieldset id="voegGebruiktMateriaalToe">
-					<legend>Voeg gebruikt materiaal toe</legend>
-					<form action="opdrachtMateriaalToevoegen" method="post">
+            </div>
+            <div class = "tab-pane fade" id = "materialen">
+                <form action="opdrachtMateriaalToevoegen" method="post">
 						<label for = "materialen"> Naam: </label> 
 						<select name="materialen">
 							<c:forEach items="${opdrachtDetailData.materiaalLijst }" var="materiaal">
@@ -191,12 +201,12 @@
 						<label for ="hoeveelheid"> Hoeveelheid: </label> 
 						<input type="number" name="hoeveelheid" />
 						${materiaal.eenheidsmaat }
-						<input type="submit" name="submit" value="Voeg toe" />
+						<input type="submit" class = "btn btn-default active"  name="submit" value="Voeg toe" />
 					</form>
-				</fieldset>
-				<fieldset id="gebruiktMateriaal">
+					<fieldset id="gebruiktMateriaal">
 					<legend>Gebruikte materialen</legend>
-					<table>
+					<table class = "table table-striped table-hover">
+						<thead>
 						<tr>
 							<th>Soort</th>
 							<th>Naam</th>
@@ -205,6 +215,8 @@
 							<th>Eenheidsprijs</th>
 							<th></th>
 						</tr>
+						</thead>
+						<tbody>
 						<c:forEach
 							items="${opdrachtDetailData.opdracht.gebruiktMateriaalLijst }"
 							var="materiaal">
@@ -217,18 +229,21 @@
 								<td>
 									<form action="opdrachtMateriaalVerwijderen" method="post">
 										<input type="hidden" name="id" value="${materiaal.id }" /> 
-										<input type="submit" name="submit" value="Verwijder" />
+										<input type="submit" class = "btn btn-default" name="submit" value="Verwijder" />
 									</form>
 								</td>
 							</tr>
 						</c:forEach>
+						</tbody>
 					</table>
 				</fieldset>
-			</div>
+            </div>
+        </div>
+				
 			<div id="opdrachtVerwijderenDiv">
 				<form action="opdrachtVerwijderen" method="post">
 					<input type="hidden" name="id" value="${opdrachtDetailData.opdracht.id }" /> 
-					<input type="submit" name="submit" value="Deze opdracht verwijderen" />
+					<input type="submit" class = "btn btn-default btn-block" name="submit" value="Deze opdracht verwijderen" />
 				</form>
 			</div>
 			

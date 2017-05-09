@@ -7,9 +7,10 @@
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+   	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	
-	
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 	<script type="text/javascript" src="script/nieuweTaak.js"></script>
 	
@@ -69,53 +70,76 @@
 			</div>
 		</div>
 		<div id="content">
-			Taakbeheer
+			<br />
 			<div id="taakomschrijving">
 				<form action="taakOpslaan" method="post" >
 					Taak: In opdracht van ${opdrachtDetailData.opdracht.klantNaam } 
-					<div class="inlogError">${inputValidatieErrorMsg }</div>
+					<div class="invulError">${inputValidatieErrorMsg }</div>
 					<br />
 					<fieldset>
 						<legend>
 							Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
 						</legend>
 						<br />
-						<label for = "taaknaam">naam: </label> 
-						<input type="text"  id="taaknaam" name="taaknaam" value ="${taak.taakNaam }" />
-						<br />
-						<label for = "opmerking">opmerking: </label>
-						<br />
-						<textarea rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
-						<br />
-						<input type="submit" name="submit" value="opslaan" />
+						<div class="inputvelden form-group">
+							<label class="control-label col-sm-2" for = "taaknaam">naam: </label>
+							 <div class="col-sm-10">
+							 	<input type="text" class="form-control" id="taaknaam" name="taaknaam" value ="${taak.taakNaam }" />
+							 </div>
+							 <label class="control-label col-sm-2" for = "opmerking">opmerking: </label>
+							 <div class="col-sm-10">
+							 	<textarea class="form-control" rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
+							 </div>
+							 <div class=" col-sm-offset-2 col-sm-10">
+							 	<input type="submit" class = "btn btn-default active" name="submit" value="opslaan" />
+							 </div> 
+						</div>
 					</fieldset>
 				</form>
 			</div>
-			<div id="planning">
-				<fieldset>
-					<legend>Planning</legend>
-						<form action="taakPlanningToevoegen" method="post">
-							<label for = "werknemer">Voeg een nieuwe werknemer toe : </label>
-							<select name = "werknemer">
-								<c:forEach items="${werknemerMap }" var="werknemer">
-									<option value="${werknemer.key }">
-										${werknemer.value }
-									</option>							
-								</c:forEach>
-							</select>
-							<br />
-							<label for = "datum">Plan een nieuwe datum in: (dd/mm/yyyy) </label>
-							<input type="date" name="datum" />
-							<input type="submit" name="submit" value="Voeg toe" />	
-						</form>
-						<br />
-						Volgende werknemer staan reeds gepland:
-						<table>
+			<ul id = "myTab" class = "nav nav-tabs">
+            	<li class = "active">
+            	    <a href = "#planning" data-toggle = "tab">
+            	        Planning
+            	    </a>
+            	</li>
+            	<li><a href = "#gewerkteUren" data-toggle = "tab">Gewerkte uren</a></li>	
+        	</ul>
+	        <div id = "myTabContent" class = "tab-content">
+	            <div class = "tab-pane fade in active" id = "planning">
+	                <form action="taakPlanningToevoegen" method="post">
+	                	<div class = "inputvelden form control">
+	                		<label for = "werknemer">Voeg een nieuwe werknemer toe : </label>
+	                		<div >
+	                			<select name = "werknemer">
+									<c:forEach items="${werknemerMap }" var="werknemer">
+										<option value="${werknemer.key }">
+											${werknemer.value }
+										</option>							
+									</c:forEach>
+								</select>
+    	            		</div>
+        	        		<label for = "datum">Plan een nieuwe datum in: (dd/mm/yyyy) </label>
+           		     		<div >
+            	    			<input " type="date" name="datum" />
+            	    		</div>
+                			<div >
+                				<input type="submit" class = "btn btn-default active" name="submit" value="Voeg toe" />	
+                			</div>
+                		</div>
+					</form>
+					<br />
+					<br />
+					Volgende werknemer staan reeds gepland:
+					<table class = "table table-striped table-hover">
+						<thead>
 							<tr>
 								<th> naam </th>
 								<th> datum </th>
 								<th> </th>
 							</tr>
+							</thead>
+							<tbody>
 							<c:forEach items="${taak.planningLijst }" var="planning">
 								<tr>
 									<td>${planning.werknemer } </td>
@@ -125,18 +149,17 @@
 									<td>
 										<form action="taakGeplandeWerknemerVerwijderen" method="get">
 											<input type="hidden" name="id" value="${planning.id }" />
-											<input type="submit" name="submit" value="verwijder" /> 
+											<input type="submit" class = "btn btn-default" name="submit" value="verwijder" /> 
 										</form>
 									</td>
 								</tr>
 							</c:forEach>
+							</tbody>
 						</table>
-				</fieldset>
-				</div>
-			<div id="vooruitgang">
-				<fieldset>
-					<legend>Gewerkte uren</legend>
-					<table>
+            </div>
+            <div class = "tab-pane fade" id = "gewerkteUren">
+                <table class = "table table-striped table-hover">
+						<thead>
 						<tr>
 							<th>Naam Werknemer </th>
 							<th>Beginuur</th>
@@ -144,6 +167,8 @@
 						<th>isAanwezig</th>
 						<th></th>
 						</tr>
+						</thead>
+						<tbody>
 						<c:forEach items="${taak.gewerkteUrenLijst }" var="element">
 							<tr>
 								<td>${element.werknemer }</td>
@@ -156,9 +181,12 @@
 								<td>${element.isAanwezig }</td>
 							</tr>
 						</c:forEach>
+						</tbody>
 					</table>
-				</fieldset>
-			</div>
+            </div>
+        </div>
+			
+			
 		</div>
 	</div>
 
