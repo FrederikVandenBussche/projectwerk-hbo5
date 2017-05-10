@@ -10,13 +10,20 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbOpdracht;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbOpdracht
+ *
+ */
 public class DbOpdrachtDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbOpdrachtDao.class);
-
+	private final String TAG = "DbOpdrachtDao: ";
+	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
+		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try{
 			DbOpdracht opdracht = (DbOpdracht)o;
@@ -24,6 +31,7 @@ public class DbOpdrachtDao implements ICRUD {
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(opdracht);
+			id = opdracht.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -32,13 +40,12 @@ public class DbOpdrachtDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class DbOpdrachtDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -95,7 +102,7 @@ public class DbOpdrachtDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -105,9 +112,8 @@ public class DbOpdrachtDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbOpdracht opdracht = (DbOpdracht)o;
@@ -122,19 +128,16 @@ public class DbOpdrachtDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdracht where id = :id";
 		try {
@@ -151,46 +154,19 @@ public class DbOpdrachtDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
 			LOGGER.error("Exception: ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
-	public int geefMaxId() {
-		int maxId = Integer.MIN_VALUE;
-		List<Integer> lijst = new ArrayList<Integer>();
-		String query = "SELECT MAX(id) FROM DbOpdracht"; 
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		if (!lijst.isEmpty()){
-			maxId = lijst.get(0);
-		}
-		return maxId;
-	}
-
+	/**
+	 * @param id int
+	 * @return String[]
+	 * 
+	 * return de klantId en de naam van DbOpdracht met geparameteriseerde id
+	 */
 	public String[] selectKlantIdEnNaam(int id) {
 		
 		String[] returnData = new String[2];
@@ -214,7 +190,7 @@ public class DbOpdrachtDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
@@ -227,6 +203,12 @@ public class DbOpdrachtDao implements ICRUD {
 		return returnData;
 	}
 
+	/**
+	 * @param klantId int
+	 * @return Lijst<DbOpdracht>
+	 * 
+	 * return een lijst met DbOpdrachten met een bepaalde klantId
+	 */
 	public List<DbOpdracht> leesWaarKlantId(int klantId) {
 		List<DbOpdracht> lijst = new ArrayList<DbOpdracht>();
 		String query = "FROM DbOpdracht WHERE klantId = :klantId"; 
@@ -248,7 +230,7 @@ public class DbOpdrachtDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesWaarKlantId(klantId) " + klantId + " ", e);
 		} finally {
 			session.close();
 		}
@@ -258,6 +240,12 @@ public class DbOpdrachtDao implements ICRUD {
 		
 	}
 
+	/**
+	 * @param id int
+	 * @return int
+	 * 
+	 * return klantAdresId van den DbOpdracht met geparameteriseerde id
+	 */
 	public int geefKlantAdresId(int id) {
 		int klantAdresId = Integer.MIN_VALUE;
 		List<Integer> lijst = new ArrayList<Integer>();
@@ -280,7 +268,7 @@ public class DbOpdrachtDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "geefKlantAdresId(id) " + id + " ", e);
 		} finally {
 			session.close();
 		}
@@ -290,4 +278,5 @@ public class DbOpdrachtDao implements ICRUD {
 		return klantAdresId;
 	}
 
+	
 }

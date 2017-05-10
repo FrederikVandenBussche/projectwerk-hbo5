@@ -22,6 +22,8 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class OpdrachtMateriaalToevoegenServlet
  */
 @WebServlet("/OpdrachtMateriaalToevoegenServlet")
@@ -48,7 +50,6 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 		
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{hoeveelheidString});
-		
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
 			HttpSession session = request.getSession();
@@ -98,7 +99,6 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 			
 		}
 		
-		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);
 	}
@@ -129,7 +129,7 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 		}
 		
 		return inputValidatieErrorMsg;
-
 	}
 
+	
 }

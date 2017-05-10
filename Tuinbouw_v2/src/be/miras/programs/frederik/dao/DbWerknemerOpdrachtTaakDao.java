@@ -11,19 +11,27 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbWerknemerOpdrachtTaak
+ *
+ */
 public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbWerknemerOpdrachtTaakDao.class);
+	private final String TAG = "DbWerknemerOpdrachtTaakDao: ";
 
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		try{
 			DbWerknemerOpdrachtTaak dwot = (DbWerknemerOpdrachtTaak)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(dwot);
+			id = dwot.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -32,13 +40,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegtoe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees() ", e);
 		} finally {
 			session.close();
 		}
@@ -95,7 +102,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -105,10 +112,9 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbWerknemerOpdrachtTaak dwot = (DbWerknemerOpdrachtTaak)o;
@@ -123,19 +129,16 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig() ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where id = :id";
 		try {
@@ -152,15 +155,19 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id) " + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param taakId int
+	 * @return Lijst<DbWerknemerOpdrachtTaak>
+	 * 
+	 * returnt waar opdrachtTaakTaakId
+	 */
 	public List<DbWerknemerOpdrachtTaak> leesWaarTaakId(int taakId) {
 		List<DbWerknemerOpdrachtTaak> lijst = new ArrayList<DbWerknemerOpdrachtTaak>();
 		String query = "FROM DbWerknemerOpdrachtTaak where opdrachtTaakTaakId = :taakId"; 
@@ -182,7 +189,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesWaarTaakId(taakId)" + taakId + " " , e);
 		} finally {
 			session.close();
 		}
@@ -190,6 +197,11 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		return lijst;
 	}
 
+	/**
+	 * @param opdrachtId int
+	 * 
+	 * verwijder DbWerknemerOpdrachtTaak met een bepaalde opdrachtId
+	 */
 	public void verwijderWaarOpdrachtId(int opdrachtId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -209,12 +221,17 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijderWaarOpdrachtId(opdrachtId) " + opdrachtId + " ", e);
 		} finally {
 			session.close();
 		}
 	}
 
+	/**
+	 * @param taakId int
+	 * 
+	 * verwijder DbWerknemerOpdrachtTaak met een bepaalde taakId
+	 */
 	public void verwijderWaarTaakId(int taakId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -234,13 +251,19 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijderWaarTaakId(taakId) " + taakId + " ", e);
 		} finally {
 			session.close();
 		}
 		
 	}
 
+	/**
+	 * @param werknemerId int
+	 * @return List<Object>
+	 * 
+	 * haal OpdrachtId, TaakId en Beginuur met een bepaalde werknemerId uit databank
+	 */
 	public List<Object> leesOpdrachtIdTaakIdBeginuur(int werknemerId) {
 		List<Object> lijst = new ArrayList<Object>();
 		String query = "SELECT id, opdrachtTaakOpdrachtId, opdrachtTaakTaakId, beginuur "
@@ -263,7 +286,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + " leesOpdrachtIdTaakIdBeginuur(werknemerId)" + werknemerId + " ", e);
 		} finally {
 			session.close();
 		}

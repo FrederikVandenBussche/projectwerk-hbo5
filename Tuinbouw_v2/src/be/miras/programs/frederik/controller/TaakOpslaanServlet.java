@@ -21,14 +21,14 @@ import be.miras.programs.frederik.util.InputValidatie;
 import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class TaakOpslaanServlet
  */
 @WebServlet("/TaakOpslaanServlet")
 public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "TaakOpslaanServet: ";
 
-	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -62,7 +62,6 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 			List<Taak> takenlijst = opdrachtDetailData.getOpdracht().getTaakLijst();
 
 			int id = taak.getId();
-			System.out.println(TAG + "taak id = " + id);
 			
 			if (id < 0) {
 				
@@ -74,8 +73,8 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 				taak.setOpmerking(opmerking);
 				taak.setOpdrachtId(opdrachtDetailData.getOpdracht().getId());
 
-				taakDaoAdapter.voegToe(taak);
-				taak.setId(dbTaakDao.geefMaxId());
+				int taakId = taakDaoAdapter.voegToe(taak);
+				taak.setId(taakId);
 				DbStatusDao dbStatusDao = new DbStatusDao();
 				// een nieuwe taak heeft als status de waarde van DbStatus met
 				// id =

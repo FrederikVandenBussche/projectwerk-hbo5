@@ -13,11 +13,18 @@ import be.miras.programs.frederik.dbo.DbOpdrachtMateriaal;
 import be.miras.programs.frederik.dbo.DbTypeMateriaal;
 import be.miras.programs.frederik.model.Materiaal;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Adapter die het model Materiaal
+ * koppelt aan de databankobjecten : DbMateriaal, DbTypeMateriaal
+ *
+ */
 public class MateriaalDaoAdapter implements ICRUD {
 		
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Materiaal materiaal = (Materiaal) o;
 
 		DbMateriaal dbMateriaal = new DbMateriaal();
@@ -43,7 +50,7 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 		dbMateriaalDao.voegToe(dbMateriaal);
 
-		return true;
+		return Integer.MIN_VALUE;
 	}
 
 	@Override
@@ -93,7 +100,7 @@ public class MateriaalDaoAdapter implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 		Materiaal materiaal = (Materiaal) o;
 
 		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
@@ -110,8 +117,7 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 			dtm.setNaam(materiaal.getSoort());
 
-			dbTypeMateriaalDao.voegToe(dtm);
-			typeMateriaalId = dbTypeMateriaalDao.zoekMaxId();
+			typeMateriaalId = dbTypeMateriaalDao.voegToe(dtm);
 		}
 		dbMateriaal.setId(materiaal.getId());
 		dbMateriaal.setNaam(materiaal.getNaam());
@@ -125,11 +131,10 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 			dbTypeMateriaalDao.verwijder(oudTMId);
 		}
-		return true;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 
 		DbMateriaalDao dmd = new DbMateriaalDao();
 
@@ -141,9 +146,14 @@ public class MateriaalDaoAdapter implements ICRUD {
 			dtmd.verwijder(typeMateriaalId);
 		}
 
-		return true;
 	}
 
+	/**
+	 * @param opdrachtId int
+	 * @return List<Materiaal>
+	 * 
+	 * returnt List<Materiaal> met een bepaalde opdrachtId
+	 */
 	public List<Materiaal> leesOpdrachtMateriaal(int opdrachtId) {
 
 		List<Materiaal> lijst = new ArrayList<Materiaal>();

@@ -18,6 +18,8 @@ import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class BedrijfsgegevensAdresVerwijderenServlet
  */
 @WebServlet("/BedrijfsgegevensAdresVerwijderenServlet")
@@ -83,4 +85,5 @@ public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

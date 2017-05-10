@@ -7,21 +7,22 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.mail.internet.InternetAddress;
-
-import org.hibernate.validator.internal.constraintvalidators.EmailValidator;
-
 /**
  * @author Frederik Vanden Bussche
  * 
- *         Er wordt een message gegenereert indien: - een tekst leeg is of uit
- *         nummers bestaat - een int niet enkel uit cijfers bestaat - een double
- *         niet uit een geldig kommagetal bestaat - een datum niet van het type
- *         dd/mm/yyyy of YYYY/mm/dd is .
+ *         Er wordt een message gegenereert indien: 
+ *         - een tekst leeg is of uit nummers bestaat 
+ *         - een int niet enkel uit cijfers bestaat 
+ *         - een double niet uit een geldig kommagetal bestaat 
+ *         - een datum niet van het type dd/mm/yyyy of YYYY/mm/dd is .
  *
  */
 public class InputValidatie {
 	
+ 	/**
+ 	 * @param tekst String
+ 	 * @return String message indien de string niet ingevuld is
+ 	 */
  	public static String ingevuld(String tekst){
 		String msg = null;
 		if (tekst == null || tekst.trim().isEmpty() || tekst.trim().length() == 0){
@@ -30,6 +31,11 @@ public class InputValidatie {
 		return msg;
 	}
 	
+	/**
+	 * @param tekst String
+	 * @return String indien de tekst niet is ingevuld of niet enkel bestaat uit
+	 * letters of de tekens '-_. of spatie
+	 */
 	public static String enkelAlfabetisch(String tekst) {
 		String msg = null;
 		if (tekst == null || tekst.trim().isEmpty() || tekst.trim().length() == 0) {
@@ -53,6 +59,10 @@ public class InputValidatie {
 		return msg;
 	}
 	
+	/** 
+	 * @param getal String
+	 * @return String indien het getal niet is ingevuld, of niet enkel uit cijfers bestaat.
+	 */
 	public static String geheelGetal(String getal) {
 		String msg = null;
 		if (getal == null || getal.trim().isEmpty() || getal.trim().length() == 0) {
@@ -68,6 +78,10 @@ public class InputValidatie {
 		return msg;
 	}
 
+	/**
+	 * @param getal String
+	 * @return String indien het getal niet geparst kan worden naar een double.
+	 */
 	public static String kommagetal(String getal) {
 		String msg = null;
 
@@ -119,6 +133,10 @@ public class InputValidatie {
 		return msg;
 	}
 
+	/**
+	 * @param datum String
+	 * @return String indien de string niet van het type dd/mm/YYYY of YYY/mm/dd is
+	 */
 	public static String correcteDatum(String datum) {
 		String msg = null;
 		if (datum == null || datum.trim().isEmpty() || datum.trim().length() == 0) {
@@ -197,6 +215,10 @@ public class InputValidatie {
 		return msg;
 	}
 
+	/**
+	 * @param email String
+	 * @return String indien email niet geen geldig email adres is
+	 */
 	public static String correctEmailadres(String email) {
 		String msg = null;
 
@@ -216,13 +238,17 @@ public class InputValidatie {
 		return msg;
 	}
 
+	/**
+	 * @param btwNr String
+	 * @return indien het btwNr geen geldig btw nummer is.
+	 */
 	public static String geldigBtwNummer(String btwNr) {
 		String msg = null;
 		
-		if(btwNr.trim().length() != 11 
+		if(btwNr.trim().length() != 12 
 				|| enkelAlfabetisch(btwNr.trim().substring(0, 2)) != null
-				|| geheelGetal(btwNr.trim().substring(2, 11)) != null){
-			msg = " is geen belgisch BTW nummer";
+				|| geheelGetal(btwNr.trim().substring(2, 12)) != null){
+			msg = " is geen belgisch BTW nummer (vb: BE0123456789";
 		}
 		return msg;
 	}

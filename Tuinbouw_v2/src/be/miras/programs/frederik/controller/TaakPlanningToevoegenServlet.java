@@ -26,6 +26,8 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class TaakPlanningToevoegenServlet
  */
 @WebServlet("/TaakPlanningToevoegenServlet")
@@ -34,9 +36,8 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 	
 	private Date startVanOpdracht;
 	private Date eindeVanOpdracht;
-	private String TAG = "TaakPlanningToevoegenServlet: ";
 
-	
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */

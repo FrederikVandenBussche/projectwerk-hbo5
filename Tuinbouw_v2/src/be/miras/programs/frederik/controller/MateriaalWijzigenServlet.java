@@ -16,6 +16,8 @@ import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class MateriaalWijzigenServlet
  */
 @WebServlet("/MateriaalWijzigenServlet")
@@ -27,7 +29,6 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 	 */
 	public MateriaalWijzigenServlet() {
 		super();
-
 	}
 
 	/**
@@ -70,4 +71,5 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

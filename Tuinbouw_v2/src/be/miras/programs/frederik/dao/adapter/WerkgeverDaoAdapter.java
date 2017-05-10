@@ -15,11 +15,19 @@ import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.GoogleApis;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Adapter die het model Werkgever
+ * koppelt aan de databankobjecten : DbWerkgever, DbPersoon, DbGebruiker,
+ * en het model PersoonAdres
+ *
+ */
 public class WerkgeverDaoAdapter implements ICRUD {
 
 	@Override
-	public boolean voegToe(Object o) {
-		return false;
+	public int voegToe(Object o) {
+		return Integer.MIN_VALUE;
 	}
 
 	@Override
@@ -76,14 +84,11 @@ public class WerkgeverDaoAdapter implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
-
-		return true;
+	public void wijzig(Object o) {
 	}
 
 	@Override
-	public boolean verwijder(int id) {
-		return false;
+	public void verwijder(int id) {
 	}
 
 }

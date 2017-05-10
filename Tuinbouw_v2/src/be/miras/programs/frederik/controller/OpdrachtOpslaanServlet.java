@@ -33,12 +33,13 @@ import be.miras.programs.frederik.util.InputValidatie;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class OpdrachtOpslaanServlet
  */
 @WebServlet("/OpdrachtOpslaanServlet")
 public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
-	private String TAG = "OpdrachtOpslaanServlet: ";
 	private int id;
 
 
@@ -108,7 +109,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			}
 			
 			opdracht.setId(this.id);
-			opdracht.setklantId(teWijzigenKlantId);
+			opdracht.setKlantId(teWijzigenKlantId);
 			opdracht.setKlantNaam(klantNaam);
 			if (opdrachtNaam == null || opdrachtNaam.isEmpty()) {
 				opdrachtNaam = "onbekend";
@@ -170,10 +171,9 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 					String staticmap = GoogleApis.urlBuilderStaticMap(adres);
 					String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 
-					dbOpdrachtDao.voegToe(dbOpdracht);
+					this.id = dbOpdrachtDao.voegToe(dbOpdracht);
 
 					// de nieuwe opdracht toevoegen aan de session opdrachtLijst
-					this.id = dbOpdrachtDao.geefMaxId();
 					opdracht.setId(this.id);
 					opdracht.setLatitude(latitude);
 					opdracht.setLongitude(longitude);
@@ -201,8 +201,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			} else {
 				// het betreft een bestaande opdracht
 				// indien er iets gewijzigd werd, de wijzigingen opslaan
-				System.out.println(TAG + "Een bestaande opdracht wijzigen");
-
+				
 				boolean isVerschillend = false;
 				double latitude = 0;
 				double longitude = 0;
@@ -337,7 +336,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 					while (it.hasNext()) {
 						Opdracht o = it.next();
 						if (o.getId() == this.id) {
-							o.setklantId(teWijzigenKlantId);
+							o.setKlantId(teWijzigenKlantId);
 							o.setKlantNaam(klantNaam);
 							o.setOpdrachtNaam(opdrachtNaam);
 							o.setStartDatum(beginDatum);

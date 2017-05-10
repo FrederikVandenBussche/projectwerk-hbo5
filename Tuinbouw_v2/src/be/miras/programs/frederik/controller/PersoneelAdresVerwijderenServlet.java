@@ -18,6 +18,8 @@ import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class AdresVerwijderenServlet
  */
 @WebServlet("/AdresVerwijderenServlet")
@@ -79,5 +81,6 @@ public class PersoneelAdresVerwijderenServlet extends HttpServlet {
 		RequestDispatcher view = request.getRequestDispatcher("/logout");
 		view.forward(request, response);
 	}
+
 
 }

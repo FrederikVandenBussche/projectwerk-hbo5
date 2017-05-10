@@ -20,6 +20,8 @@ import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class PersoneelVerwijderServlet
  */
 @WebServlet("/PersoneelVerwijderServlet")

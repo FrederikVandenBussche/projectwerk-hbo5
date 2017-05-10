@@ -26,14 +26,16 @@ import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class FacturatieDownloadServlet
  */
 @WebServlet("/FacturatieDownloadServlet")
 public class FacturatieDownloadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String TAG = "FacturatieDownloadServlet: ";
 	private static final Logger LOGGER = Logger.getLogger(FacturatieDownloadServlet.class);
-
+	private final String TAG = "FacturatieDownloadServlet: ";
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -52,7 +54,6 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		Factuur factuur = (Factuur) session.getAttribute("factuur");
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres"));
-		System.out.println(TAG + "adresId: " + adresId);
 		AdresAdapter adresAdapter = new AdresAdapter();
 		Adres facturatieAdres = (Adres) adresAdapter.lees(adresId);
 		factuur.setAdres(facturatieAdres);
@@ -96,14 +97,13 @@ public class FacturatieDownloadServlet extends HttpServlet {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-			LOGGER.error("Genereer PDF file: " + e);
+			LOGGER.error(TAG + "Genereer PDF file: " + e);
 		} finally {
 			if (bufferedInputStream != null)
 				bufferedInputStream.close();
 			if (bufferedOutputStream != null)
 				bufferedOutputStream.close();
 		}
-
 	}
 
 	/**
@@ -118,4 +118,5 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

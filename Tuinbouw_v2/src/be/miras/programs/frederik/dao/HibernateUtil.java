@@ -8,9 +8,9 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
- * Utility class om een Hibernate session aan te maken.
+ * @author Frederik Vanden Bussche
  * 
- * @author Frederik
+ * * Utility class om een Hibernate session aan te maken.
  *
  */
 public class HibernateUtil {
@@ -18,6 +18,7 @@ public class HibernateUtil {
 	private static final SessionFactory sessionFactory;
 	
 	private static final Logger LOGGER = Logger.getLogger(SessionFactory.class);
+	private final String TAG = "HibernateUtil : ";
 
 	/*
 	 * Een static methode zonder naam heet een 'Static Initialization Block'
@@ -35,7 +36,7 @@ public class HibernateUtil {
 			sessionFactory = configuration.buildSessionFactory(sr);
 		} catch (Throwable ex) {
 			System.err.println("Initial SessionFactory creation failed." + ex);
-			LOGGER.error("Throwable: ", ex);
+			LOGGER.error("Throwable: " + TAG , ex);
 			throw new ExceptionInInitializerError(ex);
 		}
 	}

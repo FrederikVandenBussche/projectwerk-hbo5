@@ -21,6 +21,8 @@ import be.miras.programs.frederik.util.InputValidatie;
 import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class PersoneelOpslaanServlet
  */
 @WebServlet("/PersoneelOpslaanServlet")
@@ -29,7 +31,6 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 	private int id;
 	private String geboortedatumString;
 	private String aanwervingsdatumString;
-	private String TAG = "PersoneelOpslaanServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -47,8 +48,6 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 		response.setContentType("text/html");
 
 		this.id = Integer.parseInt(request.getParameter("id"));
-
-		System.out.println(TAG + "request.getParameter('id') = " + this.id);
 		
 		String voornaam = request.getParameter("voornaam").trim();
 		String naam = request.getParameter("naam").trim();
@@ -62,8 +61,6 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{voornaam, naam, loonString, email, 
 						nieuweGeboortedatumString, nieuweAanwervingsdatumString});
-		
-		
 
 		if (inputValidatieErrorMsg.isEmpty()) {
 			
@@ -78,7 +75,6 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			if (this.aanwervingsdatumString != null)
 				aanwervingsdatum = Datum.creeerDatum(aanwervingsdatumString);
 
-			
 			personeel.setVoornaam(voornaam);
 			personeel.setNaam(naam);
 			personeel.setLoon(loon);
@@ -110,28 +106,22 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 				while (it.hasNext()) {
 					Personeel p = it.next();
 					if (p.getPersoonId() == this.id) {
-						System.out.println(TAG + "de persoonId = " + p.getPersoonId());
-						System.out.println(TAG + "De werknemersId = " + p.getWerknemerId());
-						System.out.println(TAG + "De gebruikerId = " + p.getGebruikerId());
 						
 						if (personeel.getGeboortedatum() == null)
 							personeel.setGeboortedatum(p.getGeboortedatum());
 						if (personeel.getAanwervingsdatum() == null)
 							personeel.setAanwervingsdatum(p.getAanwervingsdatum());
-						System.out.println(TAG + personeel.toString());
+						
 						if (p.isVerschillend(personeel, p)) {
 							personeel.setPersoonId(this.id);
 							personeel.setWerknemerId(p.getWerknemerId());
 							personeel.setGebruikerId(p.getGebruikerId());
 							personeel.setWerknemerId(p.getWerknemerId());
-							System.out.println(TAG + p.toString());
-							
 								
 							dao.wijzig(personeel);
 							it.set(personeel);
 						}
 					}
-
 				}
 			}
 	
@@ -139,13 +129,9 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
-			view = request.getRequestDispatcher("/PersoneelDetail.jsp");
-			
+			view = request.getRequestDispatcher("/PersoneelDetail.jsp");	
 		}
-		
-
-		
-		
+	
 		view.forward(request, response);
 
 	}
@@ -236,4 +222,5 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 		return inputValidatieErrorMsg;
 	}
 
+	
 }

@@ -23,13 +23,14 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class KlantOpslaanServlet
  */
 @WebServlet("/KlantOpslaanServlet")
 public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "KlantOpslaanServlet: ";
-
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -60,9 +61,6 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 		ArrayList<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) session.getAttribute("bedrijfLijst");
 
 		RequestDispatcher view = null;
-
-		System.out.println(TAG + "");
-		System.out.println(TAG + "id: " + id);
 
 		// instelling soort van klant
 		if (id < 0) {
@@ -109,8 +107,7 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 			// wijzigingen aanbrengen in de databijs en de sessionlijsten
 			if (id < 0) {
 				// nieuw Klant toevoegen
-				dbKlantDao.voegToe(klant);
-				id = dbKlantDao.zoekMakId();
+				id = dbKlantDao.voegToe(klant);
 				klant.setId(id);
 				if (klant.getClass().getSimpleName().equals("DbParticulier")) {
 					// dbKlantDao.voegToePartiulier((DbParticulier) klant);
@@ -148,7 +145,6 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 								it.set((DbBedrijf) klant);
 							}
 						}
-
 					}
 				}
 			}
@@ -163,7 +159,6 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 
 			view = request.getRequestDispatcher("/KlantDetail.jsp");
-
 		}
 
 		view.forward(request, response);
@@ -216,7 +211,7 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 		}
 		
 		return inputValidatieErrorMsg;
-
 	}
 
+	
 }

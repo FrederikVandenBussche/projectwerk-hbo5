@@ -16,6 +16,8 @@ import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Personeel;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class PersoneelLeeslijstServlet
  */
 @WebServlet("/PersoneelLeeslijstServlet")
@@ -68,4 +70,5 @@ public class PersoneelLeeslijstServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

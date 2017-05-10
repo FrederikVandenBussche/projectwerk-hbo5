@@ -2,8 +2,20 @@ package be.miras.programs.frederik.util;
 
 import java.util.Date;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * util class betreffende datums
+ *
+ */
 public class Datum {
 
+	/**
+	 * @param maandString String
+	 * @return int
+	 * 
+	 * converteert de naam van een maand in een int (0 - 11)
+	 */
 	public static int converteerMaand(String maandString) {
 		int maand = 0;
 		switch (maandString) {
@@ -50,6 +62,12 @@ public class Datum {
 		return maand;
 	}
 
+	/**
+	 * @param datumString String
+	 * @return Date
+	 * 
+	 * creëert een Date vanuit een string
+	 */
 	public static Date creeerDatum(String datumString) {
 		if (datumString != null && !datumString.isEmpty()) {
 			String eersteLetter = datumString.substring(0, 1);
@@ -85,14 +103,9 @@ public class Datum {
 					
 			} else if (datumString.length() == 29) {
 				jaar = Datatype.stringNaarInt(datumString.substring(24, 28)) - 1900; // YYYY
-																								// -
-																								// 1900
 				String maandString = datumString.substring(4, 7);
 				maand = Datum.converteerMaand(maandString);
-				dag = Datatype.stringNaarInt(datumString.substring(8, 10));// tussen
-																					// 1
-																					// en
-																					// 31
+				dag = Datatype.stringNaarInt(datumString.substring(8, 10));// tussen 1 en 31
 			}
 			Date datum = new Date(jaar, maand, dag);
 			return datum;
@@ -101,6 +114,12 @@ public class Datum {
 		}
 	}
 
+	/**
+	 * @param datum Date
+	 * @return String
+	 * 
+	 * genereer een String van het type dd/mm/YYYY
+	 */
 	public static String datumToString(Date datum) {
 		int dag = datum.getDate();
 		int maand = datum.getMonth() + 1;
@@ -114,6 +133,12 @@ public class Datum {
 		return datumString;
 	}
 	
+	/**
+	 * @param datum Date
+	 * @return String
+	 * 
+	 * genereer een string met het tijdstip ( 00:00;00)
+	 */
 	public static String tijdstipToString(Date datum) {
 		int uur = datum.getHours();
 		int minuten = datum.getMinutes();
@@ -124,6 +149,5 @@ public class Datum {
 		return tijdstip;
 	}
 	
-
 
 }

@@ -19,6 +19,8 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class MateriaalOpslaanServlet
  */
 @WebServlet("/MateriaalOpslaanServlet")
@@ -91,19 +93,17 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 
 							dao.wijzig(materiaal);
 							it.set(materiaal);
+							
+							session.setAttribute("materiaal", materiaal);
 						}
-
 					}
 				}
-
 			}
+			session.setAttribute("materiaalLijst", lijst);
 		} else {
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
-			
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);	
 		}
 		
-		
-
 		RequestDispatcher view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 		view.forward(request, response);
 	}
@@ -156,4 +156,5 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		return inputValidatieErrorMsg;
 	}
 
+	
 }

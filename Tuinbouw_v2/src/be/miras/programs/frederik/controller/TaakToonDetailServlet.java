@@ -25,12 +25,14 @@ import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class TaakToonDetailServlet
  */
 @WebServlet("/TaakToonDetailServlet")
 public class TaakToonDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "TaakToonDetailServlet: ";
+
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -139,8 +141,10 @@ public class TaakToonDetailServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
-	/*
-	 * return: HashMap<
+	/**
+	 * @return HashMap<Integer, String>
+	 * 
+	 * return een Hashmap met werknemerId en werknemer voornaam+""+naam
 	 */
 	private HashMap<Integer, String> geefWerknemerMap() {
 

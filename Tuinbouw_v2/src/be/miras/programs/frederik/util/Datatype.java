@@ -2,8 +2,18 @@ package be.miras.programs.frederik.util;
 
 import java.util.regex.Pattern;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ *         util class voor het parsen van datatypes
+ *
+ */
 public class Datatype {
 
+	/**
+	 * @param tekst String
+	 * @return boolean : true indien de tekst enkel uit numerieke waardes bestaat.
+	 */
 	private static boolean isNumeriek(String tekst) {
 		boolean isNumeriek = true;
 		char[] array = tekst.toCharArray();
@@ -16,6 +26,10 @@ public class Datatype {
 		return isNumeriek;
 	}
 
+	/**
+	 * @param tekst String
+	 * @return int : de tekst geparst naar een int
+	 */
 	public static int stringNaarInt(String tekst) {
 		int getal = Integer.MIN_VALUE;
 
@@ -29,13 +43,17 @@ public class Datatype {
 		return getal;
 	}
 
+	/**
+	 * @param tekst String
+	 * @return double : de tekste geparst naar een double
+	 */
 	public static double stringNaarDouble(String tekst) {
 		double getal = Double.MIN_VALUE;
-		
+
 		final String Digits = "(\\p{Digit}+)";
 		final String HexDigits = "(\\p{XDigit}+)";
 
-		// een exponent is 'e' of 'E' optioneel gevolgd door een + of - 
+		// een exponent is 'e' of 'E' optioneel gevolgd door een + of -
 		// met daarna een integer.
 		final String Exp = "[eE][+-]?" + Digits;
 		final String fpRegex = ("[\\x00-\\x20]*" + // optioneel beginnent met
@@ -46,10 +64,10 @@ public class Datatype {
 
 				// Een decimaal floating-point string is een eindig aantal
 				// positieve nummers die niet voorafgaan aan een teken.
-				// ze hebben 5 basis stukken: 
+				// ze hebben 5 basis stukken:
 				// Digits . Digits ExponentPart FloatTypeSuffix
 				//
-				
+
 				// Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
 				"(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|" +
 
@@ -70,7 +88,8 @@ public class Datatype {
 																				// "whitespace"
 
 		if (Pattern.matches(fpRegex, tekst))
-			getal = Double.valueOf(tekst); 
+			getal = Double.valueOf(tekst);
 		return getal;
 	}
+	
 }

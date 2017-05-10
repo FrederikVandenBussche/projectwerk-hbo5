@@ -13,19 +13,27 @@ import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbParticulier;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbKlant
+ *
+ */
 public class DbKlantDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbKlantDao.class);
+	private final String TAG = "DbKlantDao: ";
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
+		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try{
 			DbKlant klant = (DbKlant)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(klant);
+			id = klant.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -34,13 +42,12 @@ public class DbKlantDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -66,7 +73,7 @@ public class DbKlantDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -98,7 +105,7 @@ public class DbKlantDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -108,10 +115,9 @@ public class DbKlantDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbKlant klant = (DbKlant)o;
@@ -126,19 +132,16 @@ public class DbKlantDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlant where id = :id";
 		try {
@@ -155,15 +158,18 @@ public class DbKlantDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @return Object
+	 * 
+	 * return select * from DbParticulier
+	 */
 	public Object leesAlleParticulier() {
 		List<DbParticulier> lijst = new ArrayList<DbParticulier>();
 		String query = "FROM DbParticulier";
@@ -184,7 +190,7 @@ public class DbKlantDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesAllePartiuculier() ", e);
 		} finally {
 			session.close();
 		}
@@ -193,6 +199,11 @@ public class DbKlantDao implements ICRUD {
 		return objectLijst;
 	}
 
+	/**
+	 * @return Object
+	 * 
+	 * return select * from BdBedrijf
+	 */
 	public Object leesAlleBedrijf() {
 		List<DbBedrijf> lijst = new ArrayList<DbBedrijf>();
 		String query = "FROM DbBedrijf"; 
@@ -213,7 +224,7 @@ public class DbKlantDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesAlleBedrijf() ", e);
 		} finally {
 			session.close();
 		}
@@ -222,54 +233,5 @@ public class DbKlantDao implements ICRUD {
 		return objectLijst;
 	}
 
-	public void voegToePartiulier(DbParticulier klant) {
-		voegToe(klant);
-		
-	}
-
-	public void voegToeBedrijf(DbBedrijf klant) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void wijzigParticulier(DbParticulier klant) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void wijzigBedrijf(DbBedrijf klant) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public int zoekMakId() {
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "SELECT MAX(id) FROM DbKlant";
-		List<Integer> lijst = new ArrayList<Integer>();
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		int id = 0;
-		if (!lijst.isEmpty()) {
-			id = lijst.get(0);
-		}
-		return id;
-	}
 
 }

@@ -12,19 +12,26 @@ import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.dbo.DbTypeMateriaal;
 
 
+/**
+ * @author Frederik  Vanden Bussche
+ * 
+ * Dao voor het databankobject DbTypeMateriaal
+ *
+ */
 public class DbTypeMateriaalDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbTypeMateriaalDao.class);
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		try{
 			DbTypeMateriaal typeMateriaal = (DbTypeMateriaal)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(typeMateriaal);
+			id = typeMateriaal.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -33,13 +40,12 @@ public class DbTypeMateriaalDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
 			LOGGER.error("Exception: ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -106,10 +112,9 @@ public class DbTypeMateriaalDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbTypeMateriaal typeMateriaal = (DbTypeMateriaal)o;
@@ -124,19 +129,16 @@ public class DbTypeMateriaalDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
 			LOGGER.error("Exception: ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbTypeMateriaal where id = :id";
 		try {
@@ -153,15 +155,19 @@ public class DbTypeMateriaalDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
 			LOGGER.error("Exception: ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param naamType String
+	 * @return int
+	 * 
+	 * return id van een DbTypeMateriaal met een bepaalde naam
+	 */
 	public int lees(String naamType) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
@@ -193,34 +199,6 @@ public class DbTypeMateriaalDao implements ICRUD {
 		
 		return id;
 	}
+
 	
-	public int zoekMaxId() {
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "SELECT MAX(id) FROM DbTypeMateriaal";
-		List<Integer> lijst = new ArrayList<Integer>();
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		int id = 0;
-		if (!lijst.isEmpty()) {
-			id = lijst.get(0);
-		}
-		return id;
-	}
 }

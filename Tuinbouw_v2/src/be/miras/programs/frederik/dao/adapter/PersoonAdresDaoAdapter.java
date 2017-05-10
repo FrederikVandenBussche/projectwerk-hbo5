@@ -22,12 +22,20 @@ import be.miras.programs.frederik.dbo.DbPersoonAdres;
 import be.miras.programs.frederik.dbo.DbStraat;
 import be.miras.programs.frederik.model.Adres;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Adapter die het model PersoonAdres
+ * koppelt aan de databankobjecten : DbPersoonAdres, DbAdres, DbGemeente,
+ * DbStraat
+ *
+ */
 public class PersoonAdresDaoAdapter implements ICRUD {
-	String TAG = "AdresDaoAdapter ";
 	private static final Logger LOGGER = Logger.getLogger(PersoonAdresDaoAdapter.class);
+	private final String TAG = "PersoonAdresDaoAdapter: ";
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Adres adres = (Adres) o;
 		
 		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
@@ -41,7 +49,7 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		// indien de opgegeven postcode + gemeente nog niet in de databank zit
 		// voeg toe
 		int gemeenteId = dbGemeenteDao.geefIdVan(adres.getPostcode(), adres.getPlaats());
-		System.out.println(TAG + "de gemeenteId = " + gemeenteId);
+
 		if (gemeenteId < 0){
 			// gemeente nog niet in databank
 			DbGemeente dbGemeente = new DbGemeente();
@@ -51,7 +59,6 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			
 			gemeenteId = dbGemeenteDao.geefIdVan(adres.getPostcode(), adres.getPlaats());
 		}
-		System.out.println(TAG + "de gemeenteId = " + gemeenteId);
 		
 		// zoek ID van straat
 		// indien de opgegeven straatnaam nog niet in de databank zit
@@ -65,16 +72,13 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			
 			straatId = dbStraatDao.geefIdVan(adres.getStraat());
 		}
-		System.out.print(TAG + "de straatnaamId =  " + straatId);
-		
 		
 		dbAdres.setStraatId(straatId);
 		dbAdres.setGemeenteId(gemeenteId);
 		dbAdres.setHuisnummer(adres.getNummer());
 		dbAdres.setBus(adres.getBus());
-		dbAdresDao.voegToe(dbAdres);
+		int dbAdresId = dbAdresDao.voegToe(dbAdres);
 		
-		int dbAdresId = dbAdresDao.zoekMaxId();
 		int dbPersoonId = adres.getPersoonId();
 		
 		dbPersoonAdres.setAdresId(dbAdresId);
@@ -82,7 +86,7 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		dbPersoonAdresDao.voegToe(dbPersoonAdres);
 		
 		
-		return true;
+		return dbAdresId;
 	}
 
 	@Override
@@ -109,7 +113,7 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception:  ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -126,12 +130,11 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
-		return false;
+	public void wijzig(Object o) {
 	}
 
 	@Override
-	public boolean verwijder(int adresId) {
+	public void verwijder(int adresId) {
 		
 		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
 		DbPersoonAdres dbPersoonAdres = null;
@@ -168,9 +171,17 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
 			dbGemeenteDao.verwijder(gemeenteId);
 		}
-		return true;
 	}
 
+	/**
+	 * @param persoonOfKlant String
+	 * @param id int
+	 * @return List<Adres>
+	 * 
+	 * returnt een adreslijst van een bepaalde persoon of klant
+	 * String persoonOfKlant definieert of het om een Persoon of een Klant gaat.
+	 * Int id definieert welke id deze Persoon of Klant heeft.
+	 */
 	public List<Adres> leesSelectief(String persoonOfKlant, int id){
 		
 		List<Adres> adreslijst = new ArrayList<Adres>();
@@ -219,39 +230,14 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		
 		return adreslijst;
 	}
-	
-	public boolean verwijderSelectief(String kolomnaam, int id) {
-		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
-		Transaction transaction = null;
-		String query = "DELETE FROM Adres where {kolomnaam} = :id";
-		query = query.replace("{kolomnaam}", kolomnaam);
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			q.setParameter("id", id);
-			q.executeUpdate();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			isGelukt = false;
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		return isGelukt;
-		
-	}
 
+	/**
+	 * @param persoonId int
+	 * 
+	 * verwijdert adresmet geparameteriseerd persoonId.
+	 * Indien straat of gemeente nergens meer worden gebruikt wordt ook dat verwijderd
+	 */
 	public void verwijderVanPersoon(int persoonId) {
-		System.out.println(TAG + "ik wil dit adres verwijderen " + persoonId);
 		
 		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
 		
@@ -292,10 +278,5 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		}
 	}
 
-	public int geefMaxId() {
-		DbAdresDao dbAdresDao = new DbAdresDao();
-		int maxId = dbAdresDao.zoekMaxId();
-		return maxId;
-	}
 	
 }

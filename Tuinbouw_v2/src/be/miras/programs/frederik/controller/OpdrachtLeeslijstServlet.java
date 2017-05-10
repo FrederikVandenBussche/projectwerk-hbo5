@@ -24,6 +24,8 @@ import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.model.Opdracht;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class OpdrachtbeheerServlet
  */
 @WebServlet("/OpdrachtbeheerServlet")
@@ -93,7 +95,7 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 					Date eindDatum = dbOpdracht.getEinddatum();
 					
 					opdracht.setId(id);
-					opdracht.setklantId(klantId);
+					opdracht.setKlantId(klantId);
 					opdracht.setKlantAdresId(klantAdresId);
 					opdracht.setKlantNaam(naam);
 					opdracht.setOpdrachtNaam(opdrachtNaam);
@@ -105,11 +107,8 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 					opdrachtLijst.add(opdracht);
 				}
 				
-			
-				
 				session.setAttribute("opdrachtLijst", opdrachtLijst);
 			}
-			
 		});
 		thread.start();
 		
@@ -124,5 +123,6 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 		
 		doGet(request, response);
 	}
+	
 	
 }

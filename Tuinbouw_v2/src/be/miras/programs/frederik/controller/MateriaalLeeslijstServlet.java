@@ -16,6 +16,8 @@ import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class MateriaalLeeslijstServlet
  */
 @WebServlet("/MateriaalLeeslijstServlet")
@@ -51,7 +53,6 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 			
 			Materiaal m = new Materiaal();
 
-			
 			Thread thread = new Thread(new Runnable(){
 
 				@Override
@@ -71,9 +72,9 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 			session.setAttribute("materiaal", m);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
-
 		}
 		view.forward(request, response);
 	}
 
+	
 }

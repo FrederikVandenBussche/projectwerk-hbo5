@@ -16,17 +16,24 @@ import be.miras.programs.frederik.dbo.DbTaak;
 import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.model.Taak;
 
+/**
+  * @author Frederik Vanden Bussche
+ * 
+ * Adapter die het model Taak
+ * koppelt aan de databankobjecten : DbOpdrachtTaak, DbTaak, DbVooruitgang
+ *
+ */
 public class TaakDaoAdapter implements ICRUD {
-	private final String TAG = "TaakDaoAdapter: ";
 
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Taak taak = (Taak) o;
 		
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbTaakDao dbTaakDao = new DbTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
+		
 		DbTaak dbTaak = new DbTaak();
 		DbOpdrachtTaak dbOpdrachtTaak= new DbOpdrachtTaak();
 		DbVooruitgang dbVooruitgang = new DbVooruitgang();
@@ -57,7 +64,7 @@ public class TaakDaoAdapter implements ICRUD {
 		dbOpdrachtTaak.setOpmerking(taak.getOpmerking());
 		dbOpdrachtTaakDao.voegToe(dbOpdrachtTaak);
 		
-		return false;
+		return Integer.MIN_VALUE;
 	}
 
 	@Override
@@ -72,7 +79,7 @@ public class TaakDaoAdapter implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 		Taak taak = (Taak) o;
 		
 		DbTaakDao dbTaakDao = new DbTaakDao();
@@ -103,11 +110,10 @@ public class TaakDaoAdapter implements ICRUD {
 		String dbOpmerking = taak.getOpmerking();
 		dbOpdrachtTaakDao.wijzigOpmerking(dbOpdrachtId, dbTaakId, dbOpmerking);
 		
-		return false;
 	}
 
 	@Override
-	public boolean verwijder(int taakId) {
+	public void verwijder(int taakId) {
 				
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
@@ -126,9 +132,14 @@ public class TaakDaoAdapter implements ICRUD {
 		}
 		dbVooruitgangDao.verwijder(dbOpdrachtTaak.getVooruitgangId());
 		
-		return false;
 	}
 
+	/**
+	 * @param opdrachtId int
+	 * @return List<Taak>
+	 * 
+	 * haal alle Taak op met een bepaalde opdrachtId 
+	 */
 	public List<Taak> leesAlle(int opdrachtId) {
 		List<Taak> taakLijst = new ArrayList<Taak>();
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
@@ -177,11 +188,5 @@ public class TaakDaoAdapter implements ICRUD {
 		return taakLijst;
 	}
 
-	public int geefMaxId() {
-		DbTaakDao dbTaakDao = new DbTaakDao();
-		int maxId = dbTaakDao.geefMaxId();
-		return maxId;
-	}
-	
-	
+
 }

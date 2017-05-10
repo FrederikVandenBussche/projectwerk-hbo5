@@ -17,6 +17,8 @@ import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class MateriaalVerwijderenServlet
  */
 @WebServlet("/MateriaalVerwijderenServlet")
@@ -50,7 +52,6 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 				MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 				dao.verwijder(id);
 				it.remove();
-
 			}
 		}
 
@@ -71,4 +72,5 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

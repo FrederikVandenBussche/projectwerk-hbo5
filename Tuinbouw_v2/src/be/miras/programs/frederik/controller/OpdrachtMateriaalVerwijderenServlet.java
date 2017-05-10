@@ -18,12 +18,13 @@ import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class OpdrachtMateriaalVerwijderenServlet
  */
 @WebServlet("/OpdrachtMateriaalVerwijderenServlet")
 public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "OpdrachtMateriaalVerwijderenServlet: ";
 
 	
 	/**

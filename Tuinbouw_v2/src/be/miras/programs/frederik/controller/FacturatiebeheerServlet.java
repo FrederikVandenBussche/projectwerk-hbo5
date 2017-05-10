@@ -19,6 +19,8 @@ import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dbo.DbKlant;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class FacturatiebeheerServlet
  */
 @WebServlet("/FacturatiebeheerServlet")
@@ -80,4 +82,5 @@ public class FacturatiebeheerServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

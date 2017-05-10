@@ -10,19 +10,31 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbGebruiker;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbGebruiker
+ *
+ */
+/**
+ * @author Frederik
+ *
+ */
 public class DbGebruikerDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbGebruikerDao.class);
+	private final String TAG = "DbGebruikerDao: ";
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		try{
 			DbGebruiker gebruiker = (DbGebruiker)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(gebruiker);
+			id = gebruiker.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -31,13 +43,12 @@ public class DbGebruikerDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -62,7 +73,7 @@ public class DbGebruikerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -94,7 +105,7 @@ public class DbGebruikerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -104,10 +115,9 @@ public class DbGebruikerDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbGebruiker gebruiker = (DbGebruiker) o;
@@ -122,19 +132,16 @@ public class DbGebruikerDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbGebruiker where id = :id";
 		try {
@@ -151,15 +158,19 @@ public class DbGebruikerDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param idLijst int[]
+	 * @return Lijst<DbGebruiker>
+	 * 
+	 * return een lijst met DbGebruiker aan de hand van een bepaalde IdLijst
+	 */
 	public List<DbGebruiker> lees(int[] idLijst){
 		List<DbGebruiker> gebruikerLijst = new ArrayList<DbGebruiker>();
 		
@@ -187,7 +198,7 @@ public class DbGebruikerDao implements ICRUD {
 					transaction.rollback();
 				}
 				e.printStackTrace();
-				LOGGER.error("Exception: ", e);
+				LOGGER.error("Exception: " + TAG + "lees(idLijst) ", e);
 			} finally {
 				session.close();
 			}
@@ -200,6 +211,12 @@ public class DbGebruikerDao implements ICRUD {
 		return gebruikerLijst;
 	}
 
+	/**
+	 * @param id int
+	 * @return String
+	 * 
+	 * return wachtwoord van DbGebruiker met bepaald id;
+	 */
 	public String leesWachtwoord(int id) {
 		String wachtwoord = null;
 		Session session = HibernateUtil.openSession();
@@ -221,7 +238,7 @@ public class DbGebruikerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesWachtwoord(id) " + id + " ", e);
 		} finally {
 			session.close();
 		}
@@ -231,6 +248,12 @@ public class DbGebruikerDao implements ICRUD {
 		return wachtwoord;
 	}
 
+	/**
+	 * @param id int
+	 * @param wachtwoord String
+	 * 
+	 * wijzig het wachtwoord van DbGebruiker met bepaald id en het geparameteriseerde wachtwoord
+	 */
 	public void wijzigWachtwoord(int id, String wachtwoord) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -252,12 +275,18 @@ public class DbGebruikerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzigWachtwoord(id, wachtwoord) " + id + " " + wachtwoord + " ", e);
 		} finally {
 			session.close();
 		}		
 	}
 
+	/**
+	 * @param gebruikersnaam String
+	 * @return DbGebruiker
+	 * 
+	 * return DbGebruiker met een bepaalde gebruikersnaam
+	 */
 	public DbGebruiker getGebruiker(String gebruikersnaam) {
 		DbGebruiker gebruiker = new DbGebruiker();
 		Session session = HibernateUtil.openSession();
@@ -279,7 +308,7 @@ public class DbGebruikerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "getGebruiker(gebruikersnaam) " + gebruikersnaam + " ", e);
 		} finally {
 			session.close();
 		}
@@ -290,6 +319,13 @@ public class DbGebruikerDao implements ICRUD {
 		return gebruiker;
 	}
 
+	
+	/**
+	 * @param gebruikersnaam String
+	 * @return int
+	 * 
+	 * return het aantal DbGebruikers met bepaalde gebruikersnaam
+	 */
 	public int aantalMetGebruikersnaam(String gebruikersnaam) {
 		int  aantal = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
@@ -312,13 +348,18 @@ public class DbGebruikerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "aantalMetGebruikersnaam(gebruikersnaam) " + gebruikersnaam + " ", e);
 		} finally {
 			session.close();
 		}
 		return aantal;
 	}
 
+	/**
+	 * @param persoonId id
+	 * 
+	 * verwijder DbGebruiker met bepaalde persoonId
+	 */
 	public void verwijderWaarPersoonId(int persoonId) {
 		Session session = HibernateUtil.openSession();
 		boolean isGelukt = true;
@@ -340,11 +381,11 @@ public class DbGebruikerDao implements ICRUD {
 			}
 			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijderWaarPersoonId(persoonId) " + persoonId + " ", e);
 		} finally {
 			session.close();
 		}
-		
-		
 	}
+	
+	
 }

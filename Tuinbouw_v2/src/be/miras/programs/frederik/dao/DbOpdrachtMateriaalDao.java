@@ -10,19 +10,27 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbOpdrachtMateriaal;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbOpdrachtMateriaal
+ *
+ */
 public class DbOpdrachtMateriaalDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbOpdrachtMateriaalDao.class);
-
+	private final String TAG = "DbOpdrachtMateriaalDao: ";
+	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
+		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try{
 			DbOpdrachtMateriaal opdrachtMateriaal = (DbOpdrachtMateriaal)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(opdrachtMateriaal);
+			id = opdrachtMateriaal.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -31,13 +39,12 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -94,7 +101,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -104,10 +111,9 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbOpdrachtMateriaal opdrachtMateriaal = (DbOpdrachtMateriaal)o;
@@ -122,19 +128,16 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtMateriaal where id = :id";
 		try {
@@ -151,15 +154,19 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param opdrachtId int
+	 * @return List<DbOpdrachtMateriaal>
+	 * 
+	 * haal een lijst met DbOpdrachtMateriaal op met een bepaalde opdrachtId
+	 */
 	public List<DbOpdrachtMateriaal> leesWaarOpdrachtId(int opdrachtId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -180,7 +187,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesWaarOpdrachtId(opdrachtId) " + opdrachtId + " ", e);
 		} finally {
 			session.close();
 		}
@@ -188,6 +195,11 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		return lijst;
 	}
 
+	/**
+	 * @param opdrachtId int
+	 * 
+	 * verwijder alle DbOpdrachtMateriaal met een bepaalde opdrachtId
+	 */
 	public void verwijderWaarOpdrachtId(int opdrachtId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -207,11 +219,11 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijderWaarOpdrachtId(opdrachtId) " + opdrachtId + " ", e);
 		} finally {
 			session.close();
 		}
-		
 	}
 
+	
 }

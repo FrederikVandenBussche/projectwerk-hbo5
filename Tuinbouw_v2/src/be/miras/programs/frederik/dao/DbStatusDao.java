@@ -10,19 +10,27 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbStatus;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbStatus
+ *
+ */
 public class DbStatusDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbStatusDao.class);
+	private final String TAG = "DbStatusDao: ";
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
+		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try{
 			DbStatus status = (DbStatus)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(status);
+			id = status.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -31,13 +39,12 @@ public class DbStatusDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class DbStatusDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -94,7 +101,7 @@ public class DbStatusDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -104,10 +111,9 @@ public class DbStatusDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbStatus status = (DbStatus)o;
@@ -122,21 +128,18 @@ public class DbStatusDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
-		String query = "DELETE FROM DbStatus where id = :id";
+		LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		try {
 			transaction = session.getTransaction();
 			session.beginTransaction();
@@ -151,15 +154,19 @@ public class DbStatusDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
 			LOGGER.error("Exception: ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param naam String
+	 * @return int
+	 * 
+	 * return id van DbStatus met een bepaalde naam
+	 */
 	public int lees(String naam) {
 		DbStatus status = new DbStatus();
 		Session session = HibernateUtil.openSession();
@@ -181,7 +188,7 @@ public class DbStatusDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(naam) " + naam + " ", e);
 		} finally {
 			session.close();
 		}
@@ -193,4 +200,5 @@ public class DbStatusDao implements ICRUD {
 		return id;
 	}
 
+	
 }

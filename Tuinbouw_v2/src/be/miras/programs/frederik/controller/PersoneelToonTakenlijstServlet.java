@@ -24,12 +24,13 @@ import be.miras.programs.frederik.model.PersoneelbeheerTakenlijstTaak;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class PersoneelToonTakenlijstServlet
  */
 @WebServlet("/PersoneelToonTakenlijstServlet")
 public class PersoneelToonTakenlijstServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	String TAG = "PersoneelToonTakenlijstServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -56,8 +57,6 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 		} else {
 
 			int persoonId = Datatype.stringNaarInt(request.getParameter("id"));
-
-			System.out.println(TAG + "de persoonId = " + persoonId);
 
 			List<Personeel> personeelLijst = (ArrayList<Personeel>) session.getAttribute("personeelLijst");
 
@@ -122,9 +121,8 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 				taak.setTaaknaam(taakNaam);
 				taak.setKlantnaam(klantNaam);
 				taak.setDatum(startdatum);
-				System.out.println(TAG + "de datum = " + startdatum);
+				
 				lijst.add(taak);
-
 			}
 
 			session.setAttribute("personeelsnaam", persoonNaam);
@@ -137,4 +135,5 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

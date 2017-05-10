@@ -49,14 +49,15 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class FacturatieDetailServlet
  */
 @WebServlet("/FacturatieDetailServlet")
 public class FacturatieDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	//private final String TAG = "FacturatieDetailServlet: ";
 	
-	
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -301,10 +302,8 @@ public class FacturatieDetailServlet extends HttpServlet {
 							verplaatsingLijst.add(nieuweVerplaatsing);
 						}
 					}
-				}
-				
+				}	
 			}
-			
 		}
 		// er is een lijst met alle verplaatsingen apart
 		// een lijst met alle verplaatsingen per werknemer is nodig
@@ -339,6 +338,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 				teFacturerenVerplaatsingLijst.add(nieuweVerplaatsing);	
 			}
 		}
+		
 		factuur.setVerplaatsingLijst(teFacturerenVerplaatsingLijst);		
 		
 		factuur.setAanmaakDatum(aanmaakDatum);
@@ -362,6 +362,11 @@ public class FacturatieDetailServlet extends HttpServlet {
 		}
 	}
 
+	/**
+	 * @param aanmaakDatum Date
+	 * @return Date
+	 *  return een datum die exact 1 maand later is dan de geparameteriseerde datum
+	 */
 	private Date berekenVervalDatum(Date aanmaakDatum) {
 		Date datum = new Date();
 		datum.setDate(aanmaakDatum.getDate());

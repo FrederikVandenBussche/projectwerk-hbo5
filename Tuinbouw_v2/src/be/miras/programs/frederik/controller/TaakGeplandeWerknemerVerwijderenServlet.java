@@ -18,12 +18,13 @@ import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class TaakGeplandeWerknemerVerwijderen
  */
 @WebServlet("/TaakGeplandeWerknemerVerwijderen")
 public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "TaakGeplandeWerknemerVerwijderen: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -50,7 +51,6 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 		} else {
 
 			int id = Datatype.stringNaarInt(request.getParameter("id"));
-			System.out.println(TAG + "de te verwijderen id = " + id);
 
 			Taak taak = (Taak) session.getAttribute("taak");
 
@@ -73,4 +73,5 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

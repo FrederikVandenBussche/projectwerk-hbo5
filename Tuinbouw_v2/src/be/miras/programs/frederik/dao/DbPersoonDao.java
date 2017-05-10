@@ -10,19 +10,27 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbPersoon;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbPersoon
+ *
+ */
 public class DbPersoonDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbPersoonDao.class);
-
+	private final String TAG = "DbPersoonDao: ";
+	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		try {
 			DbPersoon persoon = (DbPersoon) o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(persoon);
+			id = persoon.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -31,13 +39,12 @@ public class DbPersoonDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -62,7 +69,7 @@ public class DbPersoonDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -94,7 +101,7 @@ public class DbPersoonDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -104,10 +111,9 @@ public class DbPersoonDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbPersoon persoon = (DbPersoon) o;
@@ -122,19 +128,16 @@ public class DbPersoonDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbPersoon where id = :id";
 		try {
@@ -151,15 +154,20 @@ public class DbPersoonDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param idLijst int[]
+	 * @return List<DbPersoon>
+	 * 
+	 * return een List<DbPersoon> met enkel DbPersonen met een id die
+	 * voorkomt in de idLijst 
+	 */
 	public List<DbPersoon> lees(int[] idLijst) {
 		List<DbPersoon> persoonLijst = new ArrayList<DbPersoon>();
 
@@ -189,7 +197,7 @@ public class DbPersoonDao implements ICRUD {
 					transaction.rollback();
 				}
 				e.printStackTrace();
-				LOGGER.error("Exception: ", e);
+				LOGGER.error("Exception: " + TAG + "lees(idLijst) ", e);
 			} finally {
 				session.close();
 			}
@@ -202,35 +210,5 @@ public class DbPersoonDao implements ICRUD {
 		return persoonLijst;
 	}
 
-	public int zoekMaxId() {
-		DbPersoon persoon = new DbPersoon();
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "SELECT MAX(id) FROM DbPersoon";
-		List<Integer> lijst = new ArrayList<Integer>();
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		int id = 0;
-		if (!lijst.isEmpty()) {
-			id = lijst.get(0);
-		}
-		return id;
-	}
 
 }

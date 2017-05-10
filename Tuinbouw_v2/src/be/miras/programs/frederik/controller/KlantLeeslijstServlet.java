@@ -17,12 +17,13 @@ import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbParticulier;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class KlantLeeslijstServlet
  */
 @WebServlet("/KlantLeeslijstServlet")
 public class KlantLeeslijstServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private String TAG = "KlantLeeslijstServlet: ";
 	
 	
 	/**
@@ -48,7 +49,6 @@ public class KlantLeeslijstServlet extends HttpServlet{
 		
 			view = request.getRequestDispatcher("/logout");
 		} else {
-
 			
 			DbKlantDao dbKlantDao = new DbKlantDao();
 			
@@ -60,13 +60,10 @@ public class KlantLeeslijstServlet extends HttpServlet{
 					List<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
 
 					session.setAttribute("particulierLijst", particulierLijst);
-					session.setAttribute("bedrijfLijst", bedrijfLijst);
-					
+					session.setAttribute("bedrijfLijst", bedrijfLijst);			
 				}
 			});
 			thread.start();
-
-			
 
 			view = request.getRequestDispatcher("/Klantbeheer.jsp");
 		}

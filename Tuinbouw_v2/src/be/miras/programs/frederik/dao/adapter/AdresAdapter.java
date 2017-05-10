@@ -13,10 +13,18 @@ import be.miras.programs.frederik.dbo.DbGemeente;
 import be.miras.programs.frederik.dbo.DbStraat;
 import be.miras.programs.frederik.model.Adres;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Adapter die het model Adres
+ * koppelt aan de databankobjecten : DbAdres, DbStraat, DBGemeente
+ * 
+ *
+ */
 public class AdresAdapter implements ICRUD {
 
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Adres adres = (Adres) o;
 
 		DbAdresDao dbAdresDao = new DbAdresDao();
@@ -57,7 +65,7 @@ public class AdresAdapter implements ICRUD {
 		dbAdres.setBus(adres.getBus());
 		dbAdresDao.voegToe(dbAdres);
 
-		return true;
+		return Integer.MIN_VALUE;
 	}
 
 	/*
@@ -99,13 +107,11 @@ public class AdresAdapter implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
-
-		return false;
+	public void wijzig(Object o) {
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 
 		// straatId en gemeenteId ophalen
 		DbAdresDao dbAdresdao = new DbAdresDao();
@@ -131,15 +137,14 @@ public class AdresAdapter implements ICRUD {
 			DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
 			dbGemeenteDao.verwijder(gemeenteId);
 		}
-		return true;
 	}
 
-	public int geefMaxId() {
-		DbAdresDao dbAdresDao = new DbAdresDao();
-		int maxId = dbAdresDao.zoekMaxId();
-		return maxId;
-	}
-	
+	/**
+	 * @param klantAdresId int
+	 * @return Adres
+	 * 
+	 * returnt het adres met een bepaalde klantAdresId
+	 */
 	public Adres leesWaarKlantAdresId(int klantAdresId) {
 		Adres adres = new Adres();
 		
@@ -165,6 +170,12 @@ public class AdresAdapter implements ICRUD {
 		return adres;
 	}
 	
+	/**
+	 * @param klantId int
+	 * @return List<Adres>
+	 * 
+	 * returnt List<Adres> van Adres met een bepaalde klantId
+	 */
 	public List<Adres> leesWaarKlantId(int klantId){
 		List<Adres> adresLijst = new ArrayList<Adres>();
 		
@@ -192,5 +203,6 @@ public class AdresAdapter implements ICRUD {
 		
 		return adresLijst;
 	}
+	
 	
 }

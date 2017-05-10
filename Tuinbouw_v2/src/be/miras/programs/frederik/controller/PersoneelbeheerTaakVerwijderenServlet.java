@@ -17,13 +17,14 @@ import be.miras.programs.frederik.model.PersoneelbeheerTakenlijstTaak;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class PersoneelbeheerTaakVerwijderenServlet
  */
 @WebServlet("/PersoneelbeheerTaakVerwijderenServlet")
 public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "PersoneelbeheerTaakVerwijderenServlet: ";
-
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -40,8 +41,6 @@ public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
-
-		System.out.println(TAG + "Verwijder de planning met id : " + id);
 
 		HttpSession session = request.getSession();
 		List<PersoneelbeheerTakenlijstTaak> lijst = (List<PersoneelbeheerTakenlijstTaak>) session.getAttribute("takenLijst");
@@ -63,4 +62,5 @@ public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

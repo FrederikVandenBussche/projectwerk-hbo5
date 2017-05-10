@@ -18,12 +18,14 @@ import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class TaakVerwijderenServlet
+ * 
  */
 @WebServlet("/TaakVerwijderenServlet")
 public class TaakVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "TaakVerwijderenServlet: ";
 
 	
 	/**
@@ -47,8 +49,6 @@ public class TaakVerwijderenServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
-
-		System.out.println(TAG + "de te verwijderen taak : " + id);
 
 		// de taak uit de databank verwijderen
 		taakDaoAdapter.verwijder(id);

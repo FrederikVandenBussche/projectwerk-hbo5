@@ -16,6 +16,8 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class BedrijfsWachtwoordWijzigenServlet
  */
 @WebServlet("/BedrijfsWachtwoordWijzigenServlet")
@@ -120,7 +122,6 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 		}
 		
 		return inputValidatieErrorMsg;
-
 	}
 	
 

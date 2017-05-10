@@ -1,6 +1,7 @@
 package be.miras.programs.frederik.export;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,10 +27,20 @@ import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.model.Verplaatsing;
 import be.miras.programs.frederik.util.Datum;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Genereer een pdf file
+ */
 public class GenereerPdf {
 	private static final Logger LOGGER = Logger.getLogger(GenereerPdf.class);
+	private static final String TAG = "GenereerPdf: ";
 
 	
+	/**
+	 * @param dest String :  path + filename van de pdf file
+	 * @param factuur Factuur : de data die in de pdf geplaatst wordt
+	 */
 	public void genereer(String dest, Factuur factuur) {
 		File file = new File(dest);
 		file.getParentFile().mkdirs();
@@ -37,11 +48,16 @@ public class GenereerPdf {
 			createPdf(dest, factuur);
 		} catch (IOException e) {
 			e.printStackTrace();
-			LOGGER.error("IOException: ", e); 	
+			LOGGER.error("IOException: " + TAG + "public void genereer() : ", e); 	
 		}
 	}
 
-	private void createPdf(String dest, Factuur factuur) throws IOException {
+	/**
+	 * @param dest String :  path + filename van de pdf file
+	 * @param factuur Factuur : de data die in de pdf geplaatst wordt
+	 * @throws FileNotFoundException 
+	 */
+	private void createPdf(String dest, Factuur factuur) throws FileNotFoundException{
 		double totaalPrijs = 0;
 
 		// Initialize PDF writer

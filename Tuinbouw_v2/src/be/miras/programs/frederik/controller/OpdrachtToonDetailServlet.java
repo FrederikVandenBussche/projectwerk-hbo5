@@ -31,6 +31,8 @@ import be.miras.programs.frederik.util.GoogleApis;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class OpdrachtToonDetailServlet
  */
 @WebServlet("/OpdrachtToonDetailServlet")
@@ -145,9 +147,7 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 				adresMap.put(adresId, adres.toString());
 			}
 
-			//double lat = opdracht.getLatitude();
-			//double lng = opdracht.getLongitude();
-			//Adres adres = GoogleApis.zoekAdres(lat, lng);
+			
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			int klantAdresId = dbOpdrachtDao.geefKlantAdresId(id);
 			Adres adres = adresAdapter.leesWaarKlantAdresId(klantAdresId);

@@ -10,13 +10,20 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbAdres;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject Dbadres
+ *
+ */
 public class DbAdresDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbAdresDao.class);
+	private final String TAG = "DbAdresDao: ";
 
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		
 		try {
@@ -24,6 +31,7 @@ public class DbAdresDao implements ICRUD {
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(adres);
+			id = adres.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -32,13 +40,12 @@ public class DbAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -64,7 +71,7 @@ public class DbAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -81,14 +88,12 @@ public class DbAdresDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
-		return false;
+	public void wijzig(Object o) {
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbAdres where id = :id";
 		try {
@@ -105,45 +110,19 @@ public class DbAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
-	public int zoekMaxId() {
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "SELECT MAX(id) FROM DbAdres";
-		List<Integer> lijst = new ArrayList<Integer>();
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		int id = 0;
-		if (!lijst.isEmpty()) {
-			id = lijst.get(0);
-		}
-		return id;
-	}
-
+	/**
+	 * @param straatId int
+	 * @return boolean
+	 * 
+	 * return true indien de straatId voorkomt in DbAdres-tabel
+	 */
 	public boolean isStraatInGebruik(int straatId) {
 		boolean isInGebruik = true;
 		Session session = HibernateUtil.openSession();
@@ -165,7 +144,7 @@ public class DbAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "isStraatInGebruik(straatId) " + straatId + " ", e);
 		} finally {
 			session.close();
 		}
@@ -176,6 +155,12 @@ public class DbAdresDao implements ICRUD {
 		return isInGebruik;
 	}
 
+	/**
+	 * @param gemeenteId int
+	 * @return boolean
+	 * 
+	 * return true indien de gemeenteId voorkomt in DbAdres-tabel
+	 */
 	public boolean isGemeenteInGebruik(int gemeenteId) {
 		boolean isInGebruik = true;
 		Session session = HibernateUtil.openSession();
@@ -197,7 +182,7 @@ public class DbAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "isGemeenteInGebruik(gemeenteId) " + gemeenteId + " ", e);
 		} finally {
 			session.close();
 		}
@@ -207,5 +192,6 @@ public class DbAdresDao implements ICRUD {
 
 		return isInGebruik;
 	}
-
+	
+	
 }

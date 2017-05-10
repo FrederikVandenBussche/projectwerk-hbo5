@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class LogoutServlet
  */
 @WebServlet("/LogoutServlet")
@@ -43,8 +45,9 @@ public class LogoutServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		
-		RequestDispatcher view = request.getRequestDispatcher("/main.html");
+		RequestDispatcher view = request.getRequestDispatcher("/index.html");
 		view.forward(request, response);
 	}
 
+	
 }

@@ -20,12 +20,19 @@ import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.dbo.DbWerknemer;
 import be.miras.programs.frederik.model.Personeel;
 
+/**
+  * @author Frederik Vanden Bussche
+ * 
+ * Adapter die het model Personeel
+ * koppelt aan de databankobjecten : DbWerknemer, DbPersoon, DbGebruiker
+ *
+ */
 public class PersoneelDaoAdapter implements ICRUD{
 	private static final Logger LOGGER = Logger.getLogger(PersoneelDaoAdapter.class);
-	//private String TAG = "PersoneelDaoAdapter: ";
+	private final String TAG = "PersoneelDaoAdapter: ";
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Personeel personeel = (Personeel)o;
 		
 		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
@@ -39,9 +46,7 @@ public class PersoneelDaoAdapter implements ICRUD{
 		dbpersoon.setNaam(personeel.getNaam());
 		dbpersoon.setVoornaam(personeel.getVoornaam());
 		dbpersoon.setGeboortedatum(personeel.getGeboortedatum());
-		dbPersoonDao.voegToe(dbpersoon);
-
-		int persoonId = dbPersoonDao.zoekMaxId();
+		int persoonId = dbPersoonDao.voegToe(dbpersoon);
 
 		personeel.setPersoonId(persoonId);
 		
@@ -59,7 +64,7 @@ public class PersoneelDaoAdapter implements ICRUD{
 		dbwerknemer.setPersoonId(persoonId);
 		dbWerknemerDao.voegToe(dbwerknemer);
 
-		return true;
+		return persoonId;
 	}
 
 	@Override
@@ -85,7 +90,7 @@ public class PersoneelDaoAdapter implements ICRUD{
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 
 		} finally {
 			session.close();
@@ -170,7 +175,7 @@ public class PersoneelDaoAdapter implements ICRUD{
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Personeel personeel = (Personeel)o;
 		
@@ -209,11 +214,10 @@ public class PersoneelDaoAdapter implements ICRUD{
 		
 		dbGebruikerDao.wijzig(dbgebruiker);
 		
-		return true;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		
 		// vooraleer het personeelslid te verwijderen eerst alle adressen verwijderen.
 		PersoonAdresDaoAdapter adresDaoAdapter = new PersoonAdresDaoAdapter();
@@ -229,7 +233,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 				
 		dbGebruikerDao.verwijderWaarPersoonId(id);
 		
-		return true;
 	}
 
 	private String creeerGebruikersnaam(Personeel personeel, DbGebruikerDao dbGebruikerDao) {

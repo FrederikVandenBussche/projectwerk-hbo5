@@ -20,12 +20,15 @@ import be.miras.programs.frederik.util.InputValidatie;
 import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class AdresOpslaanServlet
  */
 @WebServlet("/AdresOpslaanServlet")
 public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -43,8 +46,6 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 
 		String aanspreeknaam = request.getParameter("aanspreeknaam");
 		String opslaanBtnNaam = request.getParameter("buttonNaam");
-
-		int werknemerId = Datatype.stringNaarInt(request.getParameter("personeel_id"));
 
 		String straat = request.getParameter("straat").trim();
 		String nummerString = request.getParameter("nr").trim();
@@ -75,9 +76,8 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 			adres.setPlaats(plaats);
 			adres.setPersoonId(personeelslid.getPersoonId());
 
-			adao.voegToe(adres);
-			int maxId = adao.geefMaxId();
-			adres.setId(maxId);
+			int adresId = adao.voegToe(adres);
+			adres.setId(adresId);
 
 			// Het personeelslid als attribute meegeven met de session.
 			ArrayList<Adres> adreslijst = personeelslid.getAdreslijst();
@@ -100,9 +100,6 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 			
 		}
 		
-		
-
-
 		RequestDispatcher view = request.getRequestDispatcher("/PersoneelDetail.jsp");
 		view.forward(request, response);
 	}
@@ -123,7 +120,6 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 	public String inputValidatie(String[] teValideren) {
 		String straat = teValideren[0];
 		String nummerString = teValideren[1];
-		String bus = teValideren[2];
 		String postcodeString = teValideren[3];
 		String plaats = teValideren[4];
 		
@@ -152,8 +148,8 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Plaats).concat(msg);
 		}
 		
-
 		return inputValidatieErrorMsg;
 	}
 
+	
 }

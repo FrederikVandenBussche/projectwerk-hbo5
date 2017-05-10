@@ -19,9 +19,11 @@ import be.miras.programs.frederik.dao.DbBevoegdheidDao;
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dao.DbOpdrachtDao;
+import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
+import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbBevoegdheid;
@@ -37,6 +39,8 @@ import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.GoogleApis;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class InlogServlet
  */
 @WebServlet("/InlogServlet")
@@ -48,7 +52,6 @@ public class InlogServlet extends HttpServlet {
 	 */
 	public InlogServlet() {
 		super();
-
 	}
 
 	/**
@@ -76,29 +79,11 @@ public class InlogServlet extends HttpServlet {
 				DbBevoegdheid dbBevoegdheid = (DbBevoegdheid) dbBevoegdheidDao.lees(dbGebruiker.getBevoegdheidId());
 				if (dbBevoegdheid.getRol().equals(rol)) {
 					isIngelogd = true;
-					gebruikerId = dbGebruiker.getId();
-					
+					gebruikerId = dbGebruiker.getId();		
 				}
 			}
 		}
 
-		/*
-		 * 
-		 * 
-		 * tijdens het ontwerp van deze applicatie ben ik steeds ingelogd:
-		 * 
-		 * 
-		 */
-		isIngelogd = true;
-		gebruikerId = 1;
-		/*
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 * 
-		 */
 		if (isIngelogd) {
 			HttpSession session = request.getSession();
 			session.setAttribute("isIngelogd", isIngelogd);
@@ -128,6 +113,13 @@ public class InlogServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
+	/**
+	 * @param session HttpSession
+	 * @param gebruikerId int
+	 * 
+	 * Laad de benodigde data uit de databank en sla op in session
+	 */
 	private void laadData(HttpSession session, int gebruikerId) {
 		WerkgeverDaoAdapter werkgeverDaoAdapter = new WerkgeverDaoAdapter();
 		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
@@ -140,8 +132,7 @@ public class InlogServlet extends HttpServlet {
 		List<Materiaal> materiaalLijst = new ArrayList<Materiaal>();
 		List<DbParticulier> particulierLijst = new ArrayList<DbParticulier>();
 		List<DbBedrijf> bedrijfLijst = new ArrayList<DbBedrijf>();
-
-		
+	
 		werkgever = (Werkgever) werkgeverDaoAdapter.lees(gebruikerId);
 		personeelLijst = (List<Personeel>) (Object) personeelDaoAdapter.leesAlle();
 		//adreslijsten toevoegen aan personeel
@@ -170,8 +161,6 @@ public class InlogServlet extends HttpServlet {
 		particulierLijst = (ArrayList<DbParticulier>) (Object) dbKlantDao.leesAlleParticulier();
 		bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
 
-
-
 		session.setAttribute("werkgever", werkgever);
 		session.setAttribute("personeelLijst", personeelLijst);
 		session.setAttribute("materiaalLijst", materiaalLijst);
@@ -181,11 +170,20 @@ public class InlogServlet extends HttpServlet {
 		laadOpdrachten(session);
 	}
 
+	/**
+	 * @param session HttpSession
+	 * 
+	 * Laad de bonodigde data betreft opdracht en taakbeheer 
+	 * uit de databank en sla op in session.
+	 */
 	private void laadOpdrachten(HttpSession session) {
-List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
+		List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
 		
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		DbKlantDao dbKlantDao = new DbKlantDao();
+		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
+		MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
+		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		
 		List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) (Object) dbOpdrachtDao.leesAlle();
 		
@@ -219,7 +217,7 @@ List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
 			Date eindDatum = dbOpdracht.getEinddatum();
 			
 			opdracht.setId(id);
-			opdracht.setklantId(klantId);
+			opdracht.setKlantId(klantId);
 			opdracht.setKlantAdresId(klantAdresId);
 			opdracht.setKlantNaam(naam);
 			opdracht.setOpdrachtNaam(opdrachtNaam);
@@ -227,15 +225,13 @@ List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
 			opdracht.setEindDatum(eindDatum);
 			opdracht.setLatitude(dbOpdracht.getLatitude());
 			opdracht.setLongitude(dbOpdracht.getLongitude());
-			
+				
 			opdrachtLijst.add(opdracht);
 		}
-		
-	
-		
+
 		session.setAttribute("opdrachtLijst", opdrachtLijst);
 		
 	}
-
+	
 	
 }

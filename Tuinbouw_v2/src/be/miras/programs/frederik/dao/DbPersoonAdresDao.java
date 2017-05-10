@@ -11,19 +11,27 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbPersoonAdres;
 
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbPersoonAdres
+ *
+ */
 public class DbPersoonAdresDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbPersoonAdresDao.class);
-
+	private final String TAG = "DbPersoonAdresDao: ";
+	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
+		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try{
 			DbPersoonAdres persoonAdres = (DbPersoonAdres)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(persoonAdres);
+			id = persoonAdres.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -32,13 +40,12 @@ public class DbPersoonAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class DbPersoonAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -95,7 +102,7 @@ public class DbPersoonAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -105,10 +112,9 @@ public class DbPersoonAdresDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbPersoonAdres persoonAdres = (DbPersoonAdres)o;
@@ -123,19 +129,16 @@ public class DbPersoonAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int persoonId) {
+	public void verwijder(int persoonId) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbPersoonAdres where persoonId = :persoonId";
 		try {
@@ -152,15 +155,19 @@ public class DbPersoonAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 	
+	/**
+	 * @param id int
+	 * @return List<Integer>
+	 * 
+	 * return een lijst van adresId die bij een bepaalde persoonId horen
+	 */
 	public List<Integer> leesLijst(int id) {
 		List<Integer> lijst = new ArrayList<Integer>();
 		String query = "SELECT adresId FROM DbPersoonAdres where persoonId = :id"; 
@@ -182,7 +189,7 @@ public class DbPersoonAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesLijst(id) " + id + " ", e);
 		} finally {
 				
 			session.close();
@@ -191,6 +198,12 @@ public class DbPersoonAdresDao implements ICRUD {
 		return lijst;
 	}
 	
+	/**
+	 * @param persoonId int
+	 * @param adresId int
+	 * 
+	 * verwijder DbPersoonAdres met een bepaalde persoonId EN adresId
+	 */
 	public void verwijder(int persoonId, int adresId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -211,7 +224,7 @@ public class DbPersoonAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(persoonId, adresId) " + persoonId + adresId  + " ", e);
 		} finally {
 			session.close();
 		}

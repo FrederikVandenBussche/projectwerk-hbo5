@@ -11,19 +11,27 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbWerknemer;
 
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbWerknemer
+ *
+ */
 public class DbWerknemerDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbWerknemerDao.class);
+	private final String TAG = "DbWerknemerDao";
 
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		try{
 			DbWerknemer werknemer = (DbWerknemer)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(werknemer);
+			id = werknemer.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -32,13 +40,12 @@ public class DbWerknemerDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: "+ TAG + "voegtoe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -63,7 +70,7 @@ public class DbWerknemerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + " ", e);
 
 		} finally {
 			session.close();
@@ -96,7 +103,7 @@ public class DbWerknemerDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -106,10 +113,9 @@ public class DbWerknemerDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbWerknemer werknemer = (DbWerknemer)o;
@@ -124,19 +130,16 @@ public class DbWerknemerDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig() ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemer where id = :id";
 		try {
@@ -153,44 +156,18 @@ public class DbWerknemerDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
-	public List<Integer> leesAlleId() {
-		List<Integer> lijst = new ArrayList<Integer>();
-		String query = "SELECT id FROM DbWerknemer"; 
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		
-		return lijst;
-		
-	}
-
+	/**
+	 * @param persoonId int
+	 * 
+	 * verwijder uit DbWerknemer met een bepaalde persoonId
+	 */
 	public void verwijderWaarPersoonId(int persoonId) {
 		Session session = HibernateUtil.openSession();
 		boolean isGelukt = true;
@@ -212,13 +189,11 @@ public class DbWerknemerDao implements ICRUD {
 			}
 			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijderWaarPersoonId(persoonId)" + persoonId + " ", e);
 		} finally {
 			session.close();
 		}
-		
 	}
 
-	
 
 }

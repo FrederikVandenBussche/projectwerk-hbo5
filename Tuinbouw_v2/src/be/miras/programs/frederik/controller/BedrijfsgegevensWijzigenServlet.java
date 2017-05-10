@@ -21,12 +21,13 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class BedrijfsgegevensWijzigenServlet
  */
 @WebServlet("/BedrijfsgegevensWijzigenServlet")
 public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
-	private static final String TAG = "BedrijfsgegevensWijzigenServlet: ";
 	private Werkgever werkgever;
 
 	/**
@@ -57,9 +58,7 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				new String[]{naam, voornaam, geboortedatum, email, gebruikersnaam});
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
-		
 			
-
 			Date datum = null;
 
 			if (!geboortedatum.equals("")) {
@@ -68,7 +67,6 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				datum = werkgever.getGeboortedatum();
 			}
 
-			
 			// DbGebruiker wijzigen
 			if (!werkgever.getEmail().equals(email) || !werkgever.getGebruikersnaam().equals(gebruikersnaam)) {
 
@@ -92,7 +90,6 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				});
 				thread.start();
 				
-
 				werkgever.setEmail(email);
 				werkgever.setGebruikersnaam(gebruikersnaam);
 			}
@@ -113,8 +110,7 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 
 					@Override
 					public void run() {
-						dao.wijzig(persoon);
-						
+						dao.wijzig(persoon);		
 					}
 				});
 				thread.start();
@@ -125,13 +121,10 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 			}
 
 			session.setAttribute("werkgever", werkgever);
-
 			
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
-		
-		
 		
 		RequestDispatcher view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 		view.forward(request, response);
@@ -202,12 +195,9 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 					}	
 				}
 		}
-		
-		
-		
-		return inputValidatieErrorMsg;
-		
 
+		return inputValidatieErrorMsg;
 	}
 
+	
 }

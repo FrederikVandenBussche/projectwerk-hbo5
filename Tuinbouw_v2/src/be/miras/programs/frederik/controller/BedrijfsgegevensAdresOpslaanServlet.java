@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
@@ -24,13 +23,14 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class BedrijfsgegevensAdresOpslaanServlet
  */
 @WebServlet("/BedrijfsgegevensAdresOpslaanServlet")
 public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements IinputValidatie {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOGGER = Logger.getLogger(DbGebruikerDao.class);
-
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -63,7 +63,7 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
 
 			Adres adres = new Adres();
-			PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
+			
 
 			adres.setStraat(straat);
 			adres.setNummer(nr);
@@ -77,10 +77,9 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 
 				@Override
 				public void run() {
+					PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
 					
-					adao.voegToe(adres);
-					
-					int maxId = adao.geefMaxId();
+					int maxId = adao.voegToe(adres);
 					
 					adres.setId(maxId);
 					
@@ -95,15 +94,11 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 					werkgever.setAdreslijst(adreslijst);
 
 					session.setAttribute("werkgever", werkgever);
-
 				}
 				
 			});
 			thread.start();
 
-			
-
-			
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
@@ -129,7 +124,6 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 	public String inputValidatie(String[] teValideren) {
 		String straat = teValideren[0];
 		String nummerString = teValideren[1];
-		String bus = teValideren[2];
 		String postcodeString = teValideren[3];
 		String plaats = teValideren[4];
 		
@@ -146,7 +140,6 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 		if (msg != null) {
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Huisnummer).concat(msg);
 		}
-		
 				
 		msg = InputValidatie.geheelGetal(postcodeString);
 		if (msg != null) {
@@ -159,7 +152,7 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 		}
 		
 		return inputValidatieErrorMsg;
-
 	}
 
+	
 }

@@ -21,15 +21,16 @@ import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
 import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.model.Taak;
-import be.miras.programs.frederik.util.Datatype;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class OpdrachtVerwijderen
  */
 @WebServlet("/OpdrachtVerwijderen")
 public class OpdrachtVerwijderenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "OpdrachtVerwijderen: ";
+
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -59,8 +60,6 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		// benodigde id's opvragen om de opdracht in zijn geheel te verwijderen
 		int opdrachtId = opdrachtDetailData.getOpdracht().getId();
 
-		System.out.println(TAG + "de te verwijderen opdracht: " + opdrachtId);
-
 		// de opdracht uit de databank verwijderen
 		// 1. Werknemer_Opdracht_Taak
 		dbWerknemerOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
@@ -72,12 +71,10 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		dbOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
 		// 4. Vooruitgang
 		for (int vId : vooruitgangIdLijst) {
-			System.out.println(TAG + "ik verwijder de vooruitgang met id " + vId);
 			dbVooruitgangDao.verwijder(vId);
 		}
 		// 5. Taak
 		for (Taak t : opdrachtDetailData.getOpdracht().getTaakLijst()) {
-			System.out.println(TAG + "ik verwijder de taak met id " + t.getId());
 			dbTaakDao.verwijder(t.getId());
 		}
 		// 6. Opdracht
@@ -109,4 +106,5 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	
 }

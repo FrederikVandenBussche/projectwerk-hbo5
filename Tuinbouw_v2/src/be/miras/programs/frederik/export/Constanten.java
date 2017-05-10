@@ -1,5 +1,11 @@
 package be.miras.programs.frederik.export;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Constanten die gebruikt worden tijden het genereren van een factuur in pdf formaat
+ *
+ */
 public class Constanten {
 	protected final static String Bedrijfsnaam = "Tuinbouwbedrijf Hitek";
 	protected final static int FactuurVervalTijd = 1; //aantal maanden

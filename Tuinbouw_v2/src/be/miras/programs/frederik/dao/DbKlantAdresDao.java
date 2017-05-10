@@ -10,21 +10,27 @@ import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbKlantAdres;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * Dao voor het databankobject DbKlantAdres
+ *
+ */
 public class DbKlantAdresDao implements ICRUD {
-	//private String TAG = "DbKlantAdresDao: ";
-	
 	private static final Logger LOGGER = Logger.getLogger(DbKlantAdresDao.class);
+	private final String TAG = "DbKlantAdresDao: ";
 	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
+		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
 		try{
 			DbKlantAdres klantAdres = (DbKlantAdres)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(klantAdres);
+			id = klantAdres.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -33,13 +39,12 @@ public class DbKlantAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -64,7 +69,7 @@ public class DbKlantAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(klantId)" + klantId + "", e);
 		} finally {
 			session.close();
 		}
@@ -82,10 +87,8 @@ public class DbKlantAdresDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
-
+	public void wijzig(Object o) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbKlantAdres klantAdres = (DbKlantAdres)o;
@@ -100,19 +103,16 @@ public class DbKlantAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int klantId) {
+	public void verwijder(int klantId) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlantAdres where klantId = :id";
 		try {
@@ -129,15 +129,19 @@ public class DbKlantAdresDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(klantId)" + klantId + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 	
+	/**
+	 * @param klantId int
+	 * @return List<Integer>
+	 * 
+	 * retun een lijst met adresId die bij een klantId horen
+	 */
 	public List<Integer> leesLijst(int klantId) {
 		List<Integer> lijst = new ArrayList<Integer>();
 		String query = "SELECT adresId FROM DbKlantAdres where klantId = :id"; 
@@ -159,7 +163,7 @@ public class DbKlantAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "leesLijst(klantId) " + klantId + " ", e);
 		} finally {
 			session.close();
 		}
@@ -167,6 +171,12 @@ public class DbKlantAdresDao implements ICRUD {
 		return lijst;
 	}
 
+	/**
+	 * @param klantId int
+	 * @param adresId int
+	 * 
+	 * verwijder DbKlatnAdres met klantId EN adresId
+	 */
 	public void verwijder(int klantId, int adresId) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -187,41 +197,19 @@ public class DbKlantAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(klantId, adresId) " + klantId + " " + adresId + " ", e);
 		} finally {
 			session.close();
 		}
 		
 	}
-	
-	public List<Integer> leesAlleAdresId() {
-		List<Integer> lijst = new ArrayList<Integer>();
-		String query = "SELECT adresId FROM DbKlantAdres"; 
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
 
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		return lijst;
-	}
-
+	/**
+	 * @param id int
+	 * @return int
+	 * 
+	 * return het eerste adresId met geparameteriseerde id
+	 */
 	public int geefEersteAdresId(int id) {
 		int eersteAdresId = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
@@ -243,7 +231,7 @@ public class DbKlantAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "geefEersteAdresId(id) " + id + " ", e);
 		} finally {
 			session.close();
 		}
@@ -254,6 +242,13 @@ public class DbKlantAdresDao implements ICRUD {
 		return eersteAdresId;
 	}
 
+	/**
+	 * @param klantId int
+	 * @param adresId int
+	 * @return int
+	 * 
+	 * return id van DbKlantAdres met een bepaald klantId EN adresId
+	 */
 	public int geefId(int klantId, int adresId){
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
@@ -276,14 +271,15 @@ public class DbKlantAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "geefId(klantId, adresId) " + klantId + " " + adresId  + " ", e);
 		} finally {
 			session.close();
 		}
 		if (!lijst.isEmpty()) {
 			id = lijst.get(0);
 		}
-		
 		return id;
 	}
+	
+	
 }

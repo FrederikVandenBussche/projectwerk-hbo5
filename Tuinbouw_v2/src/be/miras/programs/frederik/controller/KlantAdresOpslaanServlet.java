@@ -27,12 +27,13 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class KlantAdresOpslaanServlet
  */
 @WebServlet("/KlantAdresOpslaanServlet")
 public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValidatie{
 	private static final long serialVersionUID = 1L;
-	private String TAG = "KlantAdresOpslaanServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -89,7 +90,7 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 				dbGemeenteDao.voegToe(gemeente);
 				gemeenteId = dbGemeenteDao.geefIdVan(postcode, plaats);
 			}
-			System.out.println(TAG + "de gemeenteId = " + gemeenteId);
+			
 			int straatId = dbStraatDao.geefIdVan(straat);
 			if (straatId < 0) {
 				DbStraat dbStraat = new DbStraat();
@@ -97,23 +98,16 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 				dbStraatDao.voegToe(dbStraat);
 				straatId = dbStraatDao.geefIdVan(straat);
 			}
-			System.out.println(TAG + "de straatId = " + straatId);
 
 			dbAdres.setStraatId(straatId);
 			dbAdres.setGemeenteId(gemeenteId);
 			dbAdres.setHuisnummer(nummer);
 			dbAdres.setBus(bus);
-			dbAdresDao.voegToe(dbAdres);
-
-			int adresId = dbAdresDao.zoekMaxId();
-			System.out.println(TAG + "Naar dbKlantAdresDao");
-			System.out.println(TAG + "Naar dbKlantAdresDao");
-			System.out.println(TAG + "Naar dbKlantAdresDao");
+			int adresId = dbAdresDao.voegToe(dbAdres);
 
 			dbKlantAdres.setKlantId(id);
 			dbKlantAdres.setAdresId(adresId);
 			dbKlantAdresDao.voegToe(dbKlantAdres);
-			System.out.println(TAG + "Ik ben uit de dbKlantAdresDao");
 
 			ArrayList<Adres> adreslijst = klant.getAdreslijst();
 			adres.setId(adresId);
@@ -136,8 +130,8 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 
 			session.setAttribute("klant", klant);
 		}else {
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
 		request.setAttribute("id", id); // klant_id
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
@@ -194,8 +188,8 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Plaats).concat(msg);
 		}
 
-
 		return inputValidatieErrorMsg;
 	}
 
+	
 }

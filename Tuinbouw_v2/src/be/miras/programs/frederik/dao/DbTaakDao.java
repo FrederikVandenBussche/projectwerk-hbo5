@@ -12,19 +12,27 @@ import org.hibernate.Transaction;
 import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbTaak;
 
+/**
+ * @author Frederik  Vanden Bussche
+ * 
+ * Dao voor het databankobject DbTaak
+ *
+ */
 public class DbTaakDao implements ICRUD {
 	private static final Logger LOGGER = Logger.getLogger(DbTaakDao.class);
-
+	private final String TAG = "DbTaakDao: ";
+	
 	@Override
-	public boolean voegToe(Object o) {
+	public int voegToe(Object o) {
+		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try{
 			DbTaak taak = (DbTaak)o;
 			transaction = session.getTransaction();
 			session.beginTransaction();
 			session.save(taak);
+			id = taak.getId();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -33,13 +41,12 @@ public class DbTaakDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "voegToe() ", e);
 		} finally {
 			session.close();
 		}	
-		return isGelukt;
+		return id;
 	}
 
 	@Override
@@ -64,7 +71,7 @@ public class DbTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
 		} finally {
 			session.close();
 		}
@@ -96,7 +103,7 @@ public class DbTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG  + " leesAlle() ", e);
 		} finally {
 			session.close();
 		}
@@ -106,10 +113,9 @@ public class DbTaakDao implements ICRUD {
 	}
 
 	@Override
-	public boolean wijzig(Object o) {
+	public void wijzig(Object o) {
 
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		try {
 			DbTaak taak = (DbTaak)o;
@@ -124,19 +130,16 @@ public class DbTaakDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o)" , e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
 	@Override
-	public boolean verwijder(int id) {
+	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
-		boolean isGelukt = true;
 		Transaction transaction = null;
 		String query = "DELETE FROM DbTaak where id = :id";
 		try {
@@ -153,15 +156,20 @@ public class DbTaakDao implements ICRUD {
 			if (transaction != null) {
 				transaction.rollback();
 			}
-			isGelukt = false;
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
-		return isGelukt;
 	}
 
+	/**
+	 * @param naam String
+	 * @param visible int
+	 * @return int
+	 * 
+	 * return de id van de DbTaak met een bepaalde naam en visible
+	 */
 	public int geefIdVan(String naam, int visible){
 		int id = Integer.MIN_VALUE;
 		
@@ -186,7 +194,7 @@ public class DbTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "geefIdVan(naam, visible " + naam + " " + visible + " ", e);
 		} finally {
 			session.close();
 		}
@@ -202,6 +210,12 @@ public class DbTaakDao implements ICRUD {
 		return id;
 	}
 
+	/**
+	 * @param taakId int
+	 * @return String
+	 * 
+	 * return de naam van een taak met bepaalde id
+	 */
 	public String selectNaam(int taakId) {
 
 		String naam = null;
@@ -225,7 +239,7 @@ public class DbTaakDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "selectNaam(taakId) " + taakId  + " ", e);
 		} finally {
 			session.close();
 		}
@@ -236,34 +250,5 @@ public class DbTaakDao implements ICRUD {
 		return naam;
 	}
 
-	public int geefMaxId() {
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "SELECT MAX(id) FROM DbTaak";
-		List<Integer> lijst = new ArrayList<Integer>();
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
-		} finally {
-			session.close();
-		}
-		int id = 0;
-		if (!lijst.isEmpty()) {
-			id = lijst.get(0);
-		}
-		return id;
-	}
 
 }

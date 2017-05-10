@@ -1,5 +1,11 @@
 package be.miras.programs.frederik.model;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ *         view model van een adres
+ *
+ */
 public class Adres implements Ivergelijk {
 	private int id;
 	private String straat;
@@ -11,69 +17,139 @@ public class Adres implements Ivergelijk {
 	private String staticmap;
 	private String googlemap;
 
-	
+	/**
+	 * @return the id int
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 *            the id to set int
+	 */
 	public void setId(int id) {
 		this.id = id;
 	}
 
+	/**
+	 * @return the straat String
+	 */
 	public String getStraat() {
 		return straat;
 	}
 
+	/**
+	 * @param straat
+	 *            the straat to set String
+	 */
 	public void setStraat(String straat) {
 		this.straat = straat;
 	}
 
+	/**
+	 * @return the nummer int
+	 */
 	public int getNummer() {
 		return nummer;
 	}
 
+	/**
+	 * @param nummer
+	 *            the nummer to set int
+	 */
 	public void setNummer(int nummer) {
 		this.nummer = nummer;
 	}
 
+	/**
+	 * @return the bus String
+	 */
 	public String getBus() {
 		return bus;
 	}
 
+	/**
+	 * @param bus
+	 *            the bus to set String
+	 */
 	public void setBus(String bus) {
 		this.bus = bus;
 	}
 
+	/**
+	 * @return the postcode int
+	 */
 	public int getPostcode() {
 		return postcode;
 	}
 
+	/**
+	 * @param postcode
+	 *            the postcode to set int
+	 */
 	public void setPostcode(int postcode) {
 		this.postcode = postcode;
 	}
 
+	/**
+	 * @return the plaats String
+	 */
 	public String getPlaats() {
 		return plaats;
 	}
 
+	/**
+	 * @param plaats
+	 *            the plaats to set String
+	 */
 	public void setPlaats(String plaats) {
 		this.plaats = plaats;
 	}
 
+	/**
+	 * @return the persoonId Integer
+	 */
 	public Integer getPersoonId() {
 		return persoonId;
 	}
 
+	/**
+	 * @param persoonId
+	 *            the persoonId to set Integer
+	 */
 	public void setPersoonId(Integer persoonId) {
 		this.persoonId = persoonId;
 	}
 
+	/**
+	 * @return the staticmap String
+	 */
 	public String getStaticmap() {
 		return staticmap;
 	}
 
+	/**
+	 * @param staticmap
+	 *            the staticmap to set String
+	 */
 	public void setStaticmap(String staticmap) {
 		this.staticmap = staticmap;
+	}
+
+	/**
+	 * @return the googlemap String
+	 */
+	public String getGooglemap() {
+		return googlemap;
+	}
+
+	/**
+	 * @param googlemap
+	 *            the googlemap to set String
+	 */
+	public void setGooglemap(String googlemap) {
+		this.googlemap = googlemap;
 	}
 
 	@Override
@@ -98,14 +174,6 @@ public class Adres implements Ivergelijk {
 		} else {
 			return this.getStraat() + " " + this.getNummer() + " " + this.getPostcode() + " " + this.getPlaats();
 		}
-	}
-
-	public String getGooglemap() {
-		return googlemap;
-	}
-
-	public void setGooglemap(String googlemap) {
-		this.googlemap = googlemap;
 	}
 
 	

@@ -47,16 +47,17 @@ import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.Datum;
-import be.miras.programs.frederik.util.ExceptieLogger;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class ExporteerPrestatiesServlet
  */
 @WebServlet("/ExporteerPrestatiesServlet")
 public class ExporteerPrestatiesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static String TAG = "ExporteerPrestatiesServlet: ";
 	private static final Logger LOGGER = Logger.getLogger(ExporteerPrestatiesServlet.class);
+	private final String TAG = "ExporteerPrestatiesServlet: ";
 
        
     /**
@@ -82,10 +83,6 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			int opdrachtId = Datatype.stringNaarInt(request.getParameter("opdracht"));
 			String begindatumString = request.getParameter("begindatum");
 			String einddatumString = request.getParameter("einddatum");
-			
-			System.out.println(TAG + "opdrachtId = " + opdrachtId);
-			System.out.println(TAG + "begindatumString = " + begindatumString);
-			System.out.println(TAG + "einddatumString = " + einddatumString);
 			
 			String klantnaam = (String) session.getAttribute("aanspreeknaam");
 			List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) session.getAttribute("opdrachtLijst");
@@ -118,7 +115,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 						if(einddatum == null || dbOpdracht.getEinddatum().before(einddatum)){
 							Opdracht opdracht = new Opdracht();
 							opdracht.setId(dbOpdracht.getId());
-							opdracht.setklantId(dbOpdracht.getKlantId());
+							opdracht.setKlantId(dbOpdracht.getKlantId());
 							opdracht.setOpdrachtNaam(dbOpdracht.getNaam());
 							opdracht.setStartDatum(dbOpdracht.getStartdatum());
 							opdracht.setEindDatum(dbOpdracht.getEinddatum());
@@ -140,7 +137,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 							if(einddatum == null || dbOpdracht.getEinddatum().before(einddatum)){
 								Opdracht opdracht = new Opdracht();
 								opdracht.setId(dbOpdracht.getId());
-								opdracht.setklantId(dbOpdracht.getKlantId());
+								opdracht.setKlantId(dbOpdracht.getKlantId());
 								opdracht.setOpdrachtNaam(dbOpdracht.getNaam());
 								opdracht.setStartDatum(dbOpdracht.getStartdatum());
 								opdracht.setEindDatum(dbOpdracht.getEinddatum());
@@ -258,17 +255,15 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			catch(IOException e)
 			{
 			    e.printStackTrace();
-			    LOGGER.error("Genereer Excell file: " , e);
+			    LOGGER.error(TAG + "Genereer Excell file: " , e);
 			} finally {
 			    if (bufferedInputStream != null)
 					bufferedInputStream.close();
 			    if (bufferedOutputStream != null)
 			        bufferedOutputStream.close();
 			}
-			
 		}
-		
-		
 	}
 
+	
 }

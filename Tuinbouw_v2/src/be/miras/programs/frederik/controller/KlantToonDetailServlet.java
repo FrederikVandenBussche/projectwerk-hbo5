@@ -32,12 +32,13 @@ import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.GoogleApis;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class KlantParticulierToonDetailsServlet
  */
 @WebServlet("/KlantParticulierToonDetailsServlet")
 public class KlantToonDetailServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String TAG = "KlantToonDetailServlet: ";
 
 	
 	/**
@@ -200,6 +201,12 @@ public class KlantToonDetailServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 
+	/**
+	 * @param id id
+	 * @return ArrayList<Adres>
+	 * 
+	 * return lijst met adressen van een klant met de geparameteriseerde id
+	 */
 	private ArrayList<Adres> haalAdresLijstOp(int id) {
 
 		ArrayList<Adres> adreslijst = new ArrayList<Adres>();

@@ -14,12 +14,13 @@ import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Werkgever;
 
 /**
+ * @author Frederik Vanden Bussche
+ * 
  * Servlet implementation class BedrijfsgegevensServlet
  */
 @WebServlet("/BedrijfsgegevensServlet")
 public class BedrijfsgegevensServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private final String TAG = "BedrijfsgegevensServlet: ";
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -48,7 +49,6 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 		
-
 		RequestDispatcher view = null;
 
 		if (isIngelogd == null || isIngelogd == false) {
@@ -65,22 +65,19 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 					WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
 					Werkgever werkgever = new Werkgever();
 
-					System.out.println(TAG + "GebruikerId= " + gebruikerId);
 					werkgever = (Werkgever) wDao.lees(gebruikerId);
 
-					System.out.println(TAG + "de werkgeversvoornaam: " + werkgever.getVoornaam());
 					session.setAttribute("werkgever", werkgever);
 				}
 				
 			});
 			thread.start();
 			
-
 			view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 
 		}
 		view.forward(request, response);
-
 	}
 
+	
 }
