@@ -18,7 +18,7 @@ public class HibernateUtil {
 	private static final SessionFactory sessionFactory;
 	
 	private static final Logger LOGGER = Logger.getLogger(SessionFactory.class);
-	private final String TAG = "HibernateUtil : ";
+	private static final String TAG = "HibernateUtil : ";
 
 	/*
 	 * Een static methode zonder naam heet een 'Static Initialization Block'

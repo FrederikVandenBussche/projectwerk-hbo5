@@ -66,5 +66,6 @@
 		<mapping class="be.miras.programs.frederik.dbo.DbVooruitgang"></mapping>
 		<mapping resource="be/miras/programs/frederik/dbo/DbWerknemerOpdrachtTaak.hbm.xml"></mapping>
 		<mapping class="be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak"></mapping>		
+	
 	</session-factory>
 </hibernate-configuration>

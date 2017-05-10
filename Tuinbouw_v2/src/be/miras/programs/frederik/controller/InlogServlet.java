@@ -66,12 +66,10 @@ public class InlogServlet extends HttpServlet {
 
 		String gebruikersnaam = request.getParameter("gebruikersnaam");
 		String wachtwoord = request.getParameter("wachtwoord");
-
+		
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 		DbBevoegdheidDao dbBevoegdheidDao = new DbBevoegdheidDao();
-
 		DbGebruiker dbGebruiker = dbGebruikerDao.getGebruiker(gebruikersnaam);
-		
 		int gebruikerId = Integer.MIN_VALUE;
 		boolean isIngelogd = false;
 		if (dbGebruiker != null && wachtwoord != null) {
@@ -83,7 +81,7 @@ public class InlogServlet extends HttpServlet {
 				}
 			}
 		}
-
+		
 		if (isIngelogd) {
 			HttpSession session = request.getSession();
 			session.setAttribute("isIngelogd", isIngelogd);
