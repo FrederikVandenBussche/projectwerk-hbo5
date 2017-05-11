@@ -18,33 +18,13 @@ table{
     overflow: hidden;
 }
 
-.adresLijst, .horizontaleDivs {
-	/*
-	* white-space: nowrap; de inhoud zal nooit naar de volgende lijn wrappen.
-	* De inhoud blijft op dezelfde lijn tot er een <br> tag volgt
-	* Dit maakt het mogelijk om een horizontale scrollbar te verkrijgen.
-	*
-	* overflow-x: auto; :plaatst een scrollbar indien gewenst 
-	*/
-	white-space: nowrap;
-	width: 750px;
-}
-
-.horizontaleDivs > div {
-	display: inline-block;
-}
-	
-.adresLijst > div {
-	display: inline-block;
-	/*height: 170px;
-	width : 650px;*/
-	padding: 5px;
-	margin-right: 10px;
-}
-
 progress {
 	width: 5em;
 }
 
+.tab-content{
+	margin-top: 1em;
+	margin-left: 5px;
+}
 
 

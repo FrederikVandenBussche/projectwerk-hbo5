@@ -274,7 +274,7 @@ public class GenereerPdf {
 			document.add(materiaalTabel);
 			
 		} // einde opdrachtIterator
-		
+		totaalPrijs = Math.round(totaalPrijs * 100) / 100;
 		document.add(new Paragraph("\n"));
 		
 		//totaal
@@ -293,6 +293,7 @@ public class GenereerPdf {
 		if (factuur.isBtwAanrekenen()){
 			btw = Constanten.Btw;
 			btwPrijs = totaalPrijs * btw / 100;
+			btwPrijs = Math.round(totaalPrijs * 100) / 100;
 			totaalTabel.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
 					.add(String.valueOf(btw).concat(" %")));
 		} else {

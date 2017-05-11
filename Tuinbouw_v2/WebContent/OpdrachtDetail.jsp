@@ -64,6 +64,11 @@
 					<input type="submit" name="submit" value="bedrijfsgegevens" />
 				</form>
 			</div>
+			<div id="wieIsWaarMenu">
+				<form action="wieIsWaarMenu" method="get">
+					<input type="submit" name="submit" value="Wie is waar?" />
+				</form>
+			</div>
 		</div>
 		<div id="content">
 			<fieldset>

@@ -1,6 +1,7 @@
 package be.miras.programs.frederik.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
+import be.miras.programs.frederik.util.Datum;
 
 
 /**
@@ -287,6 +289,52 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			}
 			e.printStackTrace();
 			LOGGER.error("Exception: " + TAG + " leesOpdrachtIdTaakIdBeginuur(werknemerId)" + werknemerId + " ", e);
+		} finally {
+			session.close();
+		}
+		
+		return lijst;
+	}
+
+	/**
+	 * @param dag Date
+	 * @return List<DbWerknemerOpdrachtTaak>
+	 * 
+	 * return een lijst met DbWerknemerOpdrachtTaak met dezelfde beginuur-datum als 
+	 * de geparameteriseerde datum.
+	 */
+	public List<DbWerknemerOpdrachtTaak> lees(Date datum) {
+		 int dag = datum.getDate();
+		 int maand = datum.getMonth() + 1;
+		 int jaar = datum.getYear() + 1900;
+		 	
+		 List<DbWerknemerOpdrachtTaak> lijst = new ArrayList<DbWerknemerOpdrachtTaak>();
+		 String query = "FROM DbWerknemerOpdrachtTaak "
+		 		+ "WHERE YEAR(beginuur) = :jaar "
+		 		+ "AND MONTH(beginuur) = :maand "
+		 		+ "AND DAY(beginuur) = :dag"; 
+		
+		 Session session = HibernateUtil.openSession();
+		 Transaction transaction = null;
+		 
+		 try {
+			 transaction = session.getTransaction();
+			 session.beginTransaction();
+			 Query q = session.createQuery(query);
+			 q.setParameter("jaar", jaar);
+			 q.setParameter("maand", maand);
+			 q.setParameter("dag", dag);
+			 lijst = q.list();
+			 session.flush();
+			 if(!transaction.wasCommitted()){
+				 transaction.commit();
+			 }
+		 } catch (Exception e) {
+			 if (transaction != null) {
+				 transaction.rollback();
+			 }
+			 e.printStackTrace();
+			 LOGGER.error("Exception: " + TAG + "lees(datum)" + datum.toString() + " " , e);
 		} finally {
 			session.close();
 		}

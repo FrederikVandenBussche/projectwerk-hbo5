@@ -51,7 +51,7 @@ public class GoogleApis {
 	final static private String googleMaps = "https://maps.google.com/?q=";
 
 	private static final Logger LOGGER = Logger.getLogger(GoogleApis.class);
-	private final String TAG = "GoogleApis: ";
+	private static final String TAG = "GoogleApis: ";
 
 	/**
 	 * @param adres Adres

@@ -195,5 +195,44 @@ public class DbWerknemerDao implements ICRUD {
 		}
 	}
 
+	/**
+	 * @param werknemerId int
+	 * @return int
+	 * 
+	 * return de persoonId aan de hand van een werknemerId
+	 */
+	public int returnPersoonId(int werknemerId) {
+		int persoonId = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT persoonId FROM DbWerknemer where id = :id";
+		List<Integer> lijst = new ArrayList<Integer>();
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", werknemerId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "returnPersoonId(werknemerId)" + werknemerId + " ", e);
+
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			persoonId = lijst.get(0);
+		}
+		
+		return persoonId;
+	}
+
 
 }

@@ -35,7 +35,7 @@ public class LogoutServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		session.setAttribute("isIngelogd", false);
 		
-		RequestDispatcher view = request.getRequestDispatcher("/main.html");
+		RequestDispatcher view = request.getRequestDispatcher("/main.jsp");
 		view.forward(request, response);
 	}
 

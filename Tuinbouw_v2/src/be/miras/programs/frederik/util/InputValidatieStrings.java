@@ -3,8 +3,9 @@ package be.miras.programs.frederik.util;
 /**
  * @author Frederik Vanden Bussche
  * 
- *         String's die meegegeven worden in errormessages tijdens de
- *         inputvalidatie
+ *         - String's die meegegeven worden in errormessages tijdens de
+ *         inputvalidatie.
+ *         - String's die meegegeven worden tijdens mislukte inlogpogingen
  *
  */
 
@@ -57,5 +58,7 @@ public class InputValidatieStrings {
 	public static final String GebruikersNaamInGeven = " Gelieve een gebruikersnaam in te geven";
 	public static final String GebruikersNaamInGebruik = " Deze gebruikersnaam is reeds in gebruik. Gelieve een andere gebruikersnaam te kiezen. ";
 
-
+	public static final String InlogGebruikersnaamNietGekend = " Deze gebruikersnaam is niet gekend. ";
+	public static final String InlogWachtwoordNietCorrect = " Het ingevoerde wachtwoord is onjuist. ";
+	public static final String InlogBevoegdheid = " Gebruiker is bekend, maar je hebt de rechten niet om hier in te loggen. ";
 }

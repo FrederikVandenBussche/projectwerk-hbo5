@@ -3,13 +3,21 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link rel="stylesheet" type="text/css" href="style/lijst.css">
+	<link rel="stylesheet" type="text/css" href="style/lijst.css">
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="script/bootstrap.min.js"></script>
+	<script type="text/javascript" src="script/adresScript.js"></script>
 </head>
 <body>
+	<!--  taglib om jstl expression language te gebruiken -->
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+	<%@ page isELIgnored="false"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 	<div id="container">
 		<div id="nav">
 			<div id="afmeldMenu">
@@ -36,7 +44,7 @@
 					<input type="submit" name="submit" value="Klanten" />
 				</form>
 			</div>
-			<div id="facturatieMenu" class="actiefItem">
+			<div id="facturatieMenu">
 				<form action="facturatieMenu" method="get">
 					<input type="submit" name="submit" value="Facturatie" />
 				</form>
@@ -56,36 +64,55 @@
 					<input type="submit" name="submit" value="bedrijfsgegevens" />
 				</form>
 			</div>
-			<div id="wieIsWaarMenu">
+			<div id="wieIsWaarMenu"  class="actiefItem">
 				<form action="wieIsWaarMenu" method="get">
 					<input type="submit" name="submit" value="Wie is waar?" />
 				</form>
 			</div>
 		</div>
-		<div id="content">
-			Facturatie
-			
+		<div id = "content">
 			<fieldset>
-				<Legend>KlantGegevens</Legend>
-				Te factureren klant: 
-				<form action="facturatieDetail" action="get">
-					<select name = "geselecteerdeKlant">
-						<option SELECTED DISABLED>Kies klant...</option>
-						<c:forEach items="${klantMap }" var="klant">
-							<option value="${klant.key }">
-								${klant.value }
-							</option>
+				<legend>Overzicht van wie vandaag waar en met wat bezig is.</legend>
+				<table class = "table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Opdracht</th>
+							<th>Taak</th>
+							<th>Klant</th>
+							<th>Status</th>
+							<th>Werknemer</th>
+							<th>Startuur</th>
+							<th>Einduur</th>
+							
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${wieIsWaarLijst }" var="element">
+							<tr>
+								<td>${element.opdracht }</td>
+								<td>${element.taak }</td>
+								<td>
+									<b>${element.klantNaam }</b> 
+									<br />
+									${element.straatEnNummer } 
+									<br />
+									${element.postcodeEnPlaats } 
+									<br />
+								</td>
+								<td>${element.status }</td>
+								<td>${element.werknemer }</td>
+								<td> <fmt:formatDate value="${element.startuur }" type="time" /></td>
+								<td> <fmt:formatDate value="${element.einduur }" type="time" /></td>
+								
+								
+								
+								
+							</tr>
 						</c:forEach>
-					</select>
-					<br />
-					<input type="submit" name="submit" value="Bevestig" />
-				</form>
-				<div class = "inlogError">
-					${factuurmessage }
-				</div>
+					</tbody>
+				</table>
 			</fieldset>
 		</div>
 	</div>
-
 </body>
 </html>

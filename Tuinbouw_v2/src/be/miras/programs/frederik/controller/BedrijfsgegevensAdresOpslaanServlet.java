@@ -87,18 +87,18 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 					adres.setStaticmap(staticmap);
 
 					String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
-					adres.setGooglemap(googlemap);
-					
-					ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
-					adreslijst.add(adres);
-					werkgever.setAdreslijst(adreslijst);
-
-					session.setAttribute("werkgever", werkgever);
+					adres.setGooglemap(googlemap);	
 				}
 				
 			});
 			thread.start();
 
+			ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
+			adreslijst.add(adres);
+			werkgever.setAdreslijst(adreslijst);
+
+			session.setAttribute("werkgever", werkgever);
+			
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			

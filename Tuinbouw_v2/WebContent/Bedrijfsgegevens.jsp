@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
@@ -64,6 +64,11 @@
 					<input type="submit" name="submit" value="bedrijfsgegevens" />
 				</form>
 			</div>
+			<div id="wieIsWaarMenu">
+				<form action="wieIsWaarMenu" method="get">
+					<input type="submit" name="submit" value="Wie is waar?" />
+				</form>
+			</div>
 		</div>
 		<div id="content">
 			<div>
@@ -113,7 +118,7 @@
 						</div>
 					</div>
 				</form>
-            </div>
+            	</div>
             <div class = "tab-pane fade" id = "wachtwoord">
                 <form action="bedrijfWachtwoordWijzigen" method="post">
                 	<div class = 'inputvelden form-group'>
@@ -137,33 +142,43 @@
             </div>
             <div class = "tab-pane fade" id = "adres">
 				<br />
-					<div class="adresLijst">
-						<c:forEach items="${werkgever.adreslijst}" var="element">
+				<ul id = "adresTab" class = "nav nav-tabs">
+					<c:forEach items="${werkgever.adreslijst }" var = "element" varStatus = "status">
+						<li class = ${status.first ? 'active' : '' }>
+							<a href = "#${element.id }" data-toggle = "tab">
+								${element.straat } ${element.nummer } ${element.bus }
+								<br />
+								${element.postcode } ${element.plaats }
+							</a>
+						</li>
+					</c:forEach>
+					<li>
+						<a href = "#nieuwAdres" data-toggle = "tab">
+							Voeg nieuw adres toe
+						</a>
+					</li>
+				</ul>
+				
+				<div id = "adresContent" class = "tab-content">
+					<c:forEach items = "${werkgever.adreslijst }" var = "element" varStatus = "status">
+						<div class = "tab-pane fade ${status.first ? ' in active' : '' }" id = "${element.id }">
 							<div>	
 								<form action="bedrijfsGegevensAdresVerwijderen" method="post">
-									<div class="horizontaleDivs">
-										<div>
-											straat: ${element.straat }  
-											nr: ${element.nummer } 
-											bus: ${element.bus } 
-											<br />
-											postcode: ${element.postcode } 
-											plaats: ${element.plaats }
-											<br />
-											<br />
-											<input type="hidden" name="bedrijfsnaam" value="${bedrijfsnaam}" />
-											<input type="hidden" name="adres_id" value=${element.id } />
-											<input type="submit" class = "btn btn-default" name="submit" value="Verwijder" />
-										</div>
-										<div class="staticmap">
-											<a href="${element.googlemap }" target="_blank">
-												<img src="${element.staticmap }" alt="kaart van dit adres">
-											</a>
-										</div>
+									<div class="staticmap">
+										<a href="${element.googlemap }" target="_blank">
+											<img src="${element.staticmap }" alt="kaart van dit adres">
+										</a>
+									</div>
+									<div>
+										<input type="hidden" name="bedrijfsnaam" value="${bedrijfsnaam}" />
+										<input type="hidden" name="adres_id" value=${element.id } />
+										<input type="submit" class = "btn btn-default btn-lg btn-block" name="submit" value="Verwijder dit adres" />
 									</div>
 								</form>
 							</div>
-						</c:forEach>
+						</div>
+					</c:forEach>
+					<div class = "tab-pane fade" id = "nieuwAdres">
 						<div>
 							<form action="bedrijfsGegevensAdresOpslaan" method="post">
 									<div class = "inputvelden form-group">
@@ -194,8 +209,8 @@
 									</div>
 								</form>
 							</div>
-						</div>
 					</div>
+				</div>
 				</div>
 			</div>
 		</div>

@@ -37,6 +37,7 @@ import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.GoogleApis;
+import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**
  * @author Frederik Vanden Bussche
@@ -62,6 +63,7 @@ public class InlogServlet extends HttpServlet {
 			throws ServletException, IOException {
 		response.setContentType("text/html");
 
+		String errorMsg = "";
 		String rol = "werkgever";
 
 		String gebruikersnaam = request.getParameter("gebruikersnaam");
@@ -70,15 +72,36 @@ public class InlogServlet extends HttpServlet {
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 		DbBevoegdheidDao dbBevoegdheidDao = new DbBevoegdheidDao();
 		DbGebruiker dbGebruiker = dbGebruikerDao.getGebruiker(gebruikersnaam);
-		int gebruikerId = Integer.MIN_VALUE;
+		
 		boolean isIngelogd = false;
-		if (dbGebruiker != null && wachtwoord != null) {
-			if (wachtwoord.equals(dbGebruiker.getWachtwoord())) {
-				DbBevoegdheid dbBevoegdheid = (DbBevoegdheid) dbBevoegdheidDao.lees(dbGebruiker.getBevoegdheidId());
-				if (dbBevoegdheid.getRol().equals(rol)) {
-					isIngelogd = true;
-					gebruikerId = dbGebruiker.getId();		
+		int gebruikerId = Integer.MIN_VALUE;
+		
+		if (dbGebruiker.getGebruikersnaam() == null){
+			
+			errorMsg = InputValidatieStrings.InlogGebruikersnaamNietGekend;
+		} else {
+			
+			if (dbGebruiker != null && wachtwoord != null) {
+				if (wachtwoord.equals(dbGebruiker.getWachtwoord())) {
+					
+					DbBevoegdheid dbBevoegdheid = (DbBevoegdheid) dbBevoegdheidDao.lees(dbGebruiker.getBevoegdheidId());
+					
+					if (dbBevoegdheid.getRol().equals(rol)) {
+					
+						isIngelogd = true;
+						gebruikerId = dbGebruiker.getId();		
+					} else {
+						
+						errorMsg = InputValidatieStrings.InlogBevoegdheid;
+					}
+
+				} else {
+					
+					errorMsg = InputValidatieStrings.InlogWachtwoordNietCorrect;
 				}
+			} else {
+				
+				errorMsg = InputValidatieStrings.InlogWachtwoordNietCorrect;
 			}
 		}
 		
@@ -92,8 +115,10 @@ public class InlogServlet extends HttpServlet {
 			RequestDispatcher view = request.getRequestDispatcher("/opdrachtenMenu");
 			view.forward(request, response);
 		} else {
-
-			RequestDispatcher view = request.getRequestDispatcher("/main.html");
+			
+			request.setAttribute("errorMsg", errorMsg);
+			
+			RequestDispatcher view = request.getRequestDispatcher("/main.jsp");
 			view.forward(request, response);
 		}
 
@@ -171,7 +196,7 @@ public class InlogServlet extends HttpServlet {
 	/**
 	 * @param session HttpSession
 	 * 
-	 * Laad de bonodigde data betreft opdracht en taakbeheer 
+	 * Laad de benodigde data betreft opdracht en taakbeheer 
 	 * uit de databank en sla op in session.
 	 */
 	private void laadOpdrachten(HttpSession session) {
@@ -179,9 +204,6 @@ public class InlogServlet extends HttpServlet {
 		
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		DbKlantDao dbKlantDao = new DbKlantDao();
-		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
-		MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
-		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		
 		List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) (Object) dbOpdrachtDao.leesAlle();
 		

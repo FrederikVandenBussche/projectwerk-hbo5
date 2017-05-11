@@ -281,5 +281,42 @@ public class DbKlantAdresDao implements ICRUD {
 		return id;
 	}
 	
+	/**
+	 * @param id int
+	 * @return DbKlantAdres
+	 * 
+	 * select * from dbKlantAdres where id = id
+	 */
+	public DbKlantAdres select(int id){
+		DbKlantAdres klantAdres = new DbKlantAdres();
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "FROM DbKlantAdres where id = :id";
+		List<DbKlantAdres> lijst = new ArrayList<DbKlantAdres>();
+		try {
+			transaction = session.getTransaction();
+			session.beginTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "select(id)" + id + "", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			klantAdres = lijst.get(0);
+		}
+		
+		return klantAdres;
+	};
 	
 }
