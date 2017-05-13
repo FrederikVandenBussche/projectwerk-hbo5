@@ -11,6 +11,7 @@
     <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
     <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -107,7 +108,7 @@
 										<td>
 											<form action="klantToonDetail" method="get">
 												<input type="hidden" name="id" value="${element.id }" />
-												<input type="submit"  class = "btn btn-default" name="particulier" value="meer..."/>
+												<input type="submit"  class = "btn btn-default eenmalig" name="particulier" value="meer..."/>
 											</form>
 										</td>
 									</tr>
@@ -143,7 +144,7 @@
 										<td>
 											<form action="klantToonDetail" method="get">
 												<input type="hidden" name="id" value="${element.id }" />
-												<input type="submit" class = "btn btn-default" name="bedrijf" value="meer..."/>
+												<input type="submit" class = "btn btn-default eenmalig" name="bedrijf" value="meer..."/>
 											</form>
 										</td>
 									</tr>

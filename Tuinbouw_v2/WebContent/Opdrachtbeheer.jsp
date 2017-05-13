@@ -11,6 +11,7 @@
     <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
     <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -76,7 +77,7 @@
 			<form action="opdrachtToonDetail" method="get">
 				<!--  if(id == -1){ nieuwe opdracht} -->
 				<input type="hidden" name="id" value="-1" />
-				<input type="submit" class = "btn btn-default btn-block active"  name="submit" value="Voeg nieuwe opdracht toe" />
+				<input type="submit" class = "btn btn-default btn-block active eenmalig"  name="submit" value="Voeg nieuwe opdracht toe" />
 			</form>
 			<div class="groteTabel">
 				<table class = "table table-striped table-hover">
@@ -102,7 +103,7 @@
 								<td>
 									<form action="opdrachtToonDetail" method="get" >
 										<input type="hidden" name="id" value="${element.id }" />
-										<input type="submit" class = "btn btn-default" name="submit" value="meer..." />
+										<input type="submit" class = "btn btn-default eenmalig" name="submit" value="meer..." />
 									</form>
 								</td>
 							</tr>

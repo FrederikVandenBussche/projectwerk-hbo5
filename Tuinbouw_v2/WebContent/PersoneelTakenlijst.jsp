@@ -9,8 +9,8 @@
 		<link href = "style/bootstrap.min.css" rel = "stylesheet">      
         <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
         <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
-
 		<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+		<script type="text/javascript" src="script/knopDisabeler.js"></script>
 	</head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -98,7 +98,7 @@
 									<form action="personeelbeheerTaakVerwijderen" method="post">
 										<input type="hidden" name="id"
 											value="${element.dbWerknemerOpdrachtTaakId }"></input> <input
-											type="submit" class = "btn btn-default" name="submit" value="Verwijder" />
+											type="submit" class = "btn btn-default eenmalig" name="submit" value="Verwijder" />
 									</form>
 								</td>
 							</tr>

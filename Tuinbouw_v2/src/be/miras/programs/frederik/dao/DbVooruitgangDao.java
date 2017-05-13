@@ -27,8 +27,8 @@ public class DbVooruitgangDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbVooruitgang vooruitgang = (DbVooruitgang) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(vooruitgang);
 			id = vooruitgang.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbVooruitgangDao implements ICRUD {
 		String query = "FROM DbVooruitgang where id = :id";
 		List<DbVooruitgang> lijst = new ArrayList<DbVooruitgang>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbVooruitgangDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbVooruitgangDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbVooruitgang vooruitgang = (DbVooruitgang) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(vooruitgang);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbVooruitgangDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbVooruitgang where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();

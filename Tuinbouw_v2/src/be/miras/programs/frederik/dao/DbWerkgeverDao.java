@@ -28,8 +28,8 @@ public class DbWerkgeverDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbWerkgever werkgever = (DbWerkgever) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(werkgever);
 			id = werkgever.getId();
 			session.flush();
@@ -56,8 +56,8 @@ public class DbWerkgeverDao implements ICRUD {
 		String query = "FROM DbWerkgever where id = :id";
 		List<DbWerkgever> lijst = new ArrayList<DbWerkgever>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -90,8 +90,8 @@ public class DbWerkgeverDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -119,8 +119,8 @@ public class DbWerkgeverDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbWerkgever werkgever = (DbWerkgever) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(werkgever);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -143,8 +143,8 @@ public class DbWerkgeverDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerkgever where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -176,8 +176,8 @@ public class DbWerkgeverDao implements ICRUD {
 		String query = "FROM DbWerkgever where persoonId = :persoonId";
 		List<DbWerkgever> lijst = new ArrayList<DbWerkgever>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("persoonId", persoonId);
 			lijst = q.list();

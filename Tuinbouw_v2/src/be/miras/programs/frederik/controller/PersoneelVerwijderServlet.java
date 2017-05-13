@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
+import be.miras.programs.frederik.dao.DbWerknemerDao;
+import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
 import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Personeel;
@@ -52,17 +54,27 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 		List<Personeel> lijst = new ArrayList<Personeel>();
 		PersoonAdresDaoAdapter persoonAdresDao = new PersoonAdresDaoAdapter();
 
-		pdao.verwijder(id);
+		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
+		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
+		int werknemerId = dbWerknemerDao.returnWerknemerId(id);
+		boolean isKomtVoor = dbWerknemerOpdrachtTaakDao.isWerknemerKomtVoor(werknemerId);
+		
+		if (isKomtVoor){
+			String errorMsg = "Kan dit personeelslid niet verwijderen omdat deze nog taken moet uitvoeren / uitgevoerd heeft.";
+			request.setAttribute("inputValidatieErrorMsg", errorMsg);
+		} else {
+			pdao.verwijder(id);
 
-		ArrayList<Adres> adreslijst = p.getAdreslijst();
-		ListIterator<Adres> it = adreslijst.listIterator();
-		while (it.hasNext()) {
-			Adres a = it.next();
+			ArrayList<Adres> adreslijst = p.getAdreslijst();
+			ListIterator<Adres> it = adreslijst.listIterator();
+			while (it.hasNext()) {
+				Adres a = it.next();
 
-			persoonAdresDao.verwijder(a.getId());
+				persoonAdresDao.verwijder(a.getId());
+			}
+
+			lijst = (List<Personeel>) (Object) pdao.leesAlle();
 		}
-
-		lijst = (List<Personeel>) (Object) pdao.leesAlle();
 
 		session.setAttribute("personeelLijst", lijst);
 

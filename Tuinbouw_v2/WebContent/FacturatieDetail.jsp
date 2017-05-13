@@ -11,8 +11,7 @@
     <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
     <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-	
-	
+	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>

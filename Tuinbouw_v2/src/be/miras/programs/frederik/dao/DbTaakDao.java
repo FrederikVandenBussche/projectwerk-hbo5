@@ -9,7 +9,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbTaak;
 
 /**
@@ -29,8 +28,8 @@ public class DbTaakDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbTaak taak = (DbTaak)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(taak);
 			id = taak.getId();
 			session.flush();
@@ -57,8 +56,8 @@ public class DbTaakDao implements ICRUD {
 		String query = "FROM DbTaak where id = :id";
 		List<DbTaak> lijst = new ArrayList<DbTaak>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -90,8 +89,8 @@ public class DbTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -119,8 +118,8 @@ public class DbTaakDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbTaak taak = (DbTaak)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(taak);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -143,8 +142,8 @@ public class DbTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbTaak where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -180,8 +179,8 @@ public class DbTaakDao implements ICRUD {
 		Transaction transaction = null;
 		
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("naam", naam);
 			lijst = q.list();
@@ -225,8 +224,8 @@ public class DbTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", taakId);
 			lijst = q.list();

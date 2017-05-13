@@ -27,8 +27,8 @@ public class DbStraatDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbStraat straat = (DbStraat)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(straat);
 			id = straat.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbStraatDao implements ICRUD {
 		String query = "FROM DbStraat where id = :id";
 		List<DbStraat> lijst = new ArrayList<DbStraat>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbStraatDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbStraatDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbStraat straat = (DbStraat)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(straat);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbStraatDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbStraat where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -177,8 +177,8 @@ public class DbStraatDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("naam", straat);
 			lijst = q.list();
@@ -204,5 +204,6 @@ public class DbStraatDao implements ICRUD {
 		
 		return id;
 	}
+
 	
 }

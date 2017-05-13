@@ -28,8 +28,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbPersoonAdres persoonAdres = (DbPersoonAdres)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(persoonAdres);
 			id = persoonAdres.getId();
 			session.flush();
@@ -56,8 +56,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		String query = "FROM DbPersoonAdres where adresId = :adresId";
 		List<DbPersoonAdres> lijst = new ArrayList<DbPersoonAdres>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("adresId", adresId);
 			lijst = q.list();
@@ -70,7 +70,7 @@ public class DbPersoonAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+			LOGGER.error("Exception: " + TAG + "lees(adresId)" + adresId + "", e);
 		} finally {
 			session.close();
 		}
@@ -89,8 +89,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -118,8 +118,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbPersoonAdres persoonAdres = (DbPersoonAdres)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(persoonAdres);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -142,8 +142,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbPersoonAdres where persoonId = :persoonId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("persoonId", persoonId);
 			q.executeUpdate();
@@ -156,7 +156,7 @@ public class DbPersoonAdresDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(persoonId)" + persoonId + " ", e);
 		} finally {
 			session.close();
 		}
@@ -175,8 +175,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -209,8 +209,8 @@ public class DbPersoonAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbPersoonAdres where persoonId = :persoonId and adresId = :adresId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("persoonId", persoonId);
 			q.setParameter("adresId", adresId);

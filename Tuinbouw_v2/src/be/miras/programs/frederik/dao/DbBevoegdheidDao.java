@@ -27,8 +27,8 @@ public class DbBevoegdheidDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbBevoegdheid bevoegdheid = (DbBevoegdheid)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(bevoegdheid);
 			id = bevoegdheid.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbBevoegdheidDao implements ICRUD {
 		String query = "FROM DbBevoegdheid where id = :id";
 		List<DbBevoegdheid> lijst = new ArrayList<DbBevoegdheid>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbBevoegdheidDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbBevoegdheidDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbBevoegdheid bevoegdheid  = (DbBevoegdheid)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(bevoegdheid);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbBevoegdheidDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbBevoegdheid where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();

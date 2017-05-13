@@ -5,23 +5,21 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Tuinbouwbedrijf Hitek</title>
-<link rel="stylesheet" type="text/css" href="style/style.css">
-<link rel="stylesheet" type="text/css" href="style/lijst.css">
-<link href = "style/bootstrap.min.css" rel = "stylesheet">      
-<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-<script  type="text/javascript" src = "script/bootstrap.min.js"></script>
-<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-<script type="text/javascript" src="script/adresScript.js"></script>
-<script type="text/javascript" src="script/nieuwPersoneel.js"></script>
-
-
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link rel="stylesheet" type="text/css" href="style/lijst.css">
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="script/adresScript.js"></script>
+	<script type="text/javascript" src="script/nieuwPersoneel.js"></script>
+	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ page isELIgnored="false"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-
 	<div id="container">
 		<div id="nav">
 			<div id="afmeldMenu">
@@ -93,74 +91,74 @@
     	        <div class = "tab-pane fade in active" id = "gegevens">
         			<form action="personeelslidOpslaan" method="post">
 						<input type="hidden" name="id" value="${id}" />
-							<br />
-							<div class = "inputvelden form-group">
-								<label class = "control-label col-sm-2" for="voornaam">Voornaam: </label>
-								<div class="col-sm-10">
-									<input type="text"  class="form-control" name="voornaam" value="${personeelslid.voornaam }" />
-								</div>
-								<label class = "control-label col-sm-2" for = "naam"> Naam: </label>
-								<div class="col-sm-10">
-									<input type="text" class = "form-control" name="naam" value="${personeelslid.naam }" />
-								</div>
-								<label class = "control-label col-sm-2" for = "loon"> Loon: </label>
-								<div class="col-sm-10">
-									<input type="number" class = "form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name="loon" value="${personeelslid.loon }" />
-								</div>
-								<label class = "control-label col-sm-2" for = "email"> email: </label>
-								<div class="col-sm-10">
-									<input type="email" class = "form-control" name="email" value="${personeelslid.email }" />
-								</div>
-								<label for = "nieuweGeboortedatum">
-									Geboortedatum
-									<fmt:formatDate value="${personeelslid.geboortedatum }" pattern="dd/MM/yyyy" />
-									wijzigen: 
-								</label>
-								<br />
-								<div class="col-sm-offset-2 col-sm-10">
-									<input type="date" class = "form-control" name="nieuweGeboortedatum">
-								</div>
-								<label for = "nieuweAanwervingsdatum">
-									Aanwervingsdatum
-									<fmt:formatDate value="${personeelslid.aanwervingsdatum }" pattern="dd/MM/yyyy" />
-									wijzigen: 
-								</label>
-								<br />
-								<div class="col-sm-offset-2 col-sm-10">
-									<input type="date" class = "form-control" name="nieuweAanwervingsdatum">
-								</div>
-								<input type="hidden" name="geboortedatum" value="${personeelslid.geboortedatum }" />
-								<input type="hidden" name="aanwervingsdatum" value="${personeelslid.aanwervingsdatum }" />
-								<div class="col-sm-offset-2 col-sm-10">
-									<input type="submit" class = "btn btn-default active" name="opslaan_btn" value="${buttonNaam }" />
-								</div>
+						<br />
+						<div class = "inputvelden form-group">
+							<label class = "control-label col-sm-2" for="voornaam">Voornaam: </label>
+							<div class="col-sm-10">
+								<input type="text"  class="form-control" name="voornaam" value="${personeelslid.voornaam }" />
 							</div>
-						</form>
-        		    </div>
-   			        <div class = "tab-pane fade" id = "adressen">
-        	        	<br />
-						<ul id = "adresTab" class = "nav nav-tabs">
-							<c:forEach items="${personeelslid.adreslijst }" var = "element" varStatus = "status">
-								<li class = ${status.first ? 'active' : '' }>
-									<a href = "#${element.id }" data-toggle = "tab">
-										${element.straat } ${element.nummer } ${element.bus }
-										<br />
-										${element.postcode } ${element.plaats }
-									</a>
-								</li>
-							</c:forEach>
-							<li>
-								<a href = "#nieuwAdres" data-toggle = "tab">
-									Voeg nieuw adres toe
+							<label class = "control-label col-sm-2" for = "naam"> Naam: </label>
+							<div class="col-sm-10">
+								<input type="text" class = "form-control" name="naam" value="${personeelslid.naam }" />
+							</div>
+							<label class = "control-label col-sm-2" for = "loon"> Loon: </label>
+							<div class="col-sm-10">
+								<input type="number" class = "form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" name="loon" value="${personeelslid.loon }" />
+							</div>
+							<label class = "control-label col-sm-2" for = "email"> email: </label>
+							<div class="col-sm-10">
+								<input type="email" class = "form-control" name="email" value="${personeelslid.email }" />
+							</div>
+							<label for = "nieuweGeboortedatum">
+								Geboortedatum
+								<fmt:formatDate value="${personeelslid.geboortedatum }" pattern="dd/MM/yyyy" />
+								wijzigen: 
+							</label>
+							<br />
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="date" class = "form-control" name="nieuweGeboortedatum">
+							</div>
+							<label for = "nieuweAanwervingsdatum">
+								Aanwervingsdatum
+								<fmt:formatDate value="${personeelslid.aanwervingsdatum }" pattern="dd/MM/yyyy" />
+								wijzigen: 
+							</label>
+							<br />
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="date" class = "form-control" name="nieuweAanwervingsdatum">
+							</div>
+							<input type="hidden" name="geboortedatum" value="${personeelslid.geboortedatum }" />
+							<input type="hidden" name="aanwervingsdatum" value="${personeelslid.aanwervingsdatum }" />
+							<div class="col-sm-offset-2 col-sm-10">
+								<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="${buttonNaam }" />
+							</div>
+						</div>
+					</form>
+        		</div>
+   			    <div class = "tab-pane fade" id = "adressen">
+        	       	<br />
+					<ul id = "adresTab" class = "nav nav-tabs">
+						<c:forEach items="${personeelslid.adreslijst }" var = "element" varStatus = "status">
+							<li class = ${status.first ? 'active' : '' }>
+								<a href = "#${element.id }" data-toggle = "tab">
+									${element.straat } ${element.nummer } ${element.bus }
+									<br />
+									${element.postcode } ${element.plaats }
 								</a>
 							</li>
-						</ul>
-        				<div id = "adresContent" class = "tab-content">
-							<c:forEach items = "${personeelslid.adreslijst }" var = "element" varStatus = "status">
-								<div class = "tab-pane fade ${status.first ? ' in active' : '' }" id = "${element.id }">
-									<div>	
-										<form action="personeelAdresVerwijderen" method="post">
-											<div class="staticmap">
+						</c:forEach>
+						<li>
+							<a href = "#nieuwAdres" data-toggle = "tab">
+								Voeg nieuw adres toe
+							</a>
+						</li>
+					</ul>
+        			<div id = "adresContent" class = "tab-content">
+						<c:forEach items = "${personeelslid.adreslijst }" var = "element" varStatus = "status">
+							<div class = "tab-pane fade ${status.first ? ' in active' : '' }" id = "${element.id }">
+								<div>	
+									<form action="personeelAdresVerwijderen" method="post">
+										<div class="staticmap">
 											<a href="${element.googlemap }" target="_blank">
 												<img src="${element.staticmap }" alt="kaart van dit adres">
 											</a>
@@ -201,8 +199,8 @@
 											 <input type="text" name="plaats" />	
 										</div> 
 										<input type="hidden" name="buttonNaam" value="${buttonNaam }" />
-								<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" /> 
-								<input type="hidden" name="personeel_id" value="${id}" /> 
+										<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" /> 
+										<input type="hidden" name="personeel_id" value="${id}" /> 
 										<div class="col-sm-offset-2 col-sm-10">
 											<input type="submit" class = "btn btn-default active" name="submit" value="Voeg nieuw adres toe" />
 										</div>
@@ -211,12 +209,14 @@
 							</div>
 						</div>
 					</div>
-        </div>
-		<div id="personeelVerwijderen">
-			<form action="personeelslidVerwijderen" method="post">
-				<input type="hidden" name="id" value="${id}" /> 
-				<input type="submit" class = "btn btn-default btn-lg btn-block" name="verwijder_btn" value="Verwijder dit personeelslid" />
-			</form>
+        		</div>
+        	</div>
+			<div id="personeelVerwijderen">
+				<form action="personeelslidVerwijderen" method="post">
+					<input type="hidden" name="id" value="${id}" /> 
+					<input type="submit" class = "btn btn-default btn-lg btn-block eenmalig" name="verwijder_btn" value="Verwijder dit personeelslid" />
+				</form>
+			</div>
 		</div>
 	</div>
 </body>

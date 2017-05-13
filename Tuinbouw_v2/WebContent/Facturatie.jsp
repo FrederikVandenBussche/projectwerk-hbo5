@@ -6,6 +6,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
+    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+    <script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -78,7 +82,8 @@
 						</c:forEach>
 					</select>
 					<br />
-					<input type="submit" name="submit" value="Bevestig" />
+					<br />
+					<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="Bevestig" />
 				</form>
 				<div class = "inlogError">
 					${factuurmessage }

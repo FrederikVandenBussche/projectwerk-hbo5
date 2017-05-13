@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import be.miras.programs.frederik.dao.DbAdresDao;
 import be.miras.programs.frederik.dao.DbGemeenteDao;
 import be.miras.programs.frederik.dao.DbKlantAdresDao;
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbStraatDao;
 import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbKlant;
@@ -54,21 +55,32 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		DbKlant klant = (DbKlant) session.getAttribute("klant");
+		
+		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
+		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+		
+		int klantAdresId= dbKlantAdresDao.geefId(klant.getId(), adresId);
+		boolean isKomtVoor = dbOpdrachtDao.isKlantAdresKomtVoor(klantAdresId);
+		
+		if (isKomtVoor){
+			String errorMsg = "Kan dit adres niet verwijderen omdat er nog opdrachten op dit adres uit te voeren zijn.";
+			request.setAttribute("inputValidatieErrorMsg", errorMsg);
+		} else {
+			// adres verwijderen
+			adresVerwijderen(klant.getId(), adresId);
 
-		// adres verwijderen
-		adresVerwijderen(klant.getId(), adresId);
+			// De adresLIjst van de klant in de session verwijderen
+			ArrayList<Adres> adresLijst = klant.getAdreslijst();
 
-		// De adresLIjst van de klant in de session wijzigen
-		ArrayList<Adres> adresLijst = klant.getAdreslijst();
-
-		ListIterator<Adres> it = adresLijst.listIterator();
-		while (it.hasNext()) {
-			Adres a = it.next();
-			if (a.getId() == adresId) {
-				it.remove();
+			ListIterator<Adres> it = adresLijst.listIterator();
+			while (it.hasNext()) {
+				Adres a = it.next();
+				if (a.getId() == adresId) {
+					it.remove();
+				}
 			}
 		}
-
+		
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("variabelVeldnaam1", variabelVeldnaam1);
 		request.setAttribute("variabelVeld1", variabelVeld1);

@@ -192,7 +192,7 @@ public class KlantToonDetailServlet extends HttpServlet {
 			session.setAttribute("variabelVeld2", variabelVeld2);
 
 			session.setAttribute("klant", klant);
-			session.setAttribute("opdrachtLijst", opdrachtLijst);
+			session.setAttribute("opdrachtLijstVoorKlantDetail", opdrachtLijst);
 			session.setAttribute("opdrachtMap", opdrachtMap);
 
 			view = this.getServletContext().getRequestDispatcher("/KlantDetail.jsp");

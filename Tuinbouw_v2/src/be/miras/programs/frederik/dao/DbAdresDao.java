@@ -28,8 +28,8 @@ public class DbAdresDao implements ICRUD {
 		
 		try {
 			DbAdres adres = (DbAdres) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(adres);
 			id = adres.getId();
 			session.flush();
@@ -57,8 +57,8 @@ public class DbAdresDao implements ICRUD {
 		String query = "FROM DbAdres where id = :id";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -97,8 +97,8 @@ public class DbAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbAdres where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -130,8 +130,8 @@ public class DbAdresDao implements ICRUD {
 		String query = "FROM DbAdres where straatId = :straatId";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("straatId", straatId);
 			lijst = q.list();
@@ -168,8 +168,8 @@ public class DbAdresDao implements ICRUD {
 		String query = "FROM DbAdres where gemeenteId = :gemeenteId";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("gemeenteId", gemeenteId);
 			lijst = q.list();

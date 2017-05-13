@@ -27,8 +27,8 @@ public class DbParticulierDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbParticulier particulier = (DbParticulier)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(particulier);
 			id = particulier.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbParticulierDao implements ICRUD {
 		String query = "FROM DbParticulier where id = :id";
 		List<DbParticulier> lijst = new ArrayList<DbParticulier>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbParticulierDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbParticulierDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbParticulier particulier = (DbParticulier)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(particulier);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbParticulierDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbParticulier where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();

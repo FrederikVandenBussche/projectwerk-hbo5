@@ -361,15 +361,27 @@ public class GoogleApis {
 
 			if (resultObject instanceof JSONObject) {
 				JSONObject obj = (JSONObject) resultObject;
-				JSONArray array = (JSONArray) obj.get("rows");
-				JSONObject obj2 = (JSONObject) array.get(0);
-				JSONArray array2 = (JSONArray) obj2.get("elements");
-				JSONObject obj3 = (JSONObject) array2.get(0);
-				JSONObject obj4 = (JSONObject) obj3.get("distance");
-				String afstand = (String) obj4.get("text");
+				if (obj.containsKey("rows")){
+					JSONArray array = (JSONArray) obj.get("rows");
+					if (array.size() > 0){
+						JSONObject obj2 = (JSONObject) array.get(0);
+						if (obj2.containsKey("elements")){
+							JSONArray array2 = (JSONArray) obj2.get("elements");
+							if (array2.size() > 0){
+								JSONObject obj3 = (JSONObject) array2.get(0);
+								if (obj3.containsKey("distance")){
+									JSONObject obj4 = (JSONObject) obj3.get("distance");
+									if (obj4.containsKey("text")){
+										String afstand = (String) obj4.get("text");
 
-				String[] afstandSplit = afstand.trim().split("\\s+");
-				aantalKilometer = Datatype.stringNaarDouble(afstandSplit[0]);
+										String[] afstandSplit = afstand.trim().split("\\s+");
+										aantalKilometer = Datatype.stringNaarDouble(afstandSplit[0]);
+									}
+								}
+							}
+						}
+					}
+				}	
 			}
 
 		} catch (ParseException e) {

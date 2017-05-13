@@ -27,8 +27,8 @@ public class DbMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbMateriaal materiaal = (DbMateriaal)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(materiaal);
 			id = materiaal.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbMateriaalDao implements ICRUD {
 		String query = "FROM DbMateriaal where id = :id";
 		List<DbMateriaal> lijst = new ArrayList<DbMateriaal>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,9 +117,8 @@ public class DbMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbMateriaal materiaal = (DbMateriaal)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
-			session.saveOrUpdate(materiaal);
+			transaction = session.getTransaction();
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();
@@ -141,8 +140,8 @@ public class DbMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbMateriaal where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -174,8 +173,8 @@ public class DbMateriaalDao implements ICRUD {
 		String query = "SELECT typeMateriaalId FROM DbMateriaal where id = :id";
 		List<Integer> lijst = new ArrayList<Integer>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -211,8 +210,8 @@ public class DbMateriaalDao implements ICRUD {
 		String query = "SELECT COUNT(id) FROM DbMateriaal where typeMateriaalId = :typeMateriaalId";
 		List<Long> lijst = new ArrayList<Long>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("typeMateriaalId", typeMateriaalId);
 			lijst = q.list();

@@ -27,8 +27,8 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbKlantAdres klantAdres = (DbKlantAdres)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(klantAdres);
 			id = klantAdres.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbKlantAdresDao implements ICRUD {
 		String query = "FROM DbKlantAdres where klantId = :id";
 		List<DbKlantAdres> lijst = new ArrayList<DbKlantAdres>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", klantId);
 			lijst = q.list();
@@ -92,8 +92,8 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbKlantAdres klantAdres = (DbKlantAdres)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(klantAdres);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -116,8 +116,8 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlantAdres where klantId = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", klantId);
 			q.executeUpdate();
@@ -149,8 +149,8 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", klantId);
 			lijst = q.list();
@@ -182,8 +182,8 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlantAdres where klantId = :id and adresId = :adresId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", klantId);
 			q.setParameter("adresId", adresId);
@@ -217,8 +217,8 @@ public class DbKlantAdresDao implements ICRUD {
 		String query = "SELECT adresId FROM DbKlantAdres where id = :id";
 		List<Integer> lijst = new ArrayList<Integer>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -256,8 +256,8 @@ public class DbKlantAdresDao implements ICRUD {
 		String query = "SELECT id FROM DbKlantAdres where klantId = :klantId AND adresId = :adresId";
 		List<Integer> lijst = new ArrayList<Integer>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("klantId", klantId);
 			q.setParameter("adresId", adresId);
@@ -294,8 +294,8 @@ public class DbKlantAdresDao implements ICRUD {
 		String query = "FROM DbKlantAdres where id = :id";
 		List<DbKlantAdres> lijst = new ArrayList<DbKlantAdres>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -318,5 +318,6 @@ public class DbKlantAdresDao implements ICRUD {
 		
 		return klantAdres;
 	};
+
 	
 }

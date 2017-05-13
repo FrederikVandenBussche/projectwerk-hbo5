@@ -28,8 +28,8 @@ public class DbGemeenteDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbGemeente gemeente = (DbGemeente)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(gemeente);
 			id = gemeente.getId();
 			session.flush();
@@ -41,7 +41,7 @@ public class DbGemeenteDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			private final String TAG = ": ";
+			LOGGER.error("Exception: " + TAG + "voegToe(o)", e);
 		} finally {
 			session.close();
 		}	
@@ -56,8 +56,8 @@ public class DbGemeenteDao implements ICRUD {
 		String query = "FROM DbGemeente where id = :id";
 		List<DbGemeente> lijst = new ArrayList<DbGemeente>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -89,8 +89,8 @@ public class DbGemeenteDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -118,8 +118,8 @@ public class DbGemeenteDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbGemeente gemeente = (DbGemeente)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(gemeente);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -142,8 +142,8 @@ public class DbGemeenteDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbGemeente where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -177,8 +177,8 @@ public class DbGemeenteDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("postcode", postcode);
 			lijst = q.list();

@@ -27,8 +27,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbOpdrachtTaak opdrachtTaak = (DbOpdrachtTaak)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(opdrachtTaak);
 			id = opdrachtTaak.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		String query = "FROM DbOpdrachtTaak where id = :id";
 		List<DbOpdrachtTaak> lijst = new ArrayList<DbOpdrachtTaak>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbOpdrachtTaak opdrachtTaak = (DbOpdrachtTaak)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(opdrachtTaak);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtTaak where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -174,8 +174,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opdrachtId", opdrachtId);
 			lijst = q.list();
@@ -210,8 +210,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 				+ " AND taakId = :taakId";
 		Transaction transaction = null;
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opmerking", opmerking);
 			q.setParameter("opdrachtId", opdrachtId);
@@ -249,8 +249,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		List<Long> results = null;
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("taakId", taakId);
 			results = q.list();
@@ -285,8 +285,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtTaak where opdrachtId = :opdrachtId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opdrachtId", opdrachtId);
 			q.executeUpdate();
@@ -317,8 +317,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT vooruitgangId FROM DbOpdrachtTaak WHERE opdrachtId = :opdrachtId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opdrachtId", opdrachtId);
 			lijst = q.list();
@@ -351,8 +351,8 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		String query = "FROM DbOpdrachtTaak where taakId = :taakId";
 		List<DbOpdrachtTaak> lijst = new ArrayList<DbOpdrachtTaak>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("taakId", taakId);
 			lijst = q.list();

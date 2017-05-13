@@ -30,8 +30,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbWerknemerOpdrachtTaak dwot = (DbWerknemerOpdrachtTaak)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(dwot);
 			id = dwot.getId();
 			session.flush();
@@ -58,8 +58,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		String query = "FROM DbWerknemerOpdrachtTaak where id = :id";
 		List<DbWerknemerOpdrachtTaak> lijst = new ArrayList<DbWerknemerOpdrachtTaak>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -91,8 +91,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -120,8 +120,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbWerknemerOpdrachtTaak dwot = (DbWerknemerOpdrachtTaak)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(dwot);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -144,8 +144,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -177,8 +177,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("taakId", taakId);
 			lijst = q.list();
@@ -209,8 +209,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where opdrachtTaakOpdrachtId = :opdrachtId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opdrachtId", opdrachtId);
 			q.executeUpdate();
@@ -239,8 +239,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where opdrachtTaakTaakId = :taakId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("taakId", taakId);
 			q.executeUpdate();
@@ -274,8 +274,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("werknemerId", werknemerId);
 			lijst = q.list();
@@ -318,8 +318,8 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		 Transaction transaction = null;
 		 
 		 try {
-			 transaction = session.getTransaction();
 			 session.beginTransaction();
+				transaction = session.getTransaction();
 			 Query q = session.createQuery(query);
 			 q.setParameter("jaar", jaar);
 			 q.setParameter("maand", maand);
@@ -340,6 +340,47 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		}
 		
 		return lijst;
+	}
+
+	/**
+	 * @param werknemerId int
+	 * @return boolean
+	 * 
+	 * return true indien deze werknemerId voorkomt in de tabel.
+	 */
+	public boolean isWerknemerKomtVoor(int werknemerId) {
+		boolean isKomtvoor = false;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT COUNT(id) FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId";
+		List<Long> lijst = new ArrayList<Long>();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("werknemerId", werknemerId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "isWerknemerKomtVoor(int werknemerId)" + werknemerId + " ", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			Long aantal = lijst.get(0);
+			if (aantal > 0){
+				isKomtvoor = true;
+			}
+		}
+		
+		return isKomtvoor;
 	}
 
 

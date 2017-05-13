@@ -27,9 +27,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbOpdracht opdracht = (DbOpdracht)o;
-						
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(opdracht);
 			id = opdracht.getId();
 			session.flush();
@@ -56,8 +55,8 @@ public class DbOpdrachtDao implements ICRUD {
 		String query = "FROM DbOpdracht where id = :id";
 		List<DbOpdracht> lijst = new ArrayList<DbOpdracht>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -89,8 +88,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +116,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbOpdracht opdracht = (DbOpdracht)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(opdracht);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +140,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdracht where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -176,8 +175,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -216,8 +215,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("klantId", klantId);
 			lijst = q.list();
@@ -254,8 +253,8 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -276,6 +275,46 @@ public class DbOpdrachtDao implements ICRUD {
 			klantAdresId = lijst.get(0);
 		}
 		return klantAdresId;
+	}
+
+	/**
+	 * @param adresId int
+	 * @return boolean
+	 * return true indien dit klantAdresId voorkomt in de tabel.
+	 */
+	public boolean isKlantAdresKomtVoor(int klantAdresId) {
+		boolean isKomtvoor = false;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT COUNT(id) FROM DBOpdracht where klantAdresId = :klantAdresId";
+		List<Long> lijst = new ArrayList<Long>();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("klantAdresId", klantAdresId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "isKlantAdresKomtVoor(int klantAdresId)" + klantAdresId + "", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			Long aantal = lijst.get(0);
+			if (aantal > 0){
+				isKomtvoor = true;
+			}
+		}
+		
+		return isKomtvoor;
 	}
 
 	

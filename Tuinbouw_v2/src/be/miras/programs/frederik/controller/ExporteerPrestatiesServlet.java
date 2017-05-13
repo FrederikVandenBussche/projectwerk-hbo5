@@ -85,8 +85,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			String einddatumString = request.getParameter("einddatum");
 			
 			String klantnaam = (String) session.getAttribute("aanspreeknaam");
-			List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) session.getAttribute("opdrachtLijst");
-			List<Opdracht> benodigdeOpdrachtLIjst = new ArrayList<Opdracht>();
+			List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) session.getAttribute("opdrachtLijstVoorKlantDetail");
 			
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 			DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();

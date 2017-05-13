@@ -28,8 +28,8 @@ public class DbWerknemerDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbWerknemer werknemer = (DbWerknemer)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(werknemer);
 			id = werknemer.getId();
 			session.flush();
@@ -56,8 +56,8 @@ public class DbWerknemerDao implements ICRUD {
 		String query = "FROM DbWerknemer where id = :id";
 		List<DbWerknemer> lijst = new ArrayList<DbWerknemer>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -90,8 +90,8 @@ public class DbWerknemerDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -119,8 +119,8 @@ public class DbWerknemerDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbWerknemer werknemer = (DbWerknemer)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(werknemer);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -143,8 +143,8 @@ public class DbWerknemerDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemer where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -174,8 +174,8 @@ public class DbWerknemerDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemer where persoonId = :persoonId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("persoonId", persoonId);
 			q.executeUpdate();
@@ -208,8 +208,8 @@ public class DbWerknemerDao implements ICRUD {
 		String query = "SELECT persoonId FROM DbWerknemer where id = :id";
 		List<Integer> lijst = new ArrayList<Integer>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", werknemerId);
 			lijst = q.list();
@@ -232,6 +232,45 @@ public class DbWerknemerDao implements ICRUD {
 		}
 		
 		return persoonId;
+	}
+
+	/**
+	 * @param werknemerId int
+	 * @return int
+	 * 
+	 * return de werknemerId aan de hand van een persoonId
+	 */
+	public int returnWerknemerId(int persoonId) {
+		int werknemerId = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT id FROM DbWerknemer where persoonId = :persoonId";
+		List<Integer> lijst = new ArrayList<Integer>();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("persoonId", persoonId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "returnWerknemerId(persoonId)" + persoonId + " ", e);
+
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			werknemerId = lijst.get(0);
+		}
+		
+		return werknemerId;
 	}
 
 

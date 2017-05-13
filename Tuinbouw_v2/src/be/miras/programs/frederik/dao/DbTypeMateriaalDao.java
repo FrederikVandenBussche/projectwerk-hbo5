@@ -28,8 +28,8 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbTypeMateriaal typeMateriaal = (DbTypeMateriaal)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(typeMateriaal);
 			id = typeMateriaal.getId();
 			session.flush();
@@ -56,8 +56,8 @@ public class DbTypeMateriaalDao implements ICRUD {
 		String query = "FROM DbTypeMateriaal where id = :id";
 		List<DbTypeMateriaal> lijst = new ArrayList<DbTypeMateriaal>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -89,8 +89,8 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -118,8 +118,8 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbTypeMateriaal typeMateriaal = (DbTypeMateriaal)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(typeMateriaal);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -142,8 +142,8 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbTypeMateriaal where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -175,8 +175,8 @@ public class DbTypeMateriaalDao implements ICRUD {
 		String query = "SELECT id FROM DbTypeMateriaal where naam = :naam";
 		List<Integer> lijst = new ArrayList<Integer>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("naam", naamType);
 			lijst = q.list();

@@ -27,8 +27,8 @@ public class DbStatusDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbStatus status = (DbStatus)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(status);
 			id = status.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbStatusDao implements ICRUD {
 		String query = "FROM DbStatus where id = :id";
 		List<DbStatus> lijst = new ArrayList<DbStatus>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbStatusDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbStatusDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbStatus status = (DbStatus)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(status);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -139,10 +139,10 @@ public class DbStatusDao implements ICRUD {
 	public void verwijder(int id) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-		LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
+		String query = "DELETE FROM DbStatus where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -155,7 +155,7 @@ public class DbStatusDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: ", e);
+			LOGGER.error("Exception: " + TAG + "verwijder(id)" + id + " ", e);
 		} finally {
 			session.close();
 		}
@@ -174,8 +174,8 @@ public class DbStatusDao implements ICRUD {
 		String query = "FROM DbStatus where naam = :naam";
 		List<DbStatus> lijst = new ArrayList<DbStatus>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("naam", naam);
 			lijst = q.list();

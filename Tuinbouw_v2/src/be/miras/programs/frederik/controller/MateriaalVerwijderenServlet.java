@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.DbOpdrachtMateriaalDao;
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.util.Datatype;
@@ -45,15 +46,27 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
 
-		ListIterator<Materiaal> it = lijst.listIterator();
-		while (it.hasNext()) {
-			Materiaal m = it.next();
-			if (m.getId() == id) {
-				MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-				dao.verwijder(id);
-				it.remove();
+		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
+		boolean isKomtVoor = dbOpdrachtMateriaalDao.isMateriaalKomtVoor(id);
+		
+		if (isKomtVoor){
+			String errorMsg = "Kan dit materiaal niet verwijderen omdat deze nog gebruikt wordt in een opdracht.";
+			request.setAttribute("inputValidatieErrorMsg", errorMsg);
+		} else {
+			
+			ListIterator<Materiaal> it = lijst.listIterator();
+			while (it.hasNext()) {
+				Materiaal m = it.next();
+				if (m.getId() == id) {
+					MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
+					
+					dao.verwijder(id);
+					it.remove();
+				}
 			}
 		}
+		
+		
 
 		RequestDispatcher view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 		view.forward(request, response);

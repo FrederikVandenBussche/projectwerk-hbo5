@@ -126,10 +126,16 @@ public class InputValidatie {
 				")[pP][+-]?" + Digits + "))" + "[fFdD]?))" + "[\\x00-\\x20]*");// Optional
 																				// trailing
 																				// "whitespace"
-
+		
 		if (!Pattern.matches(fpRegex, getal)) {
-			msg = " is geen (komma-)getal.";
+			char[] array = getal.toCharArray();
+			for (int i = 0; i < array.length; i++) {
+				if (!Character.isDigit(array[i])) {
+					msg = " is geen (komma-)getal.";
+				}
+			}
 		}
+		
 		return msg;
 	}
 

@@ -27,8 +27,8 @@ public class DbPersoonDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbPersoon persoon = (DbPersoon) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(persoon);
 			id = persoon.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbPersoonDao implements ICRUD {
 		String query = "FROM DbPersoon where id = :id";
 		List<DbPersoon> lijst = new ArrayList<DbPersoon>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbPersoonDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbPersoonDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbPersoon persoon = (DbPersoon) o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(persoon);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbPersoonDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbPersoon where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -180,14 +180,11 @@ public class DbPersoonDao implements ICRUD {
 			transaction = session.getTransaction();
 			List<DbPersoon> lijst = new ArrayList<DbPersoon>();
 			try {
-
 				session.beginTransaction();
-				Query q = null;
-
-				q = session.createQuery(query);
+				transaction = session.getTransaction();
+				Query q = session.createQuery(query);
 				q.setParameter("id", idLijst[i]);
 				lijst = q.list();
-				
 				session.flush();
 				if(!transaction.wasCommitted()){
 					transaction.commit();

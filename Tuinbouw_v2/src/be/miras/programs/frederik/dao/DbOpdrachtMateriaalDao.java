@@ -27,8 +27,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbOpdrachtMateriaal opdrachtMateriaal = (DbOpdrachtMateriaal)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(opdrachtMateriaal);
 			id = opdrachtMateriaal.getId();
 			session.flush();
@@ -55,8 +55,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		String query = "FROM DbOpdrachtMateriaal where id = :id";
 		List<DbOpdrachtMateriaal> lijst = new ArrayList<DbOpdrachtMateriaal>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -88,8 +88,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -117,8 +117,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbOpdrachtMateriaal opdrachtMateriaal = (DbOpdrachtMateriaal)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(opdrachtMateriaal);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -141,8 +141,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtMateriaal where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -173,8 +173,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		String query = "FROM DbOpdrachtMateriaal where opdrachtId = :opdrachtId";
 		List<DbOpdrachtMateriaal> lijst = new ArrayList<DbOpdrachtMateriaal>();
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opdrachtId", opdrachtId);
 			lijst = q.list();
@@ -205,8 +205,8 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtMateriaal where opdrachtId = :opdrachtId";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("opdrachtId", opdrachtId);
 			q.executeUpdate();
@@ -223,6 +223,47 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+	}
+
+	/**
+	 * @param materiaalId int
+	 * @return boolean
+	 * 
+	 * return true indien deze materiaalId voorkomt in de tabel.
+	 */
+	public boolean isMateriaalKomtVoor(int materiaalId) {
+		boolean isKomtvoor = false;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT COUNT(id) FROM DbOpdrachtMateriaal where materiaalId = :materiaalId";
+		List<Long> lijst = new ArrayList<Long>();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("materiaalId", materiaalId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "isMateriaalKomtVoor(int materiaalId)" + materiaalId + "", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			Long aantal = lijst.get(0);
+			if (aantal > 0){
+				isKomtvoor = true;
+			}
+		}
+		
+		return isKomtvoor;
 	}
 
 	

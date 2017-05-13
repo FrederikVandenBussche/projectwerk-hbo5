@@ -30,8 +30,8 @@ public class DbKlantDao implements ICRUD {
 		Transaction transaction = null;
 		try{
 			DbKlant klant = (DbKlant)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.save(klant);
 			id = klant.getId();
 			session.flush();
@@ -59,8 +59,8 @@ public class DbKlantDao implements ICRUD {
 		List<DbKlant> lijst = new ArrayList<DbKlant>();
 		DbKlant dbKlant = null;
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			lijst = q.list();
@@ -92,8 +92,8 @@ public class DbKlantDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -121,8 +121,8 @@ public class DbKlantDao implements ICRUD {
 		Transaction transaction = null;
 		try {
 			DbKlant klant = (DbKlant)o;
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			session.saveOrUpdate(klant);
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -145,8 +145,8 @@ public class DbKlantDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlant where id = :id";
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("id", id);
 			q.executeUpdate();
@@ -177,8 +177,8 @@ public class DbKlantDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
@@ -211,8 +211,8 @@ public class DbKlantDao implements ICRUD {
 		Transaction transaction = null;
 
 		try {
-			transaction = session.getTransaction();
 			session.beginTransaction();
+			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			lijst = q.list();
 			session.flush();
