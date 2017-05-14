@@ -67,7 +67,15 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 		} else {
 			// adres verwijderen
-			adresVerwijderen(klant.getId(), adresId);
+			Thread thread = new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					adresVerwijderen(klant.getId(), adresId);
+					
+				}
+			});
+			thread.start();
 
 			// De adresLIjst van de klant in de session verwijderen
 			ArrayList<Adres> adresLijst = klant.getAdreslijst();

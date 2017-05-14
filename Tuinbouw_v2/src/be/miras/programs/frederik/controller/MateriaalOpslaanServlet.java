@@ -75,8 +75,16 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 
 			if (id < 0) {
 				// nieuwMateriaal
-				dao.voegToe(materiaal);
+				Thread thread = new Thread(new Runnable(){
 
+					@Override
+					public void run() {
+
+						dao.voegToe(materiaal);
+					}
+				});
+				thread.start();
+				
 				// de lijst bewerken
 				lijst.add(materiaal);
 
@@ -91,7 +99,16 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 						if (m.isVerschillend(materiaal, m)) {
 							materiaal.setId(id);
 
-							dao.wijzig(materiaal);
+							Thread thread = new Thread(new Runnable(){
+
+								@Override
+								public void run() {
+									
+									dao.wijzig(materiaal);
+								}
+							});
+							thread.start();
+							
 							it.set(materiaal);
 							
 							session.setAttribute("materiaal", materiaal);

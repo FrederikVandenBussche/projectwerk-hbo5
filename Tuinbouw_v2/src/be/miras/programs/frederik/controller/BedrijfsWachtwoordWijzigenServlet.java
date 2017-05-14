@@ -68,6 +68,8 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 								
 							}
 						});
+						thread.start();
+						
 						werkgever.setWachtwoord(nieuwWachtwoord1);
 						session.setAttribute("werkgever", werkgever);
 					} else {

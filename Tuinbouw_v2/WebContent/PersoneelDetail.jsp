@@ -11,7 +11,6 @@
 	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
 	<script  type="text/javascript" src = "script/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-	<script type="text/javascript" src="script/adresScript.js"></script>
 	<script type="text/javascript" src="script/nieuwPersoneel.js"></script>
 	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
@@ -85,7 +84,7 @@
                 	    Gegevens
                 	</a>
          	   </li>
-         	   <li><a href = "#adressen" data-toggle = "tab">Adresgegevens</a></li>	
+         	   <li><a href = "#adres" data-toggle = "tab">Adresgegevens</a></li>	
        		</ul>
 	        <div id = "myTabContent" class = "tab-content">
     	        <div class = "tab-pane fade in active" id = "gegevens">
@@ -135,7 +134,7 @@
 						</div>
 					</form>
         		</div>
-   			    <div class = "tab-pane fade" id = "adressen">
+   			    <div class = "tab-pane fade" id = "adres">
         	       	<br />
 					<ul id = "adresTab" class = "nav nav-tabs">
 						<c:forEach items="${personeelslid.adreslijst }" var = "element" varStatus = "status">

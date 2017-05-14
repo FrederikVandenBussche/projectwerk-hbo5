@@ -46,7 +46,17 @@ public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 		List<PersoneelbeheerTakenlijstTaak> lijst = (List<PersoneelbeheerTakenlijstTaak>) session.getAttribute("takenLijst");
 
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
-		dbWerknemerOpdrachtTaakDao.verwijder(id);
+		
+		Thread thread = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				dbWerknemerOpdrachtTaakDao.verwijder(id);
+				
+			}
+		});
+		thread.start();
+		
 
 		ListIterator<PersoneelbeheerTakenlijstTaak> it = lijst.listIterator();
 		while (it.hasNext()) {

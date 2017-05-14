@@ -60,7 +60,16 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 				if (m.getId() == id) {
 					MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 					
-					dao.verwijder(id);
+					Thread thread = new Thread(new Runnable(){
+
+						@Override
+						public void run() {
+							
+							dao.verwijder(id);
+						}
+					});
+					thread.start();
+					
 					it.remove();
 				}
 			}

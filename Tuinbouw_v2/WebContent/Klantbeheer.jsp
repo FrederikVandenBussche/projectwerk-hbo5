@@ -108,6 +108,7 @@
 										<td>
 											<form action="klantToonDetail" method="get">
 												<input type="hidden" name="id" value="${element.id }" />
+												<input type="hidden" name="particulier" value="particulier" />
 												<input type="submit"  class = "btn btn-default eenmalig" name="particulier" value="meer..."/>
 											</form>
 										</td>
@@ -144,6 +145,7 @@
 										<td>
 											<form action="klantToonDetail" method="get">
 												<input type="hidden" name="id" value="${element.id }" />
+												<input type="hidden" name="bedrijf" value="bedrijf" />
 												<input type="submit" class = "btn btn-default eenmalig" name="bedrijf" value="meer..."/>
 											</form>
 										</td>

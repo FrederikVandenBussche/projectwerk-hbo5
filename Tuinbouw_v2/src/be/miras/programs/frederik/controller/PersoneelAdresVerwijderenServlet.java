@@ -50,7 +50,16 @@ public class PersoneelAdresVerwijderenServlet extends HttpServlet {
 
 		PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
 
-		adao.verwijder(adresId);
+		Thread thread = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				adao.verwijder(adresId);
+				
+			}
+		});
+		thread.start();
+		
 
 		ArrayList<Adres> adreslijst = p.getAdreslijst();
 		ListIterator<Adres> it = adreslijst.listIterator();

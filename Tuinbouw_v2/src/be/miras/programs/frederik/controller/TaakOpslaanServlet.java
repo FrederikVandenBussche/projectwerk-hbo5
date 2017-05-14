@@ -92,7 +92,16 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 				if (!taak.getTaakNaam().equals(taaknaam) || !taak.getOpmerking().equals(opmerking)) {
 					taak.setTaakNaam(taaknaam);
 					taak.setOpmerking(opmerking);
-					taakDaoAdapter.wijzig(taak);
+					
+					Thread thread = new Thread(new Runnable(){
+
+						@Override
+						public void run() {
+							taakDaoAdapter.wijzig(taak);
+							
+						}
+					});
+					thread.start();
 				}
 			}
 			

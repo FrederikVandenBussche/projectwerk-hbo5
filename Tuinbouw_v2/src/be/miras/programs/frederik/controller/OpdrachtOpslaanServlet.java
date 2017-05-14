@@ -329,7 +329,15 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 				if (isVerschillend) {
 					
 					// wijzig databank
-					dbOpdrachtDao.wijzig(dbOpdrachtTeWijzigen);
+					Thread thread = new Thread(new Runnable(){
+
+						@Override
+						public void run() {
+							dbOpdrachtDao.wijzig(dbOpdrachtTeWijzigen);
+							
+						}
+					});
+					thread.start();
 					
 					// wijzig de opdracht in de session
 					ListIterator<Opdracht> it = opdrachtLijst.listIterator();

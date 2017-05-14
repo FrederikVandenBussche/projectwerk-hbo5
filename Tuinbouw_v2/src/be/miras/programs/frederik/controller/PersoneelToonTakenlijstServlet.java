@@ -81,12 +81,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 			// Naam van de persoon
 			String persoonNaam = werknemer.getVoornaam().concat(" ").concat(werknemer.getNaam());
 
-			/*
-			 * een lijst van taken die bij deze persoon horen
-			 * 
-			 * Datum, Klantnaam, Opdracht, Taak , Verwijderbutton
-			 * WerknemerOpdrachtTaakDb OpdrachtDb TaakDb
-			 */
+			// een lijst van taken die bij deze persoon horen
 			int werknemerId = werknemer.getWerknemerId();
 			int opdrachtId = Integer.MIN_VALUE;
 			int taakId = Integer.MIN_VALUE;

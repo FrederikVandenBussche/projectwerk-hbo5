@@ -71,28 +71,18 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			adres.setPostcode(postcode);
 			adres.setPlaats(plaats);
 			adres.setPersoonId(werkgever.getPersoonId());
-
 			
-			Thread thread = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
-					
-					int maxId = adao.voegToe(adres);
-					
-					adres.setId(maxId);
-					
-					String staticmap = GoogleApis.urlBuilderStaticMap(adres);
-					adres.setStaticmap(staticmap);
-
-					String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
-					adres.setGooglemap(googlemap);	
-				}
+			PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
+			int maxId = adao.voegToe(adres);
 				
-			});
-			thread.start();
+			adres.setId(maxId);
 
+			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+			adres.setStaticmap(staticmap);
+
+			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
+			adres.setGooglemap(googlemap);	
+	
 			ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
 			adreslijst.add(adres);
 			werkgever.setAdreslijst(adreslijst);

@@ -10,7 +10,6 @@
 	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
     <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
     <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
-	<script type="text/javascript" src="script/adresScript.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 	<script type="text/javascript" src="script/nieuweKlant.js"></script>
 	<script type="text/javascript" src="script/knopDisabeler.js"></script>
@@ -81,8 +80,8 @@
            		<li class = "active">
             	   	<a href = "#gegevens" data-toggle = "tab">Klantgegevens</a>
            		</li>
-           		<li><a href = "#adressen" data-toggle = "tab">Adres</a></li>
-           		<li><a href = "#exporteer" data-toggle = "tab">Exporteer prestaties</a>
+           		<li><a href = "#adres" data-toggle = "tab">Adres</a></li>
+           		<li><a href = "#exporteer" data-toggle = "tab">Exporteer prestaties</a></li>
         	</ul>
         	<div id = "myTabContent" class = "tab-content">
         	    	<div class = "tab-pane fade in active" id = "gegevens">
@@ -107,11 +106,11 @@
 						</div>
 					</form>
             	</div>
-        	    	<div class = "tab-pane fade" id = "adressen">
+        	    	<div class = "tab-pane fade" id = "adres">
             		<br />
-            		<ul id = "adresTab" class = "nav nav-tabs">
+            		 <ul id = "adresTab" class = "nav nav-tabs">
 						<c:forEach items="${klant.adreslijst }" var = "element" varStatus = "status">
-							<li class = ${status.first ? 'active' : '' }>
+							<li class = ${status.first ? 'active' : '' } >
 								<a href = "#${element.id }" data-toggle = "tab">
 									${element.straat } ${element.nummer } ${element.bus }
 									<br />
@@ -187,6 +186,19 @@
 							</div>
 						</div>
 					</div>
+				
+            		 <!-- 
+            		 
+            		 
+            		 
+            		 
+            		 
+            		 
+            		 
+            		 
+            		 
+            		 
+            		  -->
 				</div>
         	    	<div class = "tab-pane fade" id = "exporteer">
         	    		<br />

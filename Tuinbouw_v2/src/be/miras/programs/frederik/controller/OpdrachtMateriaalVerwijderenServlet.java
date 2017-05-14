@@ -50,7 +50,16 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
 
 		// verwijderen uit db
-		dbOpdrachtMateriaalDao.verwijder(id);
+		Thread thread = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				dbOpdrachtMateriaalDao.verwijder(id);
+				
+			}
+		});
+		thread.start();
+		
 
 		// verwijdernen uit opdrachtdetailData.opdracht.materiaalLijst
 		List<Materiaal> gebruiktemateriaalLijst = opdrachtDetailData.getOpdracht().getGebruiktMateriaalLijst();

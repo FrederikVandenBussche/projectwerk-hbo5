@@ -56,30 +56,39 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
-
+		
 		// benodigde id's opvragen om de opdracht in zijn geheel te verwijderen
 		int opdrachtId = opdrachtDetailData.getOpdracht().getId();
 
-		// de opdracht uit de databank verwijderen
-		// 1. Werknemer_Opdracht_Taak
-		dbWerknemerOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
-		// 2. Opdracht_Materiaal
-		dbOpdrachtMateriaalDao.verwijderWaarOpdrachtId(opdrachtId);
-		// 3. Opdracht_Taak
-		// ik wil eerst een lijst met Vooruitgag Ids
-		List<Integer> vooruitgangIdLijst = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
-		dbOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
-		// 4. Vooruitgang
-		for (int vId : vooruitgangIdLijst) {
-			dbVooruitgangDao.verwijder(vId);
-		}
-		// 5. Taak
-		for (Taak t : opdrachtDetailData.getOpdracht().getTaakLijst()) {
-			dbTaakDao.verwijder(t.getId());
-		}
-		// 6. Opdracht
-		dbOpdrachtDao.verwijder(opdrachtId);
+		Thread thread = new Thread(new Runnable(){
 
+			@Override
+			public void run() {
+				
+				// de opdracht uit de databank verwijderen
+				// 1. Werknemer_Opdracht_Taak
+				dbWerknemerOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
+				// 2. Opdracht_Materiaal
+				dbOpdrachtMateriaalDao.verwijderWaarOpdrachtId(opdrachtId);
+				// 3. Opdracht_Taak
+				// ik wil eerst een lijst met Vooruitgag Ids
+				List<Integer> vooruitgangIdLijst = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
+				dbOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
+				// 4. Vooruitgang
+				for (int vId : vooruitgangIdLijst) {
+					dbVooruitgangDao.verwijder(vId);
+				}
+				// 5. Taak
+				for (Taak t : opdrachtDetailData.getOpdracht().getTaakLijst()) {
+					dbTaakDao.verwijder(t.getId());
+				}
+				// 6. Opdracht
+				dbOpdrachtDao.verwijder(opdrachtId);
+			}
+			
+		});
+		thread.start();
+		
 		// de opdracht uit de session verwijderen
 		List<Opdracht> opdrachtLijst = (List<Opdracht>) session.getAttribute("opdrachtLijst");
 		ListIterator<Opdracht> it = opdrachtLijst.listIterator();

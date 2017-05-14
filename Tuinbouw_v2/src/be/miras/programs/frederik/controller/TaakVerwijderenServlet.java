@@ -51,7 +51,16 @@ public class TaakVerwijderenServlet extends HttpServlet {
 		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
 
 		// de taak uit de databank verwijderen
-		taakDaoAdapter.verwijder(id);
+		Thread thread =  new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				taakDaoAdapter.verwijder(id);
+				
+			}
+			
+		});
+		thread.start();
 
 		// de taak uit de session verwijderen
 		List<Taak> takenlijst = opdrachtDetailData.getOpdracht().getTaakLijst();

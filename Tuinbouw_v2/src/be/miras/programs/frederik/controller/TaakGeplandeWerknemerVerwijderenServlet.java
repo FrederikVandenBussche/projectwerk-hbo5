@@ -56,8 +56,15 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakdao = new DbWerknemerOpdrachtTaakDao();
 
-			dbWerknemerOpdrachtTaakdao.verwijder(id);
+			Thread thread = new Thread(new Runnable(){
 
+				@Override
+				public void run() {
+					dbWerknemerOpdrachtTaakdao.verwijder(id);
+					
+				}});
+			thread.start();
+			
 			List<Planning> planningLijst = taak.getPlanningLijst();
 			ListIterator<Planning> it = planningLijst.listIterator();
 			while (it.hasNext()) {

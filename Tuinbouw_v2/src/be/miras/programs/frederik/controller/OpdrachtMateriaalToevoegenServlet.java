@@ -80,8 +80,16 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 			dbOpdrachtMateriaal.setMateriaalId(materiaal.getId());
 			dbOpdrachtMateriaal.setVerbruik(hoeveelheid);
 
-			dbOpdrachtMateriaalDao.voegToe(dbOpdrachtMateriaal);
+			Thread thread = new Thread(new Runnable(){
 
+				@Override
+				public void run() {
+					dbOpdrachtMateriaalDao.voegToe(dbOpdrachtMateriaal);
+					
+				}
+			});
+			thread.start();
+			
 			// toevoegen aan opdrachtdetailData.opdracht.materiaalLijst
 			gebruiktemateriaalLijst = opdrachtDetailData.getOpdracht().getGebruiktMateriaalLijst();
 

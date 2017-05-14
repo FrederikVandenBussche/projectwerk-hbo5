@@ -87,7 +87,16 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			dbWerknemerOpdrachtTaak.setOpdrachtTaakTaakId(opdrachtTaakTaakId);
 			dbWerknemerOpdrachtTaak.setBeginuur(beginuur);
 			
-			dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
+			Thread thread = new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
+					
+				}
+			});
+			thread.start();
+			
 
 			// planningLijst aanpassen bij deze taak
 

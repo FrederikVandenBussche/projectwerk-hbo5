@@ -68,10 +68,6 @@ public class AdresAdapter implements ICRUD {
 		return Integer.MIN_VALUE;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see be.miras.programs.frederik.dao.ICRUD#lees(int)
-	 */
 	/**
 	 * 	@param id de id
 	 *  @return het adres met de geparameteriseerde adres_id
@@ -102,7 +98,6 @@ public class AdresAdapter implements ICRUD {
 
 	@Override
 	public List<Object> leesAlle() {
-
 		return null;
 	}
 

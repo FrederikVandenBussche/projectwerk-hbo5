@@ -63,7 +63,17 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 			String errorMsg = "Kan dit personeelslid niet verwijderen omdat deze nog taken moet uitvoeren / uitgevoerd heeft.";
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 		} else {
-			pdao.verwijder(id);
+			
+			Thread thread = new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					pdao.verwijder(id);
+					
+				}
+			});
+			thread.start();
+			
 
 			ArrayList<Adres> adreslijst = p.getAdreslijst();
 			ListIterator<Adres> it = adreslijst.listIterator();

@@ -104,22 +104,32 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 				((DbBedrijf) klant).setBtwNummer(variabelVeld2);
 			}
 
-			// wijzigingen aanbrengen in de databijs en de sessionlijsten
+			// wijzigingen aanbrengen in de databank en de sessionlijsten
 			if (id < 0) {
 				// nieuw Klant toevoegen
 				id = dbKlantDao.voegToe(klant);
 				klant.setId(id);
 				if (klant.getClass().getSimpleName().equals("DbParticulier")) {
-					// dbKlantDao.voegToePartiulier((DbParticulier) klant);
+					
 					particulierLijst.add((DbParticulier) klant);
 				} else if (klant.getClass().getSimpleName().equals("DbBedrijf")) {
-					// dbKlantDao.voegToeBedrijf((DbBedrijf) klant);
+					
 					bedrijfLijst.add((DbBedrijf) klant);
 
 				}
 			} else { // ( id !< 0)
 				// een bestaande Klant wijzigen
-				dbKlantDao.wijzig(klant);
+				DbKlant teWijzigenOpDb = klant;
+				Thread thread = new Thread(new Runnable(){
+
+					@Override
+					public void run() {
+						dbKlantDao.wijzig(teWijzigenOpDb);
+						
+					}	
+				});
+				thread.start();
+				
 				if (klant.getClass().getSimpleName().equals("DbParticulier")) {
 					ListIterator<DbParticulier> it = particulierLijst.listIterator();
 					while (it.hasNext()) {
