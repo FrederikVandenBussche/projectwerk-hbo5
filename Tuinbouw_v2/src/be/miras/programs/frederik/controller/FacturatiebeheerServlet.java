@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dbo.DbKlant;
+import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -43,6 +44,7 @@ public class FacturatiebeheerServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
+		
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 
 		RequestDispatcher view = null;
@@ -72,6 +74,8 @@ public class FacturatiebeheerServlet extends HttpServlet {
 				klantMap.put(itKlantId, itKlantNaam);
 
 			}
+			
+			SessieOpruimer.AttributenVerwijderaar(session);
 
 			session.setAttribute("klantMap", klantMap);
 			session.setAttribute("klantlijst", klantlijst);

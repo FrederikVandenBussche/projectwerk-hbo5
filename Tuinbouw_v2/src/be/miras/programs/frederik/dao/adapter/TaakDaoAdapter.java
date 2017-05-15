@@ -24,14 +24,22 @@ import be.miras.programs.frederik.model.Taak;
  *
  */
 public class TaakDaoAdapter implements ICRUD {
+	private DbOpdrachtTaakDao dbOpdrachtTaakDao;
+	private DbTaakDao dbTaakDao;
 
-	
+	/**
+	 * 
+	 */
+	public TaakDaoAdapter() {
+		super();
+		this.dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
+		this.dbTaakDao = new DbTaakDao();
+	}
+
 	@Override
 	public int voegToe(Object o) {
 		Taak taak = (Taak) o;
 		
-		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
-		DbTaakDao dbTaakDao = new DbTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		
 		DbTaak dbTaak = new DbTaak();
@@ -82,9 +90,6 @@ public class TaakDaoAdapter implements ICRUD {
 	public void wijzig(Object o) {
 		Taak taak = (Taak) o;
 		
-		DbTaakDao dbTaakDao = new DbTaakDao();
-		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
-		
 		DbTaak dbTaak = (DbTaak) dbTaakDao.lees(taak.getId());
 		
 		if (!dbTaak.getNaam().equals(taak.getTaakNaam())){
@@ -115,9 +120,7 @@ public class TaakDaoAdapter implements ICRUD {
 	@Override
 	public void verwijder(int taakId) {
 				
-		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
-		DbTaakDao dbTaakDao = new DbTaakDao();
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		
 		DbOpdrachtTaak dbOpdrachtTaak = (DbOpdrachtTaak) dbOpdrachtTaakDao.leesWaarTaakId(taakId);
@@ -142,15 +145,14 @@ public class TaakDaoAdapter implements ICRUD {
 	 */
 	public List<Taak> leesAlle(int opdrachtId) {
 		List<Taak> taakLijst = new ArrayList<Taak>();
-		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
+		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
+		DbStatusDao dbStatusDao = new DbStatusDao();
 		
 		List<DbOpdrachtTaak> dbOpdrachtTaakLijst = dbOpdrachtTaakDao.leesLijst(opdrachtId);
 		
 		Iterator<DbOpdrachtTaak> it = dbOpdrachtTaakLijst.iterator();
 		while(it.hasNext()){
-			DbTaakDao dbTaakDao = new DbTaakDao();
-			DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
-			DbStatusDao dbStatusDao = new DbStatusDao();
+			
 			Taak taak = new Taak();
 			
 			DbOpdrachtTaak dbOpdrachtTaak = it.next();

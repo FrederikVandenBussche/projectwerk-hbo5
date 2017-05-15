@@ -11,10 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
-import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;

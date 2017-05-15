@@ -35,6 +35,7 @@ import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.WieIsWaar;
+import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * Servlet implementation class WieIsWaarServlet
@@ -72,6 +73,7 @@ public class WieIsWaarServlet extends HttpServlet {
 			DbKlantDao dbKlantDao = new DbKlantDao();
 			DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 			DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
+			List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = new ArrayList<DbWerknemerOpdrachtTaak>();
 			DbStatusDao dbStatusdao = new DbStatusDao();
 			
 			AdresAdapter adresAdapter = new AdresAdapter();
@@ -88,7 +90,7 @@ public class WieIsWaarServlet extends HttpServlet {
 			
 			Date vandaag = new Date();
 			
-			List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = new ArrayList<DbWerknemerOpdrachtTaak>();
+			
 			dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao.lees(vandaag);
 			
 			Iterator<DbWerknemerOpdrachtTaak> dbwotlIt = dbWerknemerOpdrachtTaakLijst.iterator();
@@ -134,22 +136,25 @@ public class WieIsWaarServlet extends HttpServlet {
 				
 				DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakDao.leesWaarTaakId(taakId);
 				DbVooruitgang dbVooruitgang = (DbVooruitgang) dbVooruitgangDao.lees(dbOpdrachtTaak.getVooruitgangId());
-				DbStatus dbStatus = (DbStatus) dbStatusdao.lees(dbVooruitgang.getStatusId());
-				String statusNaam = dbStatus.getNaam();
 				
-				wieIsWaar.setStartuur(startuur);
-				wieIsWaar.setEinduur(einduur);
-				wieIsWaar.setWerknemer(werknemerNaam);
-				wieIsWaar.setKlantNaam(klantNaam);
-				wieIsWaar.setStraatEnNummer(straatEnNummer);
-				wieIsWaar.setPostcodeEnPlaats(postcodeEnPlaats);
-				wieIsWaar.setOpdracht(opdrachtNaam);
-				wieIsWaar.setTaak(taakNaam);
-				wieIsWaar.setStatus(statusNaam);
-				
-				wieIsWaarLijst.add(wieIsWaar);
+				// statusId == 1 betekent "niet gestart"
+				if (dbVooruitgang.getStatusId() > 1){
+					DbStatus dbStatus = (DbStatus) dbStatusdao.lees(dbVooruitgang.getStatusId());
+					String statusNaam = dbStatus.getNaam();
+					
+					wieIsWaar.setStartuur(startuur);
+					wieIsWaar.setEinduur(einduur);
+					wieIsWaar.setWerknemer(werknemerNaam);
+					wieIsWaar.setKlantNaam(klantNaam);
+					wieIsWaar.setStraatEnNummer(straatEnNummer);
+					wieIsWaar.setPostcodeEnPlaats(postcodeEnPlaats);
+					wieIsWaar.setOpdracht(opdrachtNaam);
+					wieIsWaar.setTaak(taakNaam);
+					wieIsWaar.setStatus(statusNaam);
+					wieIsWaarLijst.add(wieIsWaar);
+				}
 			}
-			
+			SessieOpruimer.AttributenVerwijderaar(session);
 			request.setAttribute("wieIsWaarLijst", wieIsWaarLijst);
 			
 			view = request.getRequestDispatcher("/WieIsWaar.jsp");

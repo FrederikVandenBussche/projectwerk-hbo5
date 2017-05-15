@@ -146,31 +146,37 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		
 		//persoonAdres verwijderen
 		dbPersoonAdresDao.verwijder(persoonId, adresId);
+		List<Integer> persoonAdresIdLijst = dbPersoonAdresDao.leespersoonIdLijst(adresId);
 		
-		//straatId en gemeenteId ophalen
-		DbAdresDao dbAdresdao = new DbAdresDao();
-		DbAdres dbadres = (DbAdres) dbAdresdao.lees(adresId);
-		int straatId = dbadres.getStraatId();
-		int gemeenteId = dbadres.getGemeenteId();
-		
-		// delete dbAdres
-		dbAdresdao.verwijder(adresId);
-		// indien de straat nergens anders gebruikt wordt.
-		// deze uit de db verwijderen
-		boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
-		
-		if(!straatInGebruik){
-			DbStraatDao dbStraatDao = new DbStraatDao();
-			dbStraatDao.verwijder(straatId);
+		// indien er geen personen meer aan dit adres gekoppeld zijn
+		if (persoonAdresIdLijst.size() == 0){
+
+			//straatId en gemeenteId ophalen
+			DbAdresDao dbAdresdao = new DbAdresDao();
+			DbAdres dbadres = (DbAdres) dbAdresdao.lees(adresId);
+			int straatId = dbadres.getStraatId();
+			int gemeenteId = dbadres.getGemeenteId();
+			
+			// delete dbAdres
+			dbAdresdao.verwijder(adresId);
+			// indien de straat nergens anders gebruikt wordt.
+			// deze uit de db verwijderen
+			boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
+			
+			if(!straatInGebruik){
+				DbStraatDao dbStraatDao = new DbStraatDao();
+				dbStraatDao.verwijder(straatId);
+			}
+			// indien de gemeente nergens anders gebruikt wordt
+			// deze uit de db verwijderen
+			boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
+			
+			if(!gemeenteInGebruik){
+				DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
+				dbGemeenteDao.verwijder(gemeenteId);
+			}
 		}
-		// indien de gemeente nergens anders gebruikt wordt
-		// deze uit de db verwijderen
-		boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
 		
-		if(!gemeenteInGebruik){
-			DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
-			dbGemeenteDao.verwijder(gemeenteId);
-		}
 	}
 
 	/**
@@ -248,13 +254,17 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		//persoonAdressen verwijderen
 		dbPersoonAdresDao.verwijder(persoonId);
 		
+		DbAdresDao dbAdresdao = new DbAdresDao();
+		DbStraatDao dbStraatDao = new DbStraatDao();
+		DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
+		
 		//voor elk adres
 		Iterator<Integer> it = adressenlijst.iterator();
 		while(it.hasNext()){
 			int adresId = it.next();
 			
 			//straatId en gemeenteId ophalen
-			DbAdresDao dbAdresdao = new DbAdresDao();
+			
 			DbAdres dbadres = (DbAdres) dbAdresdao.lees(adresId);
 			int straatId = dbadres.getStraatId();
 			int gemeenteId = dbadres.getGemeenteId();
@@ -264,14 +274,13 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			// deze uit de db verwijderen
 			boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
 			if(!straatInGebruik){
-				DbStraatDao dbStraatDao = new DbStraatDao();
 				dbStraatDao.verwijder(straatId);
 			}
 			// indien de gemeente nergens anders gebruikt wordt
 			// deze uit de db verwijderen
 			boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
 			if(!gemeenteInGebruik){
-				DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
+				
 				dbGemeenteDao.verwijder(gemeenteId);
 			}
 

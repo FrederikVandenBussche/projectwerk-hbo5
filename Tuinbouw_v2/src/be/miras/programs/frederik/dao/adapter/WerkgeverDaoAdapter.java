@@ -34,18 +34,19 @@ public class WerkgeverDaoAdapter implements ICRUD {
 	public Object lees(int gebruikerId) {
 		
 		Werkgever werkgever = new Werkgever();
+		
 		DbWerkgeverDao dbWerkgeverDao = new DbWerkgeverDao();
 		DbPersoonDao dbPersoonDao = new DbPersoonDao();
-		
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
+
 		List<Adres> adresLijst = new ArrayList<Adres>();
+		
 		PersoonAdresDaoAdapter adresDaoAdapter = new PersoonAdresDaoAdapter();
 		
 		
 		DbGebruiker dbGebruiker = (DbGebruiker) dbGebruikerDao.lees(gebruikerId);
 		DbPersoon dbPersoon = (DbPersoon) dbPersoonDao.lees(dbGebruiker.getPersoonId());
 		DbWerkgever dbWerkgever = dbWerkgeverDao.geefId(dbPersoon.getId());
-		
 		
 		adresLijst = adresDaoAdapter.leesSelectief("persoon", dbPersoon.getId());
 		

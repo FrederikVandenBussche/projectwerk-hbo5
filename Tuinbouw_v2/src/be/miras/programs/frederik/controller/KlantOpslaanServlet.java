@@ -137,8 +137,7 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 						if (dbParticulier.getId() == id) {
 							if (dbParticulier.isVerschillend(klant, dbParticulier)) {
 								klant.setId(id);
-								// dbKlantDao.wijzigParticulier((DbParticulier)
-								// klant);
+								
 								it.set((DbParticulier) klant);
 							}
 						}

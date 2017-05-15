@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Personeel;
+import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -40,6 +41,7 @@ public class PersoneelLeeslijstServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
+		
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 		RequestDispatcher view = null;
 
@@ -49,20 +51,13 @@ public class PersoneelLeeslijstServlet extends HttpServlet {
 		} else {
 
 			PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
+
+			List<Personeel> personeelLijst = new ArrayList<Personeel>();
+			personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
+
+			SessieOpruimer.AttributenVerwijderaar(session);
 			
-
-			Thread thread = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					List<Personeel> personeelLijst = new ArrayList<Personeel>();
-					personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
-
-					session.setAttribute("personeelLijst", personeelLijst);
-					
-				}
-			});
-			thread.start();
+			session.setAttribute("personeelLijst", personeelLijst);
 
 			view = request.getRequestDispatcher("/Personeelsbeheer.jsp");
 

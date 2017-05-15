@@ -8,11 +8,10 @@
 	<link rel="stylesheet" type="text/css" href="style/inlogpagina.css">
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/loader.css">
-    <link href = "style/bootstrap.min.css" rel = "stylesheet">      
-    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+    <link  rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">      
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type= "text/javascript" src = "script/toonLoader.js"></script>
-    <script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
@@ -23,7 +22,7 @@
 				<input type='text' name='gebruikersnaam' size='30' class = 'input' placeholder='Gebruikersnaam' />
 				<input type='password' name='wachtwoord' size='30' class = 'input' placeholder='Wachtwoord' />
 				<div class = 'invulError'>${errorMsg} </div>				
-				<input type='submit' name='submit' id='submit' class = 'btn btn-block btn-primary input eenmalig'value='aanmelden' />
+				<input type='submit' name='submit' id='submit' class = 'btn btn-block btn-primary input'value='aanmelden' />
 				<div class = 'loader'></div>
 		</form>
 		</div>

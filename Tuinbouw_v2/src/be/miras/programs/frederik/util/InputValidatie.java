@@ -145,6 +145,7 @@ public class InputValidatie {
 	 */
 	public static String correcteDatum(String datum) {
 		String msg = null;
+		Date date = new Date();
 		if (datum == null || datum.trim().isEmpty() || datum.trim().length() == 0) {
 			msg = " is niet ingevuld.";
 		} else {
@@ -171,7 +172,7 @@ public class InputValidatie {
 						|| Datatype.stringNaarInt(datum.substring(6, 10)) < 1900 // vroeger
 																					// dan
 																					// 1900
-						|| Datatype.stringNaarInt(datum.substring(6, 10)) > (new Date().getYear() + 2000) // later
+						|| Datatype.stringNaarInt(datum.substring(6, 10)) > (date.getYear() + 2000) // later
 																											// dan
 																											// nu
 																											// binnen
@@ -205,7 +206,7 @@ public class InputValidatie {
 						|| Datatype.stringNaarInt(datum.substring(0, 4)) < 1900 // vroeger
 																				// dan
 																				// 1900
-						|| Datatype.stringNaarInt(datum.substring(0, 4)) > (new Date().getYear() + 2000) // later
+						|| Datatype.stringNaarInt(datum.substring(0, 4)) > (date.getYear() + 2000) // later
 																											// dan
 																											// nu
 																											// binnen

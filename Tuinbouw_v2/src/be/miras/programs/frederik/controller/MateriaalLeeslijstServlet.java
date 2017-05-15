@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -40,6 +41,7 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
+		
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 
 		RequestDispatcher view = null;
@@ -52,22 +54,16 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 			
 			Materiaal m = new Materiaal();
-
-			Thread thread = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					List<Materiaal> lijst = new ArrayList<Materiaal>();
-					
-					lijst = (List<Materiaal>) (Object) dao.leesAlle();
-					
-					session.setAttribute("materiaalLijst", lijst);
-				}
-			});
-			thread.start();
-			
 			// voor nieuw materiaal : id = -1
 			m.setId(-1);
+
+			List<Materiaal> lijst = new ArrayList<Materiaal>();
+					
+			lijst = (List<Materiaal>) (Object) dao.leesAlle();
+					
+			SessieOpruimer.AttributenVerwijderaar(session);
+			
+			session.setAttribute("materiaalLijst", lijst);
 
 			session.setAttribute("materiaal", m);
 

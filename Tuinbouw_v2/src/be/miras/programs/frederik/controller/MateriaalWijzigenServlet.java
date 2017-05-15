@@ -1,6 +1,8 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,33 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
-import be.miras.programs.frederik.model.Werkgever;
-import be.miras.programs.frederik.util.SessieOpruimer;
+import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.util.Datatype;
 
 /**
  * @author Frederik Vanden Bussche
  * 
- * Servlet implementation class BedrijfsgegevensServlet
+ * Servlet implementation class MateriaalWijzigenServlet
  */
-@WebServlet("/BedrijfsgegevensServlet")
-public class BedrijfsgegevensServlet extends HttpServlet {
+@WebServlet("/MateriaalWijzigenServlet")
+public class MateriaalWijzigenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public BedrijfsgegevensServlet() {
+	public MateriaalWijzigenServlet() {
 		super();
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		doGet(request, response);
 	}
 
 	/**
@@ -48,28 +40,32 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
-		
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
-		
+
 		RequestDispatcher view = null;
 
 		if (isIngelogd == null || isIngelogd == false) {
 			view = request.getRequestDispatcher("/logout");
 
 		} else {
-			
-			int gebruikerId = (int) session.getAttribute("gebruikerId");
-			
-			WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
-			Werkgever werkgever = new Werkgever();
 
-			werkgever = (Werkgever) wDao.lees(gebruikerId);
+			int id = Datatype.stringNaarInt(request.getParameter("id"));
 
-			SessieOpruimer.AttributenVerwijderaar(session);
-			
-			session.setAttribute("werkgever", werkgever);
-			
-			view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
+			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
+
+			Materiaal materiaal = new Materiaal();
+
+			Iterator<Materiaal> it = lijst.iterator();
+			while (it.hasNext()) {
+				Materiaal m = it.next();
+				if (m.getId() == id) {
+					materiaal = m;
+				}
+			}
+
+			session.setAttribute("materiaal", materiaal);
+
+			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 
 		}
 		view.forward(request, response);

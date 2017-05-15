@@ -22,14 +22,26 @@ import be.miras.programs.frederik.model.Adres;
  *
  */
 public class AdresAdapter implements ICRUD {
+	private DbAdresDao dbAdresDao;
+	private DbGemeenteDao dbGemeenteDao;
+	private DbStraatDao dbStraatDao;
+	
+
+
+	/**
+	 * 
+	 */
+	public AdresAdapter() {
+		super();
+		this.dbAdresDao = new DbAdresDao();
+		this.dbGemeenteDao = new DbGemeenteDao();
+		this.dbStraatDao = new DbStraatDao();
+	}
 
 	@Override
 	public int voegToe(Object o) {
 		Adres adres = (Adres) o;
 
-		DbAdresDao dbAdresDao = new DbAdresDao();
-		DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
-		DbStraatDao dbStraatDao = new DbStraatDao();
 		DbAdres dbAdres = new DbAdres();
 		
 		// zoekt ID van postcode + gemeente
@@ -75,10 +87,6 @@ public class AdresAdapter implements ICRUD {
 	@Override
 	public Object lees(int id) {
 		Adres adres = new Adres();
-		
-		DbAdresDao dbAdresDao = new DbAdresDao();
-		DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
-		DbStraatDao dbStraatDao = new DbStraatDao();
 				
 		DbAdres dbAdres = (DbAdres) dbAdresDao.lees(id);
 		int dbStraatId = dbAdres.getStraatId();
@@ -109,27 +117,24 @@ public class AdresAdapter implements ICRUD {
 	public void verwijder(int id) {
 
 		// straatId en gemeenteId ophalen
-		DbAdresDao dbAdresdao = new DbAdresDao();
-		DbAdres dbadres = (DbAdres) dbAdresdao.lees(id);
+		DbAdres dbadres = (DbAdres) dbAdresDao.lees(id);
 		int straatId = dbadres.getStraatId();
 		int gemeenteId = dbadres.getGemeenteId();
 
 		// delete dbAdres
-		dbAdresdao.verwijder(id);
+		dbAdresDao.verwijder(id);
 		// indien de straat nergens anders gebruikt wordt.
 		// deze uit de db verwijderen
-		boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
+		boolean straatInGebruik = dbAdresDao.isStraatInGebruik(straatId);
 
 		if (!straatInGebruik) {
-			DbStraatDao dbStraatDao = new DbStraatDao();
 			dbStraatDao.verwijder(straatId);
 		}
 		// indien de gemeente nergens anders gebruikt wordt
 		// deze uit de db verwijderen
-		boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
+		boolean gemeenteInGebruik = dbAdresDao.isGemeenteInGebruik(gemeenteId);
 
 		if (!gemeenteInGebruik) {
-			DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
 			dbGemeenteDao.verwijder(gemeenteId);
 		}
 	}
@@ -144,9 +149,6 @@ public class AdresAdapter implements ICRUD {
 		Adres adres = new Adres();
 		
 		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
-		DbAdresDao dbAdresDao = new DbAdresDao();
-		DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
-		DbStraatDao dbStraatDao = new DbStraatDao();
 		
 		int id = dbKlantAdresDao.geefEersteAdresId(klantAdresId);
 		
@@ -175,9 +177,6 @@ public class AdresAdapter implements ICRUD {
 		List<Adres> adresLijst = new ArrayList<Adres>();
 		
 		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
-		DbAdresDao dbAdresDao = new DbAdresDao();
-		DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
-		DbStraatDao dbStraatDao = new DbStraatDao();
 		
 		List<Integer> adresIds = dbKlantAdresDao.leesLijst(klantId);
 		for(int id : adresIds){

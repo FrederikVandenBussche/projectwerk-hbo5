@@ -329,7 +329,7 @@
     <servlet-name>exporteerPrestaties</servlet-name>
     <url-pattern>/exporteerPrestaties</url-pattern>
   </servlet-mapping>
-    <servlet>
+  <servlet>
     <servlet-name>wieIsWaar</servlet-name>
     <servlet-class>be.miras.programs.frederik.controller.WieIsWaarServlet</servlet-class>
   </servlet>

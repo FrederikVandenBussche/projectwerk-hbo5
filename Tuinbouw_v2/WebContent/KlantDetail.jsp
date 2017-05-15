@@ -7,12 +7,11 @@
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
-    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+	<link  rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">      
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 	<script type="text/javascript" src="script/nieuweKlant.js"></script>
-	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -101,7 +100,7 @@
   					      		<input type="text" name="variabelVeld2" value="${variabelVeld2 }" />
   					      	</div>
   					      	<div class = "col-sm-offset-3 col-sm-9">
-  					      		<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="Opslaan" />
+  					      		<input type="submit" class = "btn btn-default active" name="submit" value="Opslaan" />
   					      </div>
 						</div>
 					</form>
@@ -142,7 +141,7 @@
 											<input type="hidden" name="variabelVeld1" value="${variabelVeld1 }" />
 											<input type="hidden" name="variabelVeldnaam2" value="${variabelVeldnaam2 }" />
 											<input type="hidden" name="variabelVeld2" value="${variabelVeld2 }" />
-											<input type="submit" class = "btn btn-default btn-block eenmalig" name="submit" value="Verwijder dit adres" />
+											<input type="submit" class = "btn btn-default btn-block" name="submit" value="Verwijder dit adres" />
 										</div>
 									</form>
 								</div>
@@ -179,7 +178,7 @@
 										<input type="hidden" name="variabelVeldnaam2" value="${variabelVeldnaam2 }" />
 										<input type="hidden" name="variabelVeld2" value="${variabelVeld2 }" />
 										<div class="col-sm-offset-2 col-sm-10">
-											<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="Voeg nieuw adres toe" />
+											<input type="submit" class = "btn btn-default active" name="submit" value="Voeg nieuw adres toe" />
 										</div>
 									</div>
 								</form>
@@ -219,7 +218,7 @@
 							<label for = "einddatum"> Einddatum: </label>
 							<input type="date" name="einddatum"/>
 							<br />
-							<input type="submit" class = "btn btn-primary btn-block btn-lg active eenmalig" name="submit" value="Exporteer als Excell-file" />
+							<input type="submit" class = "btn btn-primary btn-block btn-lg active" name="submit" value="Exporteer als Excell-file" />
 						</form>
         	    	</div>
     		</div>

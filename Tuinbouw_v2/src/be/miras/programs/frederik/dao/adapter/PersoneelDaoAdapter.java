@@ -229,9 +229,10 @@ public class PersoneelDaoAdapter implements ICRUD{
 			
 		dbWerknemerDao.verwijderWaarPersoonId(id);
 		
+		dbGebruikerDao.verwijderWaarPersoonId(id);
+		
 		dbPersoonDao.verwijder(id);
 				
-		dbGebruikerDao.verwijderWaarPersoonId(id);
 		
 	}
 

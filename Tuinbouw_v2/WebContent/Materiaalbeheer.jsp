@@ -7,11 +7,10 @@
 	<title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
-    <script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+	<link  rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">      
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -88,7 +87,7 @@
 						<input type="number" step="0.01" pattern="[0-9]+([\.,][0-9]+)?" 
 							name="eenheidsprijs" value="${materiaal.eenheidsprijs }" />
 							<br />
-						<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="opslaan" />
+						<input type="submit" class = "btn btn-default active" name="submit" value="opslaan" />
 						<br />
 						
 					</form>
@@ -113,13 +112,13 @@
 						<td>
 							<form action="materiaalWijzigen" method="get">
 								<input type="hidden" name="id" value=${element.id } />
-								<input type="submit" class = "btn btn-default eenmalig" name="submit" value="Wijzigen" />
+								<input type="submit" class = "btn btn-default" name="submit" value="Wijzigen" />
 							</form>
 						</td>
 						<td>
 							<form action="materiaalVerwijderen" method="post">
 								<input type="hidden" name="id" value=${element.id } />
-								<input type="submit" class = "btn btn-default eenmalig" name="submit" value="Verwijderen" />
+								<input type="submit" class = "btn btn-default" name="submit" value="Verwijderen" />
 							</form>
 						</td>
 					</tr>

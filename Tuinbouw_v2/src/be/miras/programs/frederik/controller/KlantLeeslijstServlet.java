@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbParticulier;
+import be.miras.programs.frederik.model.Opdracht;
+import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -42,6 +44,7 @@ public class KlantLeeslijstServlet extends HttpServlet{
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
+		
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 		RequestDispatcher view = null;
 		
@@ -52,19 +55,15 @@ public class KlantLeeslijstServlet extends HttpServlet{
 			
 			DbKlantDao dbKlantDao = new DbKlantDao();
 			
-			Thread thread = new Thread(new Runnable(){
+			
+			List<DbParticulier> particulierLijst = (ArrayList<DbParticulier>) (Object) dbKlantDao.leesAlleParticulier();
+			List<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
 
-				@Override
-				public void run() {
-					List<DbParticulier> particulierLijst = (ArrayList<DbParticulier>) (Object) dbKlantDao.leesAlleParticulier();
-					List<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
-
-					session.setAttribute("particulierLijst", particulierLijst);
-					session.setAttribute("bedrijfLijst", bedrijfLijst);			
-				}
-			});
-			thread.start();
-
+			SessieOpruimer.AttributenVerwijderaar(session);
+			
+			session.setAttribute("particulierLijst", particulierLijst);
+			session.setAttribute("bedrijfLijst", bedrijfLijst);			
+			
 			view = request.getRequestDispatcher("/Klantbeheer.jsp");
 		}
 		

@@ -7,12 +7,10 @@
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-	<script  type="text/javascript" src = "script/bootstrap.min.js"></script>
-	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
+	<link  rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">      
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/nieuwPersoneel.js"></script>
-	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -129,7 +127,7 @@
 							<input type="hidden" name="geboortedatum" value="${personeelslid.geboortedatum }" />
 							<input type="hidden" name="aanwervingsdatum" value="${personeelslid.aanwervingsdatum }" />
 							<div class="col-sm-offset-2 col-sm-10">
-								<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="${buttonNaam }" />
+								<input type="submit" class = "btn btn-default active" name="submit" value="${buttonNaam }" />
 							</div>
 						</div>
 					</form>
@@ -213,7 +211,7 @@
 			<div id="personeelVerwijderen">
 				<form action="personeelslidVerwijderen" method="post">
 					<input type="hidden" name="id" value="${id}" /> 
-					<input type="submit" class = "btn btn-default btn-lg btn-block eenmalig" name="verwijder_btn" value="Verwijder dit personeelslid" />
+					<input type="submit" class = "btn btn-default btn-lg btn-block" name="verwijder_btn" value="Verwijder dit personeelslid" />
 				</form>
 			</div>
 		</div>

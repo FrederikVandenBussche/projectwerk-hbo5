@@ -199,6 +199,42 @@ public class DbPersoonAdresDao implements ICRUD {
 	}
 	
 	/**
+	 * @param id int
+	 * @return List<Integer>
+	 * 
+	 * return een lijst van persoonId die bij een bepaalde adresId horen
+	 */
+	public List<Integer> leespersoonIdLijst(int id) {
+		List<Integer> lijst = new ArrayList<Integer>();
+		String query = "SELECT adresId FROM DbPersoonAdres where adresId = :id"; 
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "leesLijst(id) " + id + " ", e);
+		} finally {
+				
+			session.close();
+		}
+		
+		return lijst;
+	}
+	
+	/**
 	 * @param persoonId int
 	 * @param adresId int
 	 * 

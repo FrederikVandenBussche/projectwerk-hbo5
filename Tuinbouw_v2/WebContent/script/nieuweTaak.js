@@ -1,4 +1,4 @@
-/**
+/*
  * indien het om een nieuwe planning gaat 
  * dient de fieldset "planning" verborgen te zijn
  */

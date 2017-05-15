@@ -21,16 +21,23 @@ import be.miras.programs.frederik.model.Materiaal;
  *
  */
 public class MateriaalDaoAdapter implements ICRUD {
-		
+	private DbMateriaalDao dbMateriaalDao;
+	private DbTypeMateriaalDao dbTypeMateriaalDao;
 	
+	/**
+	 * 
+	 */
+	public MateriaalDaoAdapter() {
+		super();
+		this.dbMateriaalDao = new DbMateriaalDao();
+		this.dbTypeMateriaalDao = new DbTypeMateriaalDao();
+	}
+
 	@Override
 	public int voegToe(Object o) {
 		Materiaal materiaal = (Materiaal) o;
 
 		DbMateriaal dbMateriaal = new DbMateriaal();
-
-		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
-		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
 
 		String naamType = materiaal.getSoort();
 		int id = dbTypeMateriaalDao.lees(naamType);
@@ -64,8 +71,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 		List<DbMateriaal> dbMateriaalLijst = new ArrayList<DbMateriaal>();
 		List<DbTypeMateriaal> dbTypeMateriaalLijst = new ArrayList<DbTypeMateriaal>();
 
-		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
-		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
 		DbMateriaal dbMateriaal = null;
 
 		dbMateriaalLijst = (ArrayList<DbMateriaal>) (Object) dbMateriaalDao.leesAlle();
@@ -103,9 +108,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 	public void wijzig(Object o) {
 		Materiaal materiaal = (Materiaal) o;
 
-		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
-		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
-
 		DbMateriaal dbMateriaal = new DbMateriaal();
 
 		int typeMateriaalId = dbTypeMateriaalDao.lees(materiaal.getSoort());
@@ -135,13 +137,11 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 	@Override
 	public void verwijder(int id) {
+		
+		int typeMateriaalId = dbMateriaalDao.geefTypeMateriaalId(id);
+		dbMateriaalDao.verwijder(id);
 
-		DbMateriaalDao dmd = new DbMateriaalDao();
-
-		int typeMateriaalId = dmd.geefTypeMateriaalId(id);
-		dmd.verwijder(id);
-
-		if (!dmd.isTypeMateriaalKomtVoor(typeMateriaalId)) {
+		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(typeMateriaalId)) {
 			DbTypeMateriaalDao dtmd = new DbTypeMateriaalDao();
 			dtmd.verwijder(typeMateriaalId);
 		}
@@ -160,8 +160,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
 		List<DbOpdrachtMateriaal> dbOpdrachtMateriaalLijst = new ArrayList<DbOpdrachtMateriaal>();
-		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
-		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
 
 		dbOpdrachtMateriaalLijst = dbOpdrachtMateriaalDao.leesWaarOpdrachtId(opdrachtId);
 

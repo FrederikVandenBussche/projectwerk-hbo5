@@ -53,12 +53,12 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 			String errorMsg = "Kan dit materiaal niet verwijderen omdat deze nog gebruikt wordt in een opdracht.";
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 		} else {
+			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 			
 			ListIterator<Materiaal> it = lijst.listIterator();
 			while (it.hasNext()) {
 				Materiaal m = it.next();
 				if (m.getId() == id) {
-					MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 					
 					Thread thread = new Thread(new Runnable(){
 

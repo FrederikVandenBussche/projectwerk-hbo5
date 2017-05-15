@@ -20,6 +20,7 @@ import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.util.Datatype;
+import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -48,6 +49,7 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 		HttpSession session = request.getSession();
+		SessieOpruimer.AttributenVerwijderaar(session);
 		Personeel p = (Personeel) session.getAttribute("personeelslid");
 
 		PersoneelDaoAdapter pdao = new PersoneelDaoAdapter();
@@ -64,17 +66,6 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 		} else {
 			
-			Thread thread = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					pdao.verwijder(id);
-					
-				}
-			});
-			thread.start();
-			
-
 			ArrayList<Adres> adreslijst = p.getAdreslijst();
 			ListIterator<Adres> it = adreslijst.listIterator();
 			while (it.hasNext()) {
@@ -82,6 +73,8 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 
 				persoonAdresDao.verwijder(a.getId());
 			}
+			
+			pdao.verwijder(id);
 
 			lijst = (List<Personeel>) (Object) pdao.leesAlle();
 		}

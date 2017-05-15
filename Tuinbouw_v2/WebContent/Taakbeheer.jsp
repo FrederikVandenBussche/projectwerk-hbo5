@@ -7,12 +7,10 @@
 <title>Tuinbouwbedrijf Hitek</title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 	<link rel="stylesheet" type="text/css" href="style/lijst.css">
-	<link href = "style/bootstrap.min.css" rel = "stylesheet">      
-   	<script type="text/javascript" src="script/jquery-2.1.3.min.js"></script>
-    <script  type="text/javascript" src = "script/bootstrap.min.js"></script>
+	<link  rel = "stylesheet" href = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">      
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
-	<script type="text/javascript" src="script/nieuweTaak.js"></script>
-	<script type="text/javascript" src="script/knopDisabeler.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -95,7 +93,7 @@
 							 	<textarea class="form-control" rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
 							 </div>
 							 <div class=" col-sm-offset-2 col-sm-10">
-							 	<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="opslaan" />
+							 	<input type="submit" class = "btn btn-default active" name="submit" value="opslaan" />
 							 </div> 
 						</div>
 					</fieldset>
@@ -128,7 +126,7 @@
             	    			<input " type="date" name="datum" />
             	    		</div>
                 			<div >
-                				<input type="submit" class = "btn btn-default active eenmalig" name="submit" value="Voeg toe" />	
+                				<input type="submit" class = "btn btn-default active" name="submit" value="Voeg toe" />	
                 			</div>
                 		</div>
 					</form>
@@ -153,7 +151,7 @@
 									<td>
 										<form action="taakGeplandeWerknemerVerwijderen" method="get">
 											<input type="hidden" name="id" value="${planning.id }" />
-											<input type="submit" class = "btn btn-default eenmalig" name="submit" value="verwijder" /> 
+											<input type="submit" class = "btn btn-default" name="submit" value="verwijder" /> 
 										</form>
 									</td>
 								</tr>
@@ -189,10 +187,7 @@
 					</table>
             </div>
         </div>
-			
-			
 		</div>
 	</div>
-
 </body>
 </html>
