@@ -1,7 +1,6 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Personeel;
@@ -57,11 +57,13 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 				new String[]{straat, nummerString, bus, postcodeString, plaats});
 		
 		HttpSession session = request.getSession();
-		Personeel personeelslid = (Personeel) session.getAttribute("personeelslid");
+		int persoonId = (int) session.getAttribute("id");
+		
+		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
 
 		if (inputValidatieErrorMsg.isEmpty()) {
 			Adres adres = new Adres();
-			PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
+			PersoonAdresDaoAdapter persoonAdresDaoAdapter = new PersoonAdresDaoAdapter();
 
 			int nr = 0;
 			int postcode = 0;
@@ -74,31 +76,28 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 			adres.setBus(bus);
 			adres.setPostcode(postcode);
 			adres.setPlaats(plaats);
-			adres.setPersoonId(personeelslid.getPersoonId());
+			adres.setPersoonId(persoonId);
 
-			int adresId = adao.voegToe(adres);
+			int adresId = persoonAdresDaoAdapter.voegToe(adres);
 			adres.setId(adresId);
-
-			// Het personeelslid als attribute meegeven met de session.
-			ArrayList<Adres> adreslijst = personeelslid.getAdreslijst();
 
 			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
 			adres.setStaticmap(staticmap);
 
 			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 			adres.setGooglemap(googlemap);
-
-			adreslijst.add(adres);
-			personeelslid.setAdreslijst(adreslijst);
-
-			session.setAttribute("personeelslid", personeelslid);
-
-			request.setAttribute("aanspreeknaam", aanspreeknaam);
-			request.setAttribute("buttonNaam", opslaanBtnNaam);
-		} else {
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
+		} else {
+			
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
+		
+		Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
+		
+		request.setAttribute("personeelslid", personeel);
+		
+		request.setAttribute("aanspreeknaam", aanspreeknaam);
+		request.setAttribute("buttonNaam", opslaanBtnNaam);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/PersoneelDetail.jsp");
 		view.forward(request, response);

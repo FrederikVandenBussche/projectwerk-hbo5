@@ -1,8 +1,6 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,8 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
-import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.util.Datatype;
 
@@ -46,34 +44,19 @@ public class PersoneelAdresVerwijderenServlet extends HttpServlet {
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres_id"));
 
 		HttpSession session = request.getSession();
-		Personeel p = (Personeel) session.getAttribute("personeelslid");
+		int persoonId = (int) session.getAttribute("id");
 
-		PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
+		PersoonAdresDaoAdapter persoonAdresDaoAdapter = new PersoonAdresDaoAdapter();
+		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
 
-		Thread thread = new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				adao.verwijder(adresId);
-				
-			}
-		});
-		thread.start();
+		persoonAdresDaoAdapter.verwijder(adresId);
 		
-
-		ArrayList<Adres> adreslijst = p.getAdreslijst();
-		ListIterator<Adres> it = adreslijst.listIterator();
-		while (it.hasNext()) {
-			Adres a = it.next();
-			if (a.getId() == adresId) {
-				it.remove();
-			}
-		}
+		Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
+		
+		request.setAttribute("personeelslid", personeel);
 
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("buttonNaam", opslaanBtnNaam);
-
-		session.setAttribute("personeelslid", p);
 
 		RequestDispatcher view = request.getRequestDispatcher("/PersoneelDetail.jsp");
 		view.forward(request, response);

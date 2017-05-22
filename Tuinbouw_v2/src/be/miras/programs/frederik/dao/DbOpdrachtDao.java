@@ -83,7 +83,7 @@ public class DbOpdrachtDao implements ICRUD {
 	@Override
 	public List<Object> leesAlle() {
 		List<DbOpdracht> lijst = new ArrayList<DbOpdracht>();
-		String query = "FROM DbOpdracht"; 
+		String query = "FROM DbOpdracht order by startdatum desc"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 
@@ -165,6 +165,8 @@ public class DbOpdrachtDao implements ICRUD {
 	 * @return String[]
 	 * 
 	 * return de klantId en de naam van DbOpdracht met geparameteriseerde id
+	 * String[0] : klantId
+	 * String[1] : opdrachtNaam
 	 */
 	public String[] selectKlantIdEnNaam(int id) {
 		
@@ -210,7 +212,7 @@ public class DbOpdrachtDao implements ICRUD {
 	 */
 	public List<DbOpdracht> leesWaarKlantId(int klantId) {
 		List<DbOpdracht> lijst = new ArrayList<DbOpdracht>();
-		String query = "FROM DbOpdracht WHERE klantId = :klantId"; 
+		String query = "FROM DbOpdracht WHERE klantId = :klantId order by startdatum desc"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 
@@ -278,6 +280,44 @@ public class DbOpdrachtDao implements ICRUD {
 	}
 
 	/**
+	 * @param id int
+	 * @return int
+	 * 
+	 * return klantId van den DbOpdracht met geparameteriseerde id
+	 */
+	public int geefKlantId(int id) {
+		int klantId = Integer.MIN_VALUE;
+		List<Integer> lijst = new ArrayList<Integer>();
+		String query = "SELECT klantId FROM DbOpdracht where id = :id"; 
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "geefAdresId(id) " + id + " ", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()){
+			klantId = lijst.get(0);
+		}
+		return klantId;
+	}
+	
+	/**
 	 * @param adresId int
 	 * @return boolean
 	 * return true indien dit klantAdresId voorkomt in de tabel.
@@ -286,7 +326,7 @@ public class DbOpdrachtDao implements ICRUD {
 		boolean isKomtvoor = false;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-		String query = "SELECT COUNT(id) FROM DBOpdracht where klantAdresId = :klantAdresId";
+		String query = "SELECT COUNT(id) FROM DbOpdracht where klantAdresId = :klantAdresId";
 		List<Long> lijst = new ArrayList<Long>();
 		try {
 			session.beginTransaction();
@@ -316,6 +356,7 @@ public class DbOpdrachtDao implements ICRUD {
 		
 		return isKomtvoor;
 	}
+
 
 	
 }

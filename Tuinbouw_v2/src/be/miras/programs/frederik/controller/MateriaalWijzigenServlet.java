@@ -3,6 +3,7 @@ package be.miras.programs.frederik.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.util.Datatype;
 
@@ -51,7 +53,12 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 
 			int id = Datatype.stringNaarInt(request.getParameter("id"));
 
-			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
+			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
+			
+			List<Materiaal> lijst = new ArrayList<Materiaal>();
+			
+			lijst = (List<Materiaal>) (Object) dao.leesAlle();
+					
 
 			Materiaal materiaal = new Materiaal();
 
@@ -63,7 +70,9 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 				}
 			}
 
-			session.setAttribute("materiaal", materiaal);
+			request.setAttribute("materiaalLijst", lijst);
+			
+			request.setAttribute("materiaal", materiaal);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 

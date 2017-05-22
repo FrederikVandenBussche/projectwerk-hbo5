@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Personeel;
@@ -62,10 +60,11 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 				new String[]{voornaam, naam, loonString, email, 
 						nieuweGeboortedatumString, nieuweAanwervingsdatumString});
 
+		PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
+		
 		if (inputValidatieErrorMsg.isEmpty()) {
 			
 			Personeel personeel = new Personeel();
-			PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
 			
 			double loon = Double.parseDouble(loonString);
 			Date geboortedatum = null;
@@ -83,51 +82,44 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			personeel.setAanwervingsdatum(aanwervingsdatum);
 
 			if (this.id < 0) {
-				// nieuw Personeelslid toevoegen
-				List<Personeel> personeelLijst = new ArrayList<Personeel>();
+				id = dao.voegToe(personeel);
 
-				dao.voegToe(personeel);
-
-				// de lijst opnieuw ophalen
-
-				personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
-
-				HttpSession session = request.getSession();
-				session.setAttribute("personeelLijst", personeelLijst);
+				request.setAttribute("id", id);
 
 			} else {
 				// indien er iets gewijzigd werd, de wijzigingen opslaan
-				HttpSession session = request.getSession();
-				ArrayList<Personeel> lijst = (ArrayList<Personeel>) session.getAttribute("personeelLijst");
-
-				// Je kan geen elementen wijzigen in Iterator
-				// Dit kan wel in een ListIterator
-				ListIterator<Personeel> it = lijst.listIterator();
-				while (it.hasNext()) {
-					Personeel p = it.next();
-					if (p.getPersoonId() == this.id) {
+				PersoneelDaoAdapter personeelAdapter = new PersoneelDaoAdapter();
+				Personeel p = (Personeel) personeelAdapter.lees(id);
+				
+				if (personeel.getGeboortedatum() == null)
+						personeel.setGeboortedatum(p.getGeboortedatum());
+				if (personeel.getAanwervingsdatum() == null)
+						personeel.setAanwervingsdatum(p.getAanwervingsdatum());
+					
+				if (p.isVerschillend(personeel, p)) {
+					personeel.setPersoonId(this.id);
+					personeel.setWerknemerId(p.getWerknemerId());
+					personeel.setGebruikerId(p.getGebruikerId());
+					personeel.setWerknemerId(p.getWerknemerId());
 						
-						if (personeel.getGeboortedatum() == null)
-							personeel.setGeboortedatum(p.getGeboortedatum());
-						if (personeel.getAanwervingsdatum() == null)
-							personeel.setAanwervingsdatum(p.getAanwervingsdatum());
-						
-						if (p.isVerschillend(personeel, p)) {
-							personeel.setPersoonId(this.id);
-							personeel.setWerknemerId(p.getWerknemerId());
-							personeel.setGebruikerId(p.getGebruikerId());
-							personeel.setWerknemerId(p.getWerknemerId());
-								
-							dao.wijzig(personeel);
-							it.set(personeel);
-						}
-					}
+					dao.wijzig(personeel);
 				}
 			}
-	
+		
+			List<Personeel> personeelLijst = new ArrayList<Personeel>();
+			personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
+			
+			request.setAttribute("personeelLijst", personeelLijst);
+			
 			view = request.getRequestDispatcher("/Personeelsbeheer.jsp");
 		} else {
+			//inputvalidatie Error
+			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
+			
+			Personeel personeel = (Personeel) dao.lees(id);
+
+			request.setAttribute("personeelslid", personeel);
 			
 			view = request.getRequestDispatcher("/PersoneelDetail.jsp");	
 		}

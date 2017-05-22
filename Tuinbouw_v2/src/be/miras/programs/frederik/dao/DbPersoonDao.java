@@ -83,7 +83,7 @@ public class DbPersoonDao implements ICRUD {
 	@Override
 	public List<Object> leesAlle() {
 		List<DbPersoon> lijst = new ArrayList<DbPersoon>();
-		String query = "FROM DbPersoon";
+		String query = "FROM DbPersoon order by naam";
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 

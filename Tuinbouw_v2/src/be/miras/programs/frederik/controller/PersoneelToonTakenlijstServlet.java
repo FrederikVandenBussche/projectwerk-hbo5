@@ -18,6 +18,7 @@ import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbTaakDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
+import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.model.Personeel;
 import be.miras.programs.frederik.model.PersoneelbeheerTakenlijstTaak;
@@ -58,31 +59,22 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 
 			int persoonId = Datatype.stringNaarInt(request.getParameter("id"));
 
-			List<Personeel> personeelLijst = (ArrayList<Personeel>) session.getAttribute("personeelLijst");
-
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			DbTaakDao dbTaakDao = new DbTaakDao();
 			DbKlantDao dbKlantDao = new DbKlantDao();
+			
+			PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
 
 			List<PersoneelbeheerTakenlijstTaak> lijst = new ArrayList<PersoneelbeheerTakenlijstTaak>();
 
-			// haal het de juiste persoon op;
-			Personeel werknemer = new Personeel();
-
-			Iterator<Personeel> it = personeelLijst.iterator();
-			while (it.hasNext()) {
-				Personeel p = it.next();
-				if (p.getPersoonId() == persoonId) {
-					werknemer = p;
-				}
-			}
+			Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
 
 			// Naam van de persoon
-			String persoonNaam = werknemer.getVoornaam().concat(" ").concat(werknemer.getNaam());
+			String persoonNaam = personeel.getVoornaam().concat(" ").concat(personeel.getNaam());
 
 			// een lijst van taken die bij deze persoon horen
-			int werknemerId = werknemer.getWerknemerId();
+			int werknemerId = personeel.getWerknemerId();
 			int opdrachtId = Integer.MIN_VALUE;
 			int taakId = Integer.MIN_VALUE;
 			Date startdatum = new Date();
@@ -119,10 +111,12 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 				
 				lijst.add(taak);
 			}
+			
+			session.setAttribute("persoonId", persoonId);
 
-			session.setAttribute("personeelsnaam", persoonNaam);
+			request.setAttribute("personeelsnaam", persoonNaam);
 
-			session.setAttribute("takenLijst", lijst);
+			request.setAttribute("takenLijst", lijst);
 
 			view = request.getRequestDispatcher("/PersoneelTakenlijst.jsp");
 

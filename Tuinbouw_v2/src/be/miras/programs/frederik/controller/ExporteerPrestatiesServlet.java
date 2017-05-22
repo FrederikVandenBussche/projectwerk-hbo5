@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -23,6 +22,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbOpdrachtTaakDao;
 import be.miras.programs.frederik.dao.DbPersoonDao;
 import be.miras.programs.frederik.dao.DbStatusDao;
@@ -39,8 +39,6 @@ import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.dbo.DbWerknemer;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 import be.miras.programs.frederik.export.ExcelData;
-import be.miras.programs.frederik.export.Factuur;
-import be.miras.programs.frederik.export.GenereerPdf;
 import be.miras.programs.frederik.export.GenereerXls;
 import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.model.Planning;
@@ -85,7 +83,11 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			String einddatumString = request.getParameter("einddatum");
 			
 			String klantnaam = (String) session.getAttribute("aanspreeknaam");
-			List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) session.getAttribute("opdrachtLijstVoorKlantDetail");
+			int id = (int) session.getAttribute("klantId");
+			
+			// de opdrachtenlijst van deze klant ophalen
+			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+			List<DbOpdracht> dbOpdrachtLijst = (ArrayList<DbOpdracht>) dbOpdrachtDao.leesWaarKlantId(id);
 			
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 			DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();

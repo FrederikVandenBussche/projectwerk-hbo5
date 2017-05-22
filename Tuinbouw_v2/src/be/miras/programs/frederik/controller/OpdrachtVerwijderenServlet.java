@@ -2,7 +2,6 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,9 +17,8 @@ import be.miras.programs.frederik.dao.DbOpdrachtTaakDao;
 import be.miras.programs.frederik.dao.DbTaakDao;
 import be.miras.programs.frederik.dao.DbVooruitgangDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
+import be.miras.programs.frederik.dao.adapter.OpdrachtDaoAdapter;
 import be.miras.programs.frederik.model.Opdracht;
-import be.miras.programs.frederik.model.OpdrachtDetailData;
-import be.miras.programs.frederik.model.Taak;
 
 /**
  * @author Frederik Vanden Bussche
@@ -48,7 +46,7 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
-		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+		int opdrachtId = (int) session.getAttribute("id");
 
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
@@ -57,48 +55,32 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		
-		// benodigde id's opvragen om de opdracht in zijn geheel te verwijderen
-		int opdrachtId = opdrachtDetailData.getOpdracht().getId();
-
-		Thread thread = new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				
-				// de opdracht uit de databank verwijderen
-				// 1. Werknemer_Opdracht_Taak
-				dbWerknemerOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
-				// 2. Opdracht_Materiaal
-				dbOpdrachtMateriaalDao.verwijderWaarOpdrachtId(opdrachtId);
-				// 3. Opdracht_Taak
-				// ik wil eerst een lijst met Vooruitgag Ids
-				List<Integer> vooruitgangIdLijst = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
-				dbOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
-				// 4. Vooruitgang
-				for (int vId : vooruitgangIdLijst) {
-					dbVooruitgangDao.verwijder(vId);
-				}
-				// 5. Taak
-				for (Taak t : opdrachtDetailData.getOpdracht().getTaakLijst()) {
-					dbTaakDao.verwijder(t.getId());
-				}
-				// 6. Opdracht
-				dbOpdrachtDao.verwijder(opdrachtId);
-			}
-			
-		});
-		thread.start();
-		
-		// de opdracht uit de session verwijderen
-		List<Opdracht> opdrachtLijst = (List<Opdracht>) session.getAttribute("opdrachtLijst");
-		ListIterator<Opdracht> it = opdrachtLijst.listIterator();
-		while (it.hasNext()) {
-			Opdracht o = it.next();
-			if (o.getId() == opdrachtId) {
-				it.remove();
-			}
+		// de opdracht uit de databank verwijderen
+		// 1. Werknemer_Opdracht_Taak
+		dbWerknemerOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
+		// 2. Opdracht_Materiaal
+		dbOpdrachtMateriaalDao.verwijderWaarOpdrachtId(opdrachtId);
+		// 3. Opdracht_Taak
+		// ik wil eerst een lijst met Vooruitgag Ids en taakIds
+		List<Integer> vooruitgangIdLijst = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
+		List<Integer> taakIdLijst = dbOpdrachtTaakDao.leesTaakIds(opdrachtId);
+		dbOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
+		// 4. Vooruitgang
+		for (int vId : vooruitgangIdLijst) {
+			dbVooruitgangDao.verwijder(vId);
 		}
-
+		// 5. Taak
+		for (int tId : taakIdLijst) {
+			dbTaakDao.verwijder(tId);
+		}
+		// 6. Opdracht
+		dbOpdrachtDao.verwijder(opdrachtId);
+	
+		OpdrachtDaoAdapter opdrachtDaoAdapter = new OpdrachtDaoAdapter();
+		List<Opdracht> opdrachtLijst = opdrachtDaoAdapter.haalOpdrachtenOp();
+		
+		request.setAttribute("opdrachtLijst", opdrachtLijst);
+		
 		RequestDispatcher view = request.getRequestDispatcher("/Opdrachtbeheer.jsp");
 		view.forward(request, response);
 	}

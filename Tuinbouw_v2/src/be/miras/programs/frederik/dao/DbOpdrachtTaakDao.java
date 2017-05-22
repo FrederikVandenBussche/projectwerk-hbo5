@@ -339,6 +339,39 @@ public class DbOpdrachtTaakDao implements ICRUD {
 	}
 
 	/**
+	 * @param opdrachtId int
+	 * @return List<Integer>
+	 * 
+	 * return lijst met taakId's met een bepaalde opdrachtId 
+	 */
+	public List<Integer> leesTaakIds(int opdrachtId) {
+		List<Integer> lijst = new ArrayList<Integer>();
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT taakId FROM DbOpdrachtTaak WHERE opdrachtId = :opdrachtId";
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("opdrachtId", opdrachtId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "leesTaakIds(opdrachtId) " + opdrachtId + " ", e);
+		} finally {
+			session.close();
+		}
+		return lijst;
+	}
+
+	/**
 	 * @param taakId int
 	 * @return DbOpdrachtTaak
 	 * 

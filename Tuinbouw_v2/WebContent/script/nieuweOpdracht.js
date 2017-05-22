@@ -12,20 +12,21 @@ function setup(){
 	
 	if(tekst.length <= 8){
 		
-		$("#voegNieuweTaakToe").hide();
-		$("#takenlijst").hide();
-		$("#voegGebruiktMateriaalToe").hide();
-		$("#gebruiktMateriaal").hide();
-		$("#opdrachtVerwijderenDiv").hide();
+		$("#taakMateriaalVerwijderen").hide();
+		$("#adresGegevens").hide();
+		$("#adresWijzigen").hide();
+		
 		
 	} else {
 	
-		$("#takenlijst").show();
-		$("#voegGebruiktMateriaalToe").show();
-		$("#gebruiktMateriaal").show();
-		$("#opdrachtVerwijderenDiv").show();
-		
+		$("#taakMateriaalVerwijderen").show();
+		$("#adresGegevens").show();
+		$("#adresWijzigen").show();
 	}
+	
+	$("#klantenSelector").on("click", function(){
+		$("#adresWijzigen").hide();
+	});
 }
 
 $(setup);

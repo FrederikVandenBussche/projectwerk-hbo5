@@ -15,8 +15,6 @@ import javax.servlet.http.HttpSession;
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbParticulier;
-import be.miras.programs.frederik.model.Opdracht;
-import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -59,15 +57,22 @@ public class KlantLeeslijstServlet extends HttpServlet{
 			List<DbParticulier> particulierLijst = (ArrayList<DbParticulier>) (Object) dbKlantDao.leesAlleParticulier();
 			List<DbBedrijf> bedrijfLijst = (ArrayList<DbBedrijf>) (Object) dbKlantDao.leesAlleBedrijf();
 
-			SessieOpruimer.AttributenVerwijderaar(session);
-			
-			session.setAttribute("particulierLijst", particulierLijst);
-			session.setAttribute("bedrijfLijst", bedrijfLijst);			
+			request.setAttribute("particulierLijst", particulierLijst);
+			request.setAttribute("bedrijfLijst", bedrijfLijst);			
 			
 			view = request.getRequestDispatcher("/Klantbeheer.jsp");
 		}
 		
 		view.forward(request, response);
+	}
+
+
+	/** 
+	 * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+	 */
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doGet(req, resp);
 	}
 
 

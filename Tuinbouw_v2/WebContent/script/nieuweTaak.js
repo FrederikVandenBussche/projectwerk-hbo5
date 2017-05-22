@@ -9,11 +9,11 @@ function setup(){
 	    
 	if(!tekst.trim()){
 		
-		$("#planning").hide();
+		$("#werknemerOpdrachtTaak").hide();
 		
 	} else {
 	
-		$("#planning").show();
+		$("#werknemerOpdrachtTaak").show();
 	
 	}
 }

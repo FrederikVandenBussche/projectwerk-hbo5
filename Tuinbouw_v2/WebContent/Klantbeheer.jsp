@@ -87,6 +87,7 @@
 							<form action="klantToonDetail" method="get">
 								<!--  if(id == -1){nieuwe klant} -->
 								<input type="hidden" name="id" value="-1" />
+								<input type="hidden" name="type" value="particulier" />
 								<input type="submit" class = "btn btn-default btn-block active" name="particulier" value="Voeg particuliere klant toe" />
 							</form>	
 						</div>
@@ -107,7 +108,7 @@
 										<td>
 											<form action="klantToonDetail" method="get">
 												<input type="hidden" name="id" value="${element.id }" />
-												<input type="hidden" name="particulier" value="particulier" />
+												<input type="hidden" name="type" value="particulier" />
 												<input type="submit"  class = "btn btn-default" name="particulier" value="meer..."/>
 											</form>
 										</td>
@@ -124,6 +125,7 @@
 							<form action="klantToonDetail" method="get">
 								<!--  if(id == -1){nieuwe klant} -->
 								<input type="hidden" name="id" value="-1" />
+								<input type="hidden" name="type" value="bedrijf" />
 								<input type="submit" class = "btn btn-default btn-block active" name="bedrijf" value="Voeg bedrijf klant toe" />
 							</form>	
 						</div>
@@ -144,7 +146,7 @@
 										<td>
 											<form action="klantToonDetail" method="get">
 												<input type="hidden" name="id" value="${element.id }" />
-												<input type="hidden" name="bedrijf" value="bedrijf" />
+												<input type="hidden" name="type" value="bedrijf" />
 												<input type="submit" class = "btn btn-default" name="bedrijf" value="meer..."/>
 											</form>
 										</td>

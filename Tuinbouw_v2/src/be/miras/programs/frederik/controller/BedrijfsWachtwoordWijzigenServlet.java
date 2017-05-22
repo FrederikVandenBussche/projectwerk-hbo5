@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
+import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
@@ -43,12 +44,18 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 		String nieuwWachtwoord1 = request.getParameter("nieuw1").trim();
 		String nieuwWachtwoord2 = request.getParameter("nieuw2").trim();
 		
+		HttpSession session = request.getSession();
+		int gebruikerId = (int) session.getAttribute("gebruikerId");
+		
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{oudWachtwoord, nieuwWachtwoord1, nieuwWachtwoord2});
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
-			HttpSession session = request.getSession();
-			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+			
+			WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+			Werkgever werkgever = new Werkgever();
+
+			werkgever = (Werkgever) wDao.lees(gebruikerId);
 
 			DbGebruikerDao dao = new DbGebruikerDao();
 
@@ -57,21 +64,10 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 			String daoWachtwoord = (String) dao.leesWachtwoord(id);
 
 			if (oudWachtwoord.equals(daoWachtwoord)) {
-				System.out.println("het oud wachtwoord is correct ");
 				if (nieuwWachtwoord1.equals(nieuwWachtwoord2)) {
 					if (nieuwWachtwoord1.length() > 8){
-						Thread thread = new Thread(new Runnable(){
-
-							@Override
-							public void run() {
-								dao.wijzigWachtwoord(id, nieuwWachtwoord1);
-								
-							}
-						});
-						thread.start();
+						dao.wijzigWachtwoord(id, nieuwWachtwoord1);
 						
-						werkgever.setWachtwoord(nieuwWachtwoord1);
-						session.setAttribute("werkgever", werkgever);
 					} else {
 						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het nieuwe wachtwoord moet tenminste 8 karakters lang zijn.");
 					}
@@ -83,7 +79,12 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 				
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het oude wachtwoord niet gekend.");
 			}
-		} 
+		} WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+		Werkgever werkgever = new Werkgever();
+
+		werkgever = (Werkgever) wDao.lees(gebruikerId);
+		
+		request.setAttribute("werkgever", werkgever);
 
 		request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 

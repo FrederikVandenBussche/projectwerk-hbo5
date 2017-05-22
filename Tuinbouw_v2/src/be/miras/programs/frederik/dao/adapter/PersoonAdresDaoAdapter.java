@@ -240,12 +240,13 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 	/**
 	 * @param persoonId int
 	 * 
-	 * verwijdert adresmet geparameteriseerd persoonId.
+	 * verwijdert adres met geparameteriseerd persoonId.
 	 * Indien straat of gemeente nergens meer worden gebruikt wordt ook dat verwijderd
 	 */
 	public void verwijderVanPersoon(int persoonId) {
 		
 		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
+		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
 		
 		//adressenlijst ophalen
 		ArrayList<Integer> adressenlijst = null;
@@ -268,22 +269,25 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			DbAdres dbadres = (DbAdres) dbAdresdao.lees(adresId);
 			int straatId = dbadres.getStraatId();
 			int gemeenteId = dbadres.getGemeenteId();
-			// delete dbAdres
-			dbAdresdao.verwijder(adresId);
-			// indien de straat nergens anders gebruikt wordt.
-			// deze uit de db verwijderen
-			boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
-			if(!straatInGebruik){
-				dbStraatDao.verwijder(straatId);
+			// indien dit adres nergens anders gebruikt word
+			// delete dbAdres 
+			boolean adresPersoonInGebruik = dbPersoonAdresDao.isInGebruik(adresId);
+			boolean adresKlantInGebruik = dbKlantAdresDao.isInGebruik(adresId);
+			if (!adresPersoonInGebruik && !adresKlantInGebruik){
+				dbAdresdao.verwijder(adresId);
+				// indien de straat nergens anders gebruikt wordt.
+				// deze uit de db verwijderen
+				boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
+				if(!straatInGebruik){
+					dbStraatDao.verwijder(straatId);
+				}
+				// indien de gemeente nergens anders gebruikt wordt
+				// deze uit de db verwijderen
+				boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
+				if(!gemeenteInGebruik){
+					dbGemeenteDao.verwijder(gemeenteId);
+				}
 			}
-			// indien de gemeente nergens anders gebruikt wordt
-			// deze uit de db verwijderen
-			boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
-			if(!gemeenteInGebruik){
-				
-				dbGemeenteDao.verwijder(gemeenteId);
-			}
-
 		}
 	}
 

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Werkgever;
-import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -64,10 +63,8 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 			Werkgever werkgever = new Werkgever();
 
 			werkgever = (Werkgever) wDao.lees(gebruikerId);
-
-			SessieOpruimer.AttributenVerwijderaar(session);
 			
-			session.setAttribute("werkgever", werkgever);
+			request.setAttribute("werkgever", werkgever);
 			
 			view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");
 

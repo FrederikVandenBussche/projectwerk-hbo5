@@ -11,6 +11,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	<script type="text/javascript" src="script/nieuweTaak.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -75,12 +76,12 @@
 			<br />
 			<div id="taakomschrijving">
 				<form action="taakOpslaan" method="post" >
-					Taak: In opdracht van ${opdrachtDetailData.opdracht.klantNaam } 
+					Taak: In opdracht van ${klantNaam } 
 					<div class="invulError">${inputValidatieErrorMsg }</div>
 					<br />
 					<fieldset>
 						<legend>
-							Onderdeel van de opdracht : ${opdrachtDetailData.opdracht.opdrachtNaam }
+							Onderdeel van de opdracht : ${opdrachtNaam }
 						</legend>
 						<br />
 						<div class="inputvelden form-group">
@@ -93,12 +94,14 @@
 							 	<textarea class="form-control" rows="4" cols="50" name="opmerking">${taak.opmerking }</textarea>
 							 </div>
 							 <div class=" col-sm-offset-2 col-sm-10">
+							 	<input type="hidden" name = "taakId" value = "${taak.id }" />
 							 	<input type="submit" class = "btn btn-default active" name="submit" value="opslaan" />
 							 </div> 
 						</div>
 					</fieldset>
 				</form>
 			</div>
+			<div id = "werknemerOpdrachtTaak">
 			<ul id = "myTab" class = "nav nav-tabs">
             	<li class = "active">
             	    <a href = "#planning" data-toggle = "tab">
@@ -123,9 +126,10 @@
     	            		</div>
         	        		<label for = "datum">Plan een nieuwe datum in: (dd/mm/yyyy) </label>
            		     		<div >
-            	    			<input " type="date" name="datum" />
+            	    			<input type="date" name="datum" />
             	    		</div>
                 			<div >
+                				<input type="hidden" name = "taakId" value = "${taak.id }" />
                 				<input type="submit" class = "btn btn-default active" name="submit" value="Voeg toe" />	
                 			</div>
                 		</div>
@@ -150,7 +154,8 @@
 									</td>
 									<td>
 										<form action="taakGeplandeWerknemerVerwijderen" method="get">
-											<input type="hidden" name="id" value="${planning.id }" />
+											<input type="hidden" name="planningId" value="${planning.id }" />
+											<input type="hidden" name="taakId" value = "${taak.id }" />
 											<input type="submit" class = "btn btn-default" name="submit" value="verwijder" /> 
 										</form>
 									</td>
@@ -186,6 +191,7 @@
 						</tbody>
 					</table>
             </div>
+        </div>
         </div>
 		</div>
 	</div>

@@ -24,7 +24,7 @@ import be.miras.programs.frederik.dao.DbTaakDao;
 import be.miras.programs.frederik.dao.DbVooruitgangDao;
 import be.miras.programs.frederik.dao.DbWerknemerDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
-import be.miras.programs.frederik.dao.adapter.AdresAdapter;
+import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbKlantAdres;
 import be.miras.programs.frederik.dbo.DbOpdracht;
@@ -35,7 +35,6 @@ import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.WieIsWaar;
-import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * Servlet implementation class WieIsWaarServlet
@@ -76,7 +75,7 @@ public class WieIsWaarServlet extends HttpServlet {
 			List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = new ArrayList<DbWerknemerOpdrachtTaak>();
 			DbStatusDao dbStatusdao = new DbStatusDao();
 			
-			AdresAdapter adresAdapter = new AdresAdapter();
+			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 			
 			DbPersoon dbPersoon = new DbPersoon();
 			DbOpdracht dbOpdracht = new DbOpdracht();
@@ -125,7 +124,7 @@ public class WieIsWaarServlet extends HttpServlet {
 				dbKlant = (DbKlant) dbKlantDao.lees(klantId);
 				String klantNaam = null;
 				klantNaam = dbKlant.geefAanspreekNaam();
-				adres = (Adres) adresAdapter.lees(adresId);
+				adres = (Adres) adresDaoAdapter.lees(adresId);
 				String straatEnNummer = null;
 				if (adres.getBus() != null && !adres.getBus().isEmpty()) {
 					straatEnNummer =  adres.getStraat() + " " + adres.getNummer() + " " + adres.getBus();
@@ -154,7 +153,7 @@ public class WieIsWaarServlet extends HttpServlet {
 					wieIsWaarLijst.add(wieIsWaar);
 				}
 			}
-			SessieOpruimer.AttributenVerwijderaar(session);
+			
 			request.setAttribute("wieIsWaarLijst", wieIsWaarLijst);
 			
 			view = request.getRequestDispatcher("/WieIsWaar.jsp");

@@ -107,31 +107,34 @@ public class MateriaalDaoAdapter implements ICRUD {
 	@Override
 	public void wijzig(Object o) {
 		Materiaal materiaal = (Materiaal) o;
-
 		DbMateriaal dbMateriaal = new DbMateriaal();
 
 		int typeMateriaalId = dbTypeMateriaalDao.lees(materiaal.getSoort());
-
-		int oudTMId = dbMateriaalDao.geefTypeMateriaalId(materiaal.getId());
-
+		int oudTypeMateriaalId = dbMateriaalDao.geefTypeMateriaalId(materiaal.getId());
+		System.out.println("zoek id van : " + materiaal.getSoort() + ": " + typeMateriaalId);
 		if (typeMateriaalId < 0) {
 			DbTypeMateriaal dtm = new DbTypeMateriaal();
 
 			dtm.setNaam(materiaal.getSoort());
 
 			typeMateriaalId = dbTypeMateriaalDao.voegToe(dtm);
-		}
+		} 
+		
+		dbMateriaal.setTypeMateriaalId(typeMateriaalId);
+		
 		dbMateriaal.setId(materiaal.getId());
 		dbMateriaal.setNaam(materiaal.getNaam());
-		dbMateriaal.setTypeMateriaalId(typeMateriaalId);
 		dbMateriaal.setEenheid(materiaal.getEenheidsmaat());
 		dbMateriaal.setEenheidsprijs(materiaal.getEenheidsprijs());
 
 		dbMateriaalDao.wijzig(dbMateriaal);
-
-		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(oudTMId)) {
-
-			dbTypeMateriaalDao.verwijder(oudTMId);
+		
+		
+		System.out.println("als dit niet meer voorkomt : " + oudTypeMateriaalId);
+		
+		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(oudTypeMateriaalId)){
+			System.out.println("het komt niet meer voor");
+			dbTypeMateriaalDao.verwijder(oudTypeMateriaalId);
 		}
 	}
 

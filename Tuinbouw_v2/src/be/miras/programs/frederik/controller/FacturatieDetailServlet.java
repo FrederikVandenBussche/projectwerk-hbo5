@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dao.DbMateriaalDao;
 import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbOpdrachtMateriaalDao;
@@ -25,7 +27,7 @@ import be.miras.programs.frederik.dao.DbTaakDao;
 import be.miras.programs.frederik.dao.DbTypeMateriaalDao;
 import be.miras.programs.frederik.dao.DbVooruitgangDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
-import be.miras.programs.frederik.dao.adapter.AdresAdapter;
+import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbMateriaal;
@@ -87,14 +89,16 @@ public class FacturatieDetailServlet extends HttpServlet {
 		
 		Factuur factuur = new Factuur();
 		
-		AdresAdapter adresAdapter = new AdresAdapter();
+		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		DbStatusDao dbStatusDao = new DbStatusDao();
+		DbKlantDao dbKlantDao = new DbKlantDao();
 		
 		//klantlijst ophalen
-		List<DbKlant> klantlijst = (List<DbKlant>) session.getAttribute("klantlijst");
+		List<DbKlant> klantlijst = new ArrayList<DbKlant>();
+		klantlijst = (List<DbKlant>) (Object) dbKlantDao.leesAlle();
 		
 		//geselecteerde klant zoeken
 		Iterator<DbKlant> klantIt = klantlijst.iterator();
@@ -115,7 +119,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 		Date vervalDatum = berekenVervalDatum(aanmaakDatum);
 		
 		// er is een klant-adreslijst nodig
-		List<Adres> adresLijst = adresAdapter.leesWaarKlantId(klantId);
+		List<Adres> adresLijst = adresDaoAdapter.leesWaarKlantId(klantId);
 		HashMap<Integer, String> adresMap = new HashMap<Integer, String>();
 		
 		Iterator<Adres> adresLijstIterator = adresLijst.iterator();
@@ -140,6 +144,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 		List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
 		
 		int benodigdeStatusId = dbStatusDao.lees("Afgewerkt");
+		int gefactureerdStatusId = dbStatusDao.lees("Gefactureerd");
 		
 		// dbOpdrachtLijst waar klantId = geselecteerde id;
 		List<DbOpdracht> dbOpdrachtLijst = dbOpdrachtDao.leesWaarKlantId(klantId);
@@ -161,7 +166,8 @@ public class FacturatieDetailServlet extends HttpServlet {
 				DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakLijstIterator.next();
 				DbVooruitgang dbVooruitgang = (DbVooruitgang) dbVooruitgangDao.lees(dbOpdrachtTaak.getVooruitgangId());
 			
-				if (dbVooruitgang.getStatusId() == benodigdeStatusId){
+				if (dbVooruitgang.getStatusId() == benodigdeStatusId ||
+						dbVooruitgang.getStatusId() == gefactureerdStatusId){
 					
 					// we hebben een dbopdracht 
 					//waarvan de opdrachttaak  vooruitgang : statusId op "afgewerkt" staat.
@@ -225,7 +231,12 @@ public class FacturatieDetailServlet extends HttpServlet {
 						planning.setAantalUren();
 						
 						planning.setAantalKm(aantalKm);
-						planningLijst.add(planning);
+						
+						if (planning.getEinduur() != null && 
+								planning.getEinduur().after(planning.getBeginuur()) &&
+								planning.getAantalUren() > 0){
+							planningLijst.add(planning);
+						}
 					}
 					
 					taak.setPlanningLijst(planningLijst);
@@ -347,8 +358,25 @@ public class FacturatieDetailServlet extends HttpServlet {
 		
 		RequestDispatcher view = null;
 		if (factuur.getOpdrachtLijst().isEmpty()){
+			
+			// andere initialisaties
+			Map<Integer, String> klantMap = new HashMap<Integer, String>();
+
+			// er is een klantenlijst nodig
+			Iterator<DbKlant> klantIterator = klantlijst.iterator();
+			while (klantIterator.hasNext()) {
+				DbKlant dbKlant = klantIterator.next();
+
+				int itKlantId = dbKlant.getId();
+				String itKlantNaam = dbKlant.geefAanspreekNaam();
+
+				klantMap.put(itKlantId, itKlantNaam);
+
+			}
 			String factuurmessage = InputValidatieStrings.FactuurMessage;
+			
 			request.setAttribute("factuurmessage", factuurmessage);
+			request.setAttribute("klantMap", klantMap);
 			
 			view = request.getRequestDispatcher("/Facturatie.jsp");
 		} else {

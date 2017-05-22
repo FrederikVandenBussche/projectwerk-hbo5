@@ -53,7 +53,7 @@ public abstract class DbKlant {
 		if (this.getClass().getSimpleName().equals("DbParticulier")) {
 			String naam = ((DbParticulier) this).getNaam();
 			String voornaam = ((DbParticulier) this).getVoornaam();
-			aanspreeknaam = voornaam.concat(" ").concat(naam);
+			aanspreeknaam = naam.concat(" ").concat(voornaam);
 
 		} else if (this.getClass().getSimpleName().equals("DbBedrijf")) {
 			aanspreeknaam = ((DbBedrijf) this).getBedrijfnaam();

@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dbo.DbKlant;
-import be.miras.programs.frederik.util.SessieOpruimer;
+import be.miras.programs.frederik.util.Sorteer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -56,13 +56,13 @@ public class FacturatiebeheerServlet extends HttpServlet {
 
 			// DB initialiseren
 			DbKlantDao dbKlantDao = new DbKlantDao();
-
-			// andere initialisaties
+			
 			List<DbKlant> klantlijst = new ArrayList<DbKlant>();
+			klantlijst = (List<DbKlant>) (Object) dbKlantDao.leesAlle();
+			
+			// andere initialisaties
 			Map<Integer, String> klantMap = new HashMap<Integer, String>();
 
-			// haal klantlijst op
-			klantlijst = (List<DbKlant>) (Object) dbKlantDao.leesAlle();
 			// er is een klantenlijst nodig
 			Iterator<DbKlant> klantIterator = klantlijst.iterator();
 			while (klantIterator.hasNext()) {
@@ -72,13 +72,12 @@ public class FacturatiebeheerServlet extends HttpServlet {
 				String itKlantNaam = dbKlant.geefAanspreekNaam();
 
 				klantMap.put(itKlantId, itKlantNaam);
-
 			}
 			
-			SessieOpruimer.AttributenVerwijderaar(session);
-
-			session.setAttribute("klantMap", klantMap);
-			session.setAttribute("klantlijst", klantlijst);
+			//sorteer de klantNaamMap op naam
+			klantMap = Sorteer.SorteerMap(klantMap);
+			
+			request.setAttribute("klantMap", klantMap);
 
 			view = request.getRequestDispatcher("/Facturatie.jsp");
 

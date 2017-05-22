@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -35,7 +34,7 @@ public class LogoutServlet extends HttpServlet {
 		response.setContentType("text/html");
 		
 		HttpSession session = request.getSession();
-		SessieOpruimer.AttributenVerwijderaar(session);
+
 		session.invalidate();
 		
 		

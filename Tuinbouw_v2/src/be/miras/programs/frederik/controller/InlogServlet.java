@@ -1,11 +1,6 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -17,26 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbBevoegdheidDao;
 import be.miras.programs.frederik.dao.DbGebruikerDao;
-import be.miras.programs.frederik.dao.DbKlantDao;
-import be.miras.programs.frederik.dao.DbOpdrachtDao;
-import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
-import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
-import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
-import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
-import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
-import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
-import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbBevoegdheid;
 import be.miras.programs.frederik.dbo.DbGebruiker;
-import be.miras.programs.frederik.dbo.DbKlant;
-import be.miras.programs.frederik.dbo.DbOpdracht;
-import be.miras.programs.frederik.dbo.DbParticulier;
-import be.miras.programs.frederik.model.Adres;
-import be.miras.programs.frederik.model.Materiaal;
-import be.miras.programs.frederik.model.Opdracht;
-import be.miras.programs.frederik.model.Personeel;
-import be.miras.programs.frederik.model.Werkgever;
-import be.miras.programs.frederik.util.GoogleApis;
 import be.miras.programs.frederik.util.InputValidatieStrings;
 
 /**

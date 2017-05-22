@@ -1,6 +1,7 @@
 package be.miras.programs.frederik.dao.adapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,6 +15,9 @@ import be.miras.programs.frederik.dbo.DbOpdrachtTaak;
 import be.miras.programs.frederik.dbo.DbStatus;
 import be.miras.programs.frederik.dbo.DbTaak;
 import be.miras.programs.frederik.dbo.DbVooruitgang;
+import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
+import be.miras.programs.frederik.model.Personeel;
+import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
 
 /**
@@ -51,10 +55,9 @@ public class TaakDaoAdapter implements ICRUD {
 		dbTaak.setVisible(1);
 		int dbTaakId =  dbTaakDao.geefIdVan(dbTaak.getNaam(), dbTaak.getVisible());
 		if (dbTaakId < 0){
-			dbTaakDao.voegToe(dbTaak);
-		} else {
-			dbTaak.setId(dbTaakId);
+			dbTaakId = dbTaakDao.voegToe(dbTaak);
 		}
+		dbTaak.setId(dbTaakId);
 		
 		//nieuwe DbVooruitgang toevoegen
 		dbVooruitgang.setPercentage(0);
@@ -72,7 +75,8 @@ public class TaakDaoAdapter implements ICRUD {
 		dbOpdrachtTaak.setOpmerking(taak.getOpmerking());
 		dbOpdrachtTaakDao.voegToe(dbOpdrachtTaak);
 		
-		return Integer.MIN_VALUE;
+		
+		return dbTaak.getId();
 	}
 
 	@Override
@@ -119,13 +123,13 @@ public class TaakDaoAdapter implements ICRUD {
 
 	@Override
 	public void verwijder(int taakId) {
-				
+		System.out.println("taakId: " + taakId);
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		
 		DbOpdrachtTaak dbOpdrachtTaak = (DbOpdrachtTaak) dbOpdrachtTaakDao.leesWaarTaakId(taakId);
 		int opdrachtTaakId = dbOpdrachtTaak.getId();
-		dbWerknemerOpdrachtTaakDao.verwijderWaarTaakId(opdrachtTaakId);
+		dbWerknemerOpdrachtTaakDao.verwijderWaarTaakId(taakId);
 		dbOpdrachtTaakDao.verwijder(opdrachtTaakId);
 		
 		// verwijder de DbTaak als ze enkel in deze dbOpdrachtTaak wordt gebruikt 
@@ -190,5 +194,103 @@ public class TaakDaoAdapter implements ICRUD {
 		return taakLijst;
 	}
 
+	/**
+	 * @param taakId int
+	 * @return Taak
+	 * 
+	 * haal de Taak op met de geparameteriseerde Id
+	 */
+	public Taak haalTaak(int taakId){
+		Taak taak = new Taak();
+		
+		DbStatusDao dbStatusDao = new DbStatusDao();
+		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
+		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
+		DbTaakDao dbTaakDao = new DbTaakDao();
+		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
+		
+		List<Planning> planningLijst = new ArrayList<Planning>();
+		List<Planning> gewerkteUrenLijst = new ArrayList<Planning>();
+		
+		// zoek de taak
+		DbTaak dbTaak = (DbTaak) dbTaakDao.lees(taakId);
+		DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakDao.leesWaarTaakId(taakId);
+		DbVooruitgang dbVooruitgang = (DbVooruitgang) dbVooruitgangDao.lees(dbOpdrachtTaak.getVooruitgangId());
+		DbStatus dbStatus = (DbStatus) dbStatusDao.lees(dbVooruitgang.getStatusId());
+		
+		taak.setId(taakId);
+		taak.setOpdrachtId(dbOpdrachtTaak.getId());
+		taak.setTaakNaam(dbTaak.getNaam());
+		taak.setOpmerking(dbOpdrachtTaak.getOpmerking());
+		taak.setVooruitgangPercentage(dbVooruitgang.getPercentage());
+		taak.setStatus(dbStatus.getNaam());
+		
+		// planningLijst ophalen
+		List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao
+				.leesWaarTaakId(taakId);
 
+		Iterator<DbWerknemerOpdrachtTaak> wotIt = dbWerknemerOpdrachtTaakLijst.iterator();
+		while (wotIt.hasNext()) {
+			DbWerknemerOpdrachtTaak wot = wotIt.next();
+			if (wot.getEinduur() == null) {
+				HashMap<Integer, String> werknemerMap = geefWerknemerMap();
+				Planning planning = new Planning();
+				planning.setId(wot.getId());
+				int werknemerId = wot.getWerknemerId();
+				
+				String werknemerNaam = werknemerMap.get(werknemerId);
+				planning.setWerknemer(werknemerNaam);
+				planning.setBeginuur(wot.getBeginuur());
+				planning.setEinduur(wot.getEinduur());
+				planning.setIsAanwezig(wot.getAanwezig());
+
+				planningLijst.add(planning);
+
+			} else {
+				
+				Planning gewerkteUren = new Planning();
+				gewerkteUren.setId(wot.getId());
+				int werknemerId = wot.getWerknemerId();
+				HashMap<Integer, String> werknemerMap = geefWerknemerMap();
+				String werknemerNaam = werknemerMap.get(werknemerId);
+				gewerkteUren.setWerknemer(werknemerNaam);
+				gewerkteUren.setBeginuur(wot.getBeginuur());
+				gewerkteUren.setEinduur(wot.getEinduur());
+				gewerkteUren.setIsAanwezig(wot.getAanwezig());
+
+				gewerkteUrenLijst.add(gewerkteUren);
+			}
+		}
+		
+		taak.setPlanningLijst(planningLijst);
+		taak.setGewerkteUrenLijst(gewerkteUrenLijst);
+		
+		return taak;
+	}
+
+	/**
+	 * @return HashMap<Integer, String>
+	 * 
+	 * return een Hashmap met werknemerId en werknemer voornaam+""+naam
+	 */
+	public HashMap<Integer, String> geefWerknemerMap() {
+
+		PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
+		List<Personeel> lijst = new ArrayList<Personeel>();
+		HashMap<Integer, String> werknemerMap = new HashMap<Integer, String>();
+
+		lijst = (List<Personeel>) (Object) dao.leesAlle();
+
+		Iterator<Personeel> it = lijst.iterator();
+		while (it.hasNext()) {
+			Personeel p = it.next();
+			int id = p.getWerknemerId();
+			String naam = p.getVoornaam().concat(" ").concat(p.getNaam());
+			werknemerMap.put(id, naam);
+		}
+
+		return werknemerMap;
+	}
+	
+	
 }

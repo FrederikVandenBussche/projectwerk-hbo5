@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
+import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;
@@ -44,18 +45,17 @@ public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres_id"));
 
 		PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
-		Thread thread = new Thread(new Runnable(){
+		
+		adao.verwijder(adresId);
 
-			@Override
-			public void run() {
-				adao.verwijder(adresId);
-
-			}
-		});
-		thread.start();
 		
 		HttpSession session = request.getSession();
-		Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+		int gebruikerId = (int) session.getAttribute("gebruikerId");
+
+		WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+		Werkgever werkgever = new Werkgever();
+
+		werkgever = (Werkgever) wDao.lees(gebruikerId);
 
 		ArrayList<Adres> adreslijst = werkgever.getAdreslijst();
 		ListIterator<Adres> it = adreslijst.listIterator();
@@ -66,8 +66,6 @@ public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
 			}
 		}
 		werkgever.setAdreslijst(adreslijst);
-
-		session.setAttribute("werkgever", werkgever);
 
 		RequestDispatcher view = request.getRequestDispatcher("/bedrijfsgegevensMenu");
 		view.forward(request, response);

@@ -81,13 +81,15 @@ public class GenereerXls {
 
 			HSSFRow startDatumRij = sheet.createRow(rijenteller);
 			startDatumRij.createCell(1).setCellValue("Start datum: ");
-			startDatumRij.createCell(2).setCellValue(opdracht.getStartDatum());
+			String startDatumString = Datum.datumToString(opdracht.getStartDatum());
+			startDatumRij.createCell(2).setCellValue(startDatumString);
 
 			rijenteller++;
 
 			HSSFRow eindDatumRij = sheet.createRow(rijenteller);
 			eindDatumRij.createCell(1).setCellValue("Eind datum: ");
-			eindDatumRij.createCell(2).setCellValue(opdracht.getEindDatum());
+			String eindDatumString = Datum.datumToString(opdracht.getEindDatum());
+			eindDatumRij.createCell(2).setCellValue(eindDatumString);
 
 			rijenteller += 2;
 
@@ -142,43 +144,66 @@ public class GenereerXls {
 				rijenteller += 2;
 
 				HSSFRow planningRij = sheet.createRow(rijenteller);
-				HSSFCell planningcell = planningRij.createCell(1);
+				HSSFCell planningcell = planningRij.createCell(2);
 				planningcell.setCellValue("Prestaties: ");
 				planningcell.setCellStyle(vetStyle);
 
-				rijenteller += 2;
+				rijenteller ++;
 
 				HSSFRow planningTitelsRij = sheet.createRow(rijenteller);
-				planningTitelsRij.createCell(1).setCellValue("werknemer");
-				planningTitelsRij.createCell(2).setCellValue("datum");
-				planningTitelsRij.createCell(3).setCellValue("beginuur");
-				planningTitelsRij.createCell(4).setCellValue("einduur");
-				planningTitelsRij.createCell(5).setCellValue("aantal uren");
+				planningTitelsRij.createCell(2).setCellValue("werknemer");
+				planningTitelsRij.createCell(3).setCellValue("datum");
+				planningTitelsRij.createCell(4).setCellValue("beginuur");
+				planningTitelsRij.createCell(5).setCellValue("einduur");
+				planningTitelsRij.createCell(6).setCellValue("aantal uren");
 
 				rijenteller++;
+				
+				double totaalAantalUren = 0;
 
 				Iterator<Planning> planningIt = taak.getPlanningLijst().iterator();
 				while (planningIt.hasNext()) {
+					
+					
 					Planning planning = planningIt.next();
 
 					HSSFRow planningDataRij = sheet.createRow(rijenteller);
-					planningDataRij.createCell(1).setCellValue(planning.getWerknemer());
+					planningDataRij.createCell(2).setCellValue(planning.getWerknemer());
 					if (planning.getBeginuur() != null) {
 						String datum = Datum.datumToString(planning.getBeginuur());
 						String tijdstip = Datum.tijdstipToString(planning.getBeginuur());
-						planningDataRij.createCell(2).setCellValue(datum);
-						planningDataRij.createCell(3).setCellValue(tijdstip);
+						planningDataRij.createCell(3).setCellValue(datum);
+						planningDataRij.createCell(4).setCellValue(tijdstip);
 
 					}
 					if (planning.getEinduur() != null) {
 						String tijdstip = Datum.tijdstipToString(planning.getEinduur());
-						planningDataRij.createCell(4).setCellValue(tijdstip);
+						planningDataRij.createCell(5).setCellValue(tijdstip);
 
 					}
-					planningDataRij.createCell(5).setCellValue(planning.getAantalUren());
-
+					if (planning.getEinduur() != null && planning.getEinduur().after(planning.getBeginuur())){
+						double aantalUren = planning.getAantalUren();
+						totaalAantalUren += aantalUren;
+						planningDataRij.createCell(6).setCellValue(aantalUren);
+					} 
+					
 					rijenteller++;
+					
 				}
+				HSSFRow totaalUrenRij = sheet.createRow(rijenteller);
+				HSSFCell totaalTitelCell = totaalUrenRij.createCell(5);
+				totaalTitelCell.setCellValue("Totaal" );
+				totaalTitelCell.setCellStyle(vetStyle);
+				
+				HSSFCell totaalCell = totaalUrenRij.createCell(6);
+				totaalCell.setCellValue(totaalAantalUren );
+				totaalCell.setCellStyle(vetStyle);
+				
+				HSSFCell totaalUurCell = totaalUrenRij.createCell(7);
+				totaalUurCell.setCellValue("Uur" );
+				totaalUurCell.setCellStyle(vetStyle);
+				
+				rijenteller += 2;
 			}
 		}
 		sheet.createRow(1);

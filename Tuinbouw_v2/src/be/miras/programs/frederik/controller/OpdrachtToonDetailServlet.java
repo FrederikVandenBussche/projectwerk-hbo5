@@ -2,8 +2,10 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,19 +17,22 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import be.miras.programs.frederik.dao.DbKlantAdresDao;
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dao.DbOpdrachtDao;
-import be.miras.programs.frederik.dao.adapter.AdresAdapter;
+import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
+import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbKlant;
+import be.miras.programs.frederik.dbo.DbOpdracht;
+import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.GoogleApis;
+import be.miras.programs.frederik.util.Sorteer;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
@@ -58,8 +63,7 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 		HttpSession session = request.getSession();
-		ArrayList<Opdracht> opdrachtLijst = (ArrayList<Opdracht>) session.getAttribute("opdrachtLijst");
-
+		
 		// bovenaan de content wordt de aanspreektitel van de
 		// opdrachtgever weergegeven
 		String aanspreeknaam = null;
@@ -74,7 +78,7 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		String staticmap = null;
 		String googlemap = null;
 
-		Opdracht opdracht = null;
+		Opdracht opdracht = new Opdracht();
 
 		Map<Integer, String> adresMap = new HashMap<Integer, String>();
 
@@ -103,54 +107,66 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 
 			klantNaamMap.put(itKlantId, itKlantNaam);
 		}
-
+		
+		//sorteer de klantNaamMap op naam
+		klantNaamMap = Sorteer.SorteerMap(klantNaamMap);
+		    
 		if (id < 0) {
 			// het gaat om de aanmaak van een nieuwe opdracht
-
-			opdracht = new Opdracht();
 			aanspreeknaam = " ";
 			buttonNaam = "Voeg toe";
 			opdracht.setId(Integer.MIN_VALUE);
 
 		} else {
-			DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
-			AdresAdapter adresAdapter = new AdresAdapter();
-			GoogleApis googleApis = new GoogleApis();
+			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 
 			// het gaat om het wijzigen van een bestaande opdracht
 			variabelveld1 = ". Opdrachtgever wijzigen: ";
 			variabelveld2 = ", wijzigen :";
 
 			// zoek de opdracht aan de hand van de opdrachtId
-			Iterator<Opdracht> iter = opdrachtLijst.iterator();
-			while (iter.hasNext()) {
-				Opdracht o = iter.next();
-				if (o.getId() == id) {
-					opdracht = o;
-				}
+			DbOpdracht dbOpdracht = (DbOpdracht) dbOpdrachtDao.lees(id);
+			
+			opdracht.setId(id);
+			opdracht.setKlantId(dbOpdracht.getKlantAdresId());
+			opdracht.setKlantAdresId(dbOpdracht.getKlantAdresId());
+			opdracht.setOpdrachtNaam(dbOpdracht.getNaam());
+			opdracht.setStartDatum(dbOpdracht.getStartdatum());
+			opdracht.setEindDatum(dbOpdracht.getEinddatum());
+			
+			//aanspreeknaam definiëren
+			dbKlant = (DbKlant) dbKlantDao.lees(dbOpdracht.getKlantId());
+			String naam = null;
+			
+			if(dbKlant.getClass().getSimpleName().equals("DbParticulier")) {
+				String voornaam = ((DbParticulier) dbKlant).getVoornaam();
+				String familienaam = ((DbParticulier) dbKlant).getNaam();
+				naam = familienaam.concat(" ").concat(voornaam);
+			} else if(dbKlant.getClass().getSimpleName().equals("DbBedrijf")){
+				naam = ((DbBedrijf) dbKlant).getBedrijfnaam();
+			} else {
+				// DbKlant is geen DbParticulier en ook geen DbBedrijf
 			}
-
+			
+			opdracht.setKlantNaam(naam);
+			
 			aanspreeknaam = "voor ";
-			aanspreeknaam = aanspreeknaam.concat(opdracht.getKlantNaam());
+			aanspreeknaam = aanspreeknaam.concat(naam);
 			buttonNaam = "Wijziging opslaan";
 
 			// adreslijst die bij de opdrachtgever van deze opdracht hoort
 			// ophalen.
+			List<Adres> adresLijst = adresDaoAdapter.leesWaarKlantId(dbOpdracht.getKlantId());
 
-			// aanmaak van adresMap<adresId, adresString>
-			List<Integer> adresIdLijst = dbKlantAdresDao.leesLijst(opdracht.getKlantId());
-
-			Iterator<Integer> adresIdIter = adresIdLijst.iterator();
-			while (adresIdIter.hasNext()) {
-				int adresId = adresIdIter.next();
-				Adres adres = (Adres) adresAdapter.lees(adresId);
-				adresMap.put(adresId, adres.toString());
+			Iterator<Adres> adresIter = adresLijst.iterator();
+			while (adresIter.hasNext()) {
+				Adres adres = adresIter.next();
+				adresMap.put(adres.getId(), adres.toString());
 			}
 
-			
-			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			int klantAdresId = dbOpdrachtDao.geefKlantAdresId(id);
-			Adres adres = adresAdapter.leesWaarKlantAdresId(klantAdresId);
+			Adres adres = adresDaoAdapter.leesWaarKlantAdresId(klantAdresId);
 			adresString = adres.toString();
 
 			staticmap = GoogleApis.urlBuilderStaticMap(adres);
@@ -169,8 +185,8 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		OpdrachtDetailData opdrachtDetailData = new OpdrachtDetailData(aanspreeknaam, variabelveld1, variabelveld2,
 				buttonNaam, opdracht, klantNaamMap, adresString, adresMap, materiaalLijst, staticmap, googlemap);
 
-		session.setAttribute("opdrachtDetailData", opdrachtDetailData);
-		request.setAttribute("id", id);
+		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
+		session.setAttribute("id", id);
 
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);

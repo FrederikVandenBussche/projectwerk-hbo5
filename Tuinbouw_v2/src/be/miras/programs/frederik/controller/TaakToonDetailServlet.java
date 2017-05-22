@@ -1,10 +1,7 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,13 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
-import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
-import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
-import be.miras.programs.frederik.model.Opdracht;
-import be.miras.programs.frederik.model.OpdrachtDetailData;
-import be.miras.programs.frederik.model.Personeel;
-import be.miras.programs.frederik.model.Planning;
+import be.miras.programs.frederik.dao.DbKlantDao;
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
+import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
+import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 
@@ -57,113 +51,51 @@ public class TaakToonDetailServlet extends HttpServlet {
 			view = request.getRequestDispatcher("/logout");
 
 		} else {
+			int opdrachtId = (int) session.getAttribute("id");
+			
+			
+			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+			DbKlantDao dbKlantDao = new DbKlantDao();
+			TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
+			
+			String[] klantIdEnNaam = dbOpdrachtDao.selectKlantIdEnNaam(opdrachtId);
+			int klantId = Datatype.stringNaarInt(klantIdEnNaam[0]);
+			String opdrachtNaam = klantIdEnNaam[1];
+			
+			DbKlant dbKlant = (DbKlant) dbKlantDao.lees(klantId);
+			String klantNaam = dbKlant.geefAanspreekNaam();
 
 			Taak taak = null;
-
-			int id = Datatype.stringNaarInt(request.getParameter("id"));
-
-			OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+			
+			int taakId = Datatype.stringNaarInt(request.getParameter("taakId"));
 
 			// lijst van alle werknemers
-			HashMap<Integer, String> werknemerMap = geefWerknemerMap();
+			HashMap<Integer, String> werknemerMap = taakDaoAdapter.geefWerknemerMap();
 
-			if (id < 0) {
+			if (taakId < 0) {
 				// het gaat om de aanmaak van een nieuwe taak
 				taak = new Taak();
-
 				taak.setId(Integer.MIN_VALUE);
 
-			} else {
+			} else {		
+				// het gaat om een bestaande taak
+				taak = taakDaoAdapter.haalTaak(taakId);
+			}	
 				
-				// het gaat om het wijzigen van een bestaande taak
-				List<Planning> planningLijst = new ArrayList<Planning>();
-				List<Planning> gewerkteUrenLijst = new ArrayList<Planning>();
-				DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
-
-				// zoek de taak
-				Opdracht opdracht = opdrachtDetailData.getOpdracht();
-				List<Taak> taakLijst = opdracht.getTaakLijst();
-				
-				Iterator<Taak> it = taakLijst.iterator();
-				while (it.hasNext()) {
-					Taak t = it.next();
-					if (t.getId() == id) {
-						taak = t;
-					}
-				}
-
-				// planningLijst ophalen
-
-				List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao
-						.leesWaarTaakId(id);
-
-				Iterator<DbWerknemerOpdrachtTaak> wotIt = dbWerknemerOpdrachtTaakLijst.iterator();
-				while (wotIt.hasNext()) {
-					DbWerknemerOpdrachtTaak wot = wotIt.next();
-					if (wot.getEinduur() == null) {
-						Planning planning = new Planning();
-						planning.setId(wot.getId());
-						int werknemerId = wot.getWerknemerId();
-						String werknemerNaam = werknemerMap.get(werknemerId);
-						planning.setWerknemer(werknemerNaam);
-						planning.setBeginuur(wot.getBeginuur());
-						planning.setEinduur(wot.getEinduur());
-						planning.setIsAanwezig(wot.getAanwezig());
-
-						planningLijst.add(planning);
-
-					} else {
-						
-						Planning gewerkteUren = new Planning();
-						gewerkteUren.setId(wot.getId());
-						int werknemerId = wot.getWerknemerId();
-						String werknemerNaam = werknemerMap.get(werknemerId);
-						gewerkteUren.setWerknemer(werknemerNaam);
-						gewerkteUren.setBeginuur(wot.getBeginuur());
-						gewerkteUren.setEinduur(wot.getEinduur());
-						gewerkteUren.setIsAanwezig(wot.getAanwezig());
-
-						gewerkteUrenLijst.add(gewerkteUren);
-					}
-				}
-				
-				taak.setPlanningLijst(planningLijst);
-				taak.setGewerkteUrenLijst(gewerkteUrenLijst);
-			}
-
-			session.setAttribute("taak", taak);
-			request.setAttribute("id", id);
-			session.setAttribute("werknemerMap", werknemerMap);
+			request.setAttribute("klantNaam", klantNaam);
+			request.setAttribute("opdrachtNaam", opdrachtNaam);
+			request.setAttribute("taak", taak);
+			request.setAttribute("id", taakId);
+			request.setAttribute("werknemerMap", werknemerMap);
 
 			view = request.getRequestDispatcher("/Taakbeheer.jsp");
+			
 		}
 		
 		view.forward(request, response);
 	}
 
-	/**
-	 * @return HashMap<Integer, String>
-	 * 
-	 * return een Hashmap met werknemerId en werknemer voornaam+""+naam
-	 */
-	private HashMap<Integer, String> geefWerknemerMap() {
-
-		PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
-		List<Personeel> lijst = new ArrayList<Personeel>();
-		HashMap<Integer, String> werknemerMap = new HashMap<Integer, String>();
-
-		lijst = (List<Personeel>) (Object) dao.leesAlle();
-
-		Iterator<Personeel> it = lijst.iterator();
-		while (it.hasNext()) {
-			Personeel p = it.next();
-			int id = p.getWerknemerId();
-			String naam = p.getVoornaam().concat(" ").concat(p.getNaam());
-			werknemerMap.put(id, naam);
-		}
-
-		return werknemerMap;
-	}
+	
 
 	
 }

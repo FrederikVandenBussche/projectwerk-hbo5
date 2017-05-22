@@ -83,7 +83,7 @@ public class DbMateriaalDao implements ICRUD {
 	@Override
 	public List<Object> leesAlle() {
 		List<DbMateriaal> lijst = new ArrayList<DbMateriaal>();
-		String query = "FROM DbMateriaal"; 
+		String query = "FROM DbMateriaal order by typeMateriaalId"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 
@@ -119,6 +119,7 @@ public class DbMateriaalDao implements ICRUD {
 			DbMateriaal materiaal = (DbMateriaal)o;
 			session.beginTransaction();
 			transaction = session.getTransaction();
+			session.saveOrUpdate(materiaal);
 			session.flush();
 			if(!transaction.wasCommitted()){
 				transaction.commit();

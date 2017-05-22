@@ -2,7 +2,7 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ListIterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +10,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
@@ -42,7 +41,7 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 			throws ServletException, IOException {
 		response.setContentType("text/html");
 
-		String idString = request.getParameter("id").trim();
+		int id = Integer.parseInt(request.getParameter("id"));
 		String naam = request.getParameter("naam").trim();
 		String soort = request.getParameter("soort").trim();
 		String eenheidsmaat = request.getParameter("eenheidsmaat").trim();
@@ -50,24 +49,21 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{naam, soort, eenheidsmaat, eenheidsprijsString});
+		
+		MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
+		Materiaal materiaal = null;
 				
 		if (inputValidatieErrorMsg.isEmpty()) {
 			// de Materialenlijst ophalen
-			HttpSession session = request.getSession();
-			ArrayList<Materiaal> lijst = (ArrayList<Materiaal>) session.getAttribute("materiaalLijst");
-
-			Materiaal materiaal = new Materiaal();
-			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-
+			
 			double eenheidsprijs = 0;
-			int id = Datatype.stringNaarInt(idString);
 			
 			if (eenheidsprijsString != "") {
 				eenheidsprijs = Datatype.stringNaarDouble(eenheidsprijsString);
 			} else {
 				eenheidsprijs = 0;
 			}
-
+			materiaal = new Materiaal();
 			materiaal.setNaam(naam);
 			materiaal.setSoort(soort);
 			materiaal.setEenheidsmaat(eenheidsmaat);
@@ -75,51 +71,30 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 
 			if (id < 0) {
 				// nieuwMateriaal
-				Thread thread = new Thread(new Runnable(){
-
-					@Override
-					public void run() {
-
-						dao.voegToe(materiaal);
-					}
-				});
-				thread.start();
+				dao.voegToe(materiaal);
 				
-				// de lijst bewerken
-				lijst.add(materiaal);
-
 			} else {
 
-				// indien er iets gewijzigd werd, de wijzigingen opslaan
-
-				ListIterator<Materiaal> it = lijst.listIterator();
-				while (it.hasNext()) {
-					Materiaal m = it.next();
-					if (m.getId() == id) {
-						if (m.isVerschillend(materiaal, m)) {
-							materiaal.setId(id);
-
-							Thread thread = new Thread(new Runnable(){
-
-								@Override
-								public void run() {
-									
-									dao.wijzig(materiaal);
-								}
-							});
-							thread.start();
-							
-							it.set(materiaal);
-							
-							session.setAttribute("materiaal", materiaal);
-						}
-					}
-				}
+				materiaal.setId(id);
+				dao.wijzig(materiaal);
 			}
-			session.setAttribute("materiaalLijst", lijst);
+			
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);	
+			
+			// het materiaal ophalen zoals het was
+			materiaal = new Materiaal();
+			
+			materiaal = (Materiaal) dao.lees(id);
 		}
+		
+		List<Materiaal> lijst = new ArrayList<Materiaal>();
+				
+		lijst = (List<Materiaal>) (Object) dao.leesAlle();
+		
+		request.setAttribute("materiaalLijst", lijst);
+
+		request.setAttribute("materiaal", materiaal);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 		view.forward(request, response);

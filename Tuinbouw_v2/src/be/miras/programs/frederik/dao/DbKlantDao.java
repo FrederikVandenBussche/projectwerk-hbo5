@@ -52,7 +52,6 @@ public class DbKlantDao implements ICRUD {
 
 	@Override
 	public Object lees(int id) {
-		//DbKlant klant = new DbKlant();
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "FROM DbKlant where id = :id";
@@ -172,7 +171,7 @@ public class DbKlantDao implements ICRUD {
 	 */
 	public Object leesAlleParticulier() {
 		List<DbParticulier> lijst = new ArrayList<DbParticulier>();
-		String query = "FROM DbParticulier";
+		String query = "FROM DbParticulier order by naam";
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 
@@ -206,7 +205,7 @@ public class DbKlantDao implements ICRUD {
 	 */
 	public Object leesAlleBedrijf() {
 		List<DbBedrijf> lijst = new ArrayList<DbBedrijf>();
-		String query = "FROM DbBedrijf"; 
+		String query = "FROM DbBedrijf order by bedrijfnaam"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 
@@ -232,6 +231,82 @@ public class DbKlantDao implements ICRUD {
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
 		return objectLijst;
 	}
+
+	/**
+	 * @param id int
+	 * @return DbKlant
+	 * 
+	 * return de DbKlant met geparameteriseerde id
+	 */
+	public DbKlant leesParticulier(int id) {
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "FROM DbParticulier where id = :id";
+		List<DbKlant> lijst = new ArrayList<DbKlant>();
+		DbKlant dbKlant = new DbParticulier();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "leesParticulier(id)" + id + "", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			dbKlant = lijst.get(0);
+		}
+		return dbKlant;
+	}
+	
+	/**
+	 * @param id int
+	 * @return DbKlant
+	 * 
+	 * return de DbKlant met geparameteriseerde id
+	 */
+	public DbKlant leesBedrijf(int id) {
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "FROM DbBedrijf where id = :id";
+		List<DbKlant> lijst = new ArrayList<DbKlant>();
+		DbKlant dbKlant = new DbBedrijf();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "leesBedrijf(id)" + id + "", e);
+		} finally {
+			session.close();
+		}
+		if (!lijst.isEmpty()) {
+			dbKlant = lijst.get(0);
+		}
+		return dbKlant;
+	}
+
+	
 
 
 }

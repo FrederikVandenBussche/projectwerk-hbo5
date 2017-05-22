@@ -1,8 +1,6 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.adapter.OpdrachtDetailDaoAdapter;
 import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
-import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
@@ -45,33 +43,19 @@ public class TaakVerwijderenServlet extends HttpServlet {
 
 		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
 
-		int id = Datatype.stringNaarInt(request.getParameter("id"));
+		int taakId = Datatype.stringNaarInt(request.getParameter("taakId"));
 
 		HttpSession session = request.getSession();
-		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
-
+		int opdrachtId = (int) session.getAttribute("id");
+		
 		// de taak uit de databank verwijderen
-		Thread thread =  new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				taakDaoAdapter.verwijder(id);
-				
-			}
-			
-		});
-		thread.start();
-
-		// de taak uit de session verwijderen
-		List<Taak> takenlijst = opdrachtDetailData.getOpdracht().getTaakLijst();
-
-		ListIterator<Taak> it = takenlijst.listIterator();
-		while (it.hasNext()) {
-			Taak taak = (Taak) it.next();
-			if (taak.getId() == id) {
-				it.remove();
-			}
-		}
+		taakDaoAdapter.verwijder(taakId);
+		
+		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
+		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
+		
+		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
+		
 		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);

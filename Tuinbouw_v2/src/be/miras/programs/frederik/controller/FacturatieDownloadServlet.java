@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,10 +21,15 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import be.miras.programs.frederik.dao.adapter.AdresAdapter;
+import be.miras.programs.frederik.dao.DbOpdrachtTaakDao;
+import be.miras.programs.frederik.dao.DbStatusDao;
+import be.miras.programs.frederik.dao.DbVooruitgangDao;
+import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
+import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.export.Factuur;
 import be.miras.programs.frederik.export.GenereerPdf;
 import be.miras.programs.frederik.model.Adres;
+import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
@@ -54,8 +61,8 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		Factuur factuur = (Factuur) session.getAttribute("factuur");
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres"));
-		AdresAdapter adresAdapter = new AdresAdapter();
-		Adres facturatieAdres = (Adres) adresAdapter.lees(adresId);
+		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+		Adres facturatieAdres = (Adres) adresDaoAdapter.lees(adresId);
 		factuur.setAdres(facturatieAdres);
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
@@ -103,6 +110,37 @@ public class FacturatieDownloadServlet extends HttpServlet {
 				bufferedInputStream.close();
 			if (bufferedOutputStream != null)
 				bufferedOutputStream.close();
+		}
+		
+		// de DbOpdrachtTaak instellen op "Gefactuureerd"
+		DbStatusDao dbStatusDao = new DbStatusDao();
+		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
+		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
+		
+		int gefactureerdId = dbStatusDao.lees("Gefactureerd");
+		List<Opdracht> opdrachtLijst = factuur.getOpdrachtLijst();
+		
+		Iterator<Opdracht> it = opdrachtLijst.iterator();
+		while (it.hasNext()){
+			Opdracht opdracht = it.next();
+			
+			int opdrachtId = opdracht.getId();
+			
+			
+			
+			List<Integer> vooruitgangIds = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
+			
+			Iterator<Integer> vooruitgangIdsIt = vooruitgangIds.iterator();
+			while (vooruitgangIdsIt.hasNext()){
+				int vooruitgangId = vooruitgangIdsIt.next();
+				
+				DbVooruitgang dbVooruitgang = new DbVooruitgang();
+				dbVooruitgang.setId(vooruitgangId);
+				dbVooruitgang.setPercentage(100);
+				dbVooruitgang.setStatusId(gefactureerdId);
+				
+				dbVooruitgangDao.wijzig(dbVooruitgang);
+			}
 		}
 	}
 

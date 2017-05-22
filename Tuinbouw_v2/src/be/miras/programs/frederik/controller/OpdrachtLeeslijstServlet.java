@@ -22,7 +22,6 @@ import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbOpdracht;
 import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.model.Opdracht;
-import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -105,9 +104,7 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 				opdrachtLijst.add(opdracht);
 			}
 				
-			SessieOpruimer.AttributenVerwijderaar(session);
-			
-			session.setAttribute("opdrachtLijst", opdrachtLijst);
+			request.setAttribute("opdrachtLijst", opdrachtLijst);
 			
 			view = request.getRequestDispatcher("/Opdrachtbeheer.jsp");
 		

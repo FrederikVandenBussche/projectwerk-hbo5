@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.PersoonAdresDaoAdapter;
+import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.Datatype;
@@ -57,7 +58,13 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			int postcode = Datatype.stringNaarInt(postcodeString);
 
 			HttpSession session = request.getSession();
-			Werkgever werkgever = (Werkgever) session.getAttribute("werkgever");
+			
+			int gebruikerId = (int) session.getAttribute("gebruikerId");
+
+			WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+			Werkgever werkgever = new Werkgever();
+
+			werkgever = (Werkgever) wDao.lees(gebruikerId);
 
 			Adres adres = new Adres();
 			
@@ -84,7 +91,7 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			adreslijst.add(adres);
 			werkgever.setAdreslijst(adreslijst);
 
-			session.setAttribute("werkgever", werkgever);
+			request.setAttribute("werkgever", werkgever);
 			
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);

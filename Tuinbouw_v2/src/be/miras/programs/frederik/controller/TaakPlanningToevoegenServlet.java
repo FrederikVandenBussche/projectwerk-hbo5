@@ -1,11 +1,8 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,11 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.DbKlantDao;
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
+import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
+import be.miras.programs.frederik.dbo.DbKlant;
+import be.miras.programs.frederik.dbo.DbOpdracht;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
-import be.miras.programs.frederik.model.Opdracht;
-import be.miras.programs.frederik.model.OpdrachtDetailData;
-import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datum;
 import be.miras.programs.frederik.util.InputValidatie;
@@ -57,60 +56,54 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 		String datumString = request.getParameter("datum").trim();
 		
 		HttpSession session = request.getSession();
-		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+		int opdrachtId = (int) session.getAttribute("id");
+		int taakId = Integer.valueOf(request.getParameter("taakId"));
+		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+		DbKlantDao dbKlantDao = new DbKlantDao();
+		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
 		
-		this.startVanOpdracht = opdrachtDetailData.getOpdracht().getStartDatum();
-		this.eindeVanOpdracht = opdrachtDetailData.getOpdracht().getEindDatum();
+		DbOpdracht dbOpdracht = (DbOpdracht) dbOpdrachtDao.lees(opdrachtId);
+		
+		int klantId = dbOpdracht.getKlantId();
+		String opdrachtNaam = dbOpdracht.getNaam();
+		
+		this.startVanOpdracht = dbOpdracht.getStartdatum();
+		this.eindeVanOpdracht = dbOpdracht.getEinddatum();
+		
+		DbKlant dbKlant = (DbKlant) dbKlantDao.lees(klantId);
+		String klantNaam = dbKlant.geefAanspreekNaam();
 		
 		String inputValidatieErrorMsg = inputValidatie(new String[]{datumString});
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
 			
-			Taak taak = (Taak) session.getAttribute("taak");
-			HashMap<Integer, String> werknemerMap = (HashMap<Integer, String>) session.getAttribute("werknemerMap");
-
 			DbWerknemerOpdrachtTaak dbWerknemerOpdrachtTaak = new DbWerknemerOpdrachtTaak();
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
-			List<Planning> planningLijst = new ArrayList<Planning>();
-			Planning planning = new Planning();
-
-			// DbWerknemerOpdrachtTaak aanmaken en toevoegen aan databank
-			Opdracht opdracht = opdrachtDetailData.getOpdracht();
-
+	
 			Date beginuur = Datum.creeerDatum(datumString);
 
-			int opdrachtTaakOpdrachtId = opdracht.getId();
-			int opdrachtTaakTaakId = taak.getId();
-
+			// DbWerknemerOpdrachtTaak aanmaken en toevoegen aan databank			
 			dbWerknemerOpdrachtTaak.setWerknemerId(werknemerId);
-			dbWerknemerOpdrachtTaak.setOpdrachtTaakOpdrachtId(opdrachtTaakOpdrachtId);
-			dbWerknemerOpdrachtTaak.setOpdrachtTaakTaakId(opdrachtTaakTaakId);
+			dbWerknemerOpdrachtTaak.setOpdrachtTaakOpdrachtId(opdrachtId);
+			dbWerknemerOpdrachtTaak.setOpdrachtTaakTaakId(taakId);
 			dbWerknemerOpdrachtTaak.setBeginuur(beginuur);
 			
-			Thread thread = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
-					
-				}
-			});
-			thread.start();
-			
-
-			// planningLijst aanpassen bij deze taak
-
-			planningLijst = taak.getPlanningLijst();
-
-			planning.setWerknemer(werknemerMap.get(werknemerId));
-			planning.setBeginuur(beginuur);
-
-			planningLijst.add(planning);
+			dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
 			
 		} else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
+		
+		Taak taak = taakDaoAdapter.haalTaak(taakId);
+		
+		HashMap<Integer, String> werknemerMap = taakDaoAdapter.geefWerknemerMap();
+		
+		request.setAttribute("klantNaam", klantNaam);
+		request.setAttribute("opdrachtNaam", opdrachtNaam);
+		request.setAttribute("taak", taak);
+		request.setAttribute("id", taakId);
+		request.setAttribute("werknemerMap", werknemerMap);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/Taakbeheer.jsp");
 		view.forward(request, response);
@@ -144,9 +137,12 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			
 			Date datum = Datum.creeerDatum(datumString);
 			Date nu = new Date();
+			nu.setDate(nu.getDate() - 1);
 			if(datum.before(nu)){
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumToekomst);
 			}
+			
+			
 			
 			if (datum.before(this.startVanOpdracht)){
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumNaStartDatumOpdracht

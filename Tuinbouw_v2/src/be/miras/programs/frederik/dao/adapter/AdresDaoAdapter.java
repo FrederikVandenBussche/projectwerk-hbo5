@@ -1,11 +1,13 @@
 package be.miras.programs.frederik.dao.adapter;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import be.miras.programs.frederik.dao.DbAdresDao;
 import be.miras.programs.frederik.dao.DbGemeenteDao;
 import be.miras.programs.frederik.dao.DbKlantAdresDao;
+import be.miras.programs.frederik.dao.DbPersoonAdresDao;
 import be.miras.programs.frederik.dao.DbStraatDao;
 import be.miras.programs.frederik.dao.ICRUD;
 import be.miras.programs.frederik.dbo.DbAdres;
@@ -21,7 +23,7 @@ import be.miras.programs.frederik.model.Adres;
  * 
  *
  */
-public class AdresAdapter implements ICRUD {
+public class AdresDaoAdapter implements ICRUD {
 	private DbAdresDao dbAdresDao;
 	private DbGemeenteDao dbGemeenteDao;
 	private DbStraatDao dbStraatDao;
@@ -31,7 +33,7 @@ public class AdresAdapter implements ICRUD {
 	/**
 	 * 
 	 */
-	public AdresAdapter() {
+	public AdresDaoAdapter() {
 		super();
 		this.dbAdresDao = new DbAdresDao();
 		this.dbGemeenteDao = new DbGemeenteDao();
@@ -179,7 +181,10 @@ public class AdresAdapter implements ICRUD {
 		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
 		
 		List<Integer> adresIds = dbKlantAdresDao.leesLijst(klantId);
-		for(int id : adresIds){
+		
+		Iterator<Integer> it = adresIds.iterator();
+		while(it.hasNext()){
+			int id = it.next();
 			Adres a = new Adres();
 			DbAdres dbAdres = (DbAdres) dbAdresDao.lees(id);
 			DbStraat dbStraat = (DbStraat) dbStraatDao.lees(dbAdres.getStraatId());
@@ -198,5 +203,34 @@ public class AdresAdapter implements ICRUD {
 		return adresLijst;
 	}
 	
+	/**
+	 * @param persoonId int
+	 * @return List<Adres>
+	 * 
+	 * returnt List<Adres> van Adres met een bepaalde persoonId
+	 */
+	public List<Adres> leesWaarPersoonId(int persoonId){
+		List<Adres> adresLijst = new ArrayList<Adres>();
+		
+		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
+		
+		List<Integer> adresIds = dbPersoonAdresDao.leesLijst(persoonId);
+		for(int id : adresIds){
+			Adres a = new Adres();
+			DbAdres dbAdres = (DbAdres) dbAdresDao.lees(id);
+			DbStraat dbStraat = (DbStraat) dbStraatDao.lees(dbAdres.getStraatId());
+			DbGemeente dbGemeente = (DbGemeente) dbGemeenteDao.lees(dbAdres.getGemeenteId());
+			
+			a.setId(id);
+			a.setStraat(dbStraat.getNaam());
+			a.setNummer(dbAdres.getHuisnummer());
+			a.setBus(dbAdres.getBus());
+			a.setPostcode(dbGemeente.getPostcode());
+			a.setPlaats(dbGemeente.getNaam());
+			adresLijst.add(a);
+		}
+		
+		return adresLijst;
+	}
 	
 }

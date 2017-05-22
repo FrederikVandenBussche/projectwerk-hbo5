@@ -2,6 +2,9 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,11 +17,17 @@ import javax.servlet.http.HttpSession;
 import be.miras.programs.frederik.dao.DbAdresDao;
 import be.miras.programs.frederik.dao.DbGemeenteDao;
 import be.miras.programs.frederik.dao.DbKlantAdresDao;
+import be.miras.programs.frederik.dao.DbKlantDao;
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbStraatDao;
+import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dbo.DbAdres;
+import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbGemeente;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbKlantAdres;
+import be.miras.programs.frederik.dbo.DbOpdracht;
+import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.dbo.DbStraat;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.util.Datatype;
@@ -64,14 +73,15 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 		String plaats = request.getParameter("plaats").trim();
 		
 		String inputValidatieErrorMsg = inputValidatie(
-				new String[]{straat, nummerString, bus, postcodeString, plaats});
+				new String[]{straat, nummerString, postcodeString, plaats});
+		
+		HttpSession session = request.getSession();
+		String type = (String) session.getAttribute("type");
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
+			
 			int nummer = Datatype.stringNaarInt(nummerString);
 			int postcode = Datatype.stringNaarInt(postcodeString);
-			
-			HttpSession session = request.getSession();
-			DbKlant klant = (DbKlant) session.getAttribute("klant");
 
 			DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
 			DbAdresDao dbAdresDao = new DbAdresDao();
@@ -109,7 +119,6 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			dbKlantAdres.setAdresId(adresId);
 			dbKlantAdresDao.voegToe(dbKlantAdres);
 
-			ArrayList<Adres> adreslijst = klant.getAdreslijst();
 			adres.setId(adresId);
 			adres.setStraat(straat);
 			adres.setNummer(nummer);
@@ -123,16 +132,91 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 
 			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 			adres.setGooglemap(googlemap);
+			
 
-			adreslijst.add(adres);
-
-			klant.setAdreslijst(adreslijst);
-
-			session.setAttribute("klant", klant);
 		}else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
+		// de klantDetails terug ophalen
+		DbKlant klant = null;
+
+		ArrayList<DbOpdracht> opdrachtLijst = null;
+		HashMap<Integer, String> opdrachtMap = null;
+
+		if (type.equals("particulier")) {
+			klant = new DbParticulier();
+			variabelVeldnaam1 = "Voornaam";
+			variabelVeldnaam2 = "Naam";
+
+		} else if (type.equals("bedrijf")) {
+			klant = new DbBedrijf();
+			variabelVeldnaam1 = "Naam";
+			variabelVeldnaam2 = "Btw nummer";
+
+		} else {
+			// Er is geen type klant gedefinieerd
+		}
+		
+		// het gaat niet om een nieuwe klant.
+		DbKlantDao dbKlantDao = new DbKlantDao();
+		
+		
+		// de klant met de corresponderende id opzoeken.
+		if (type.equals("particulier")) {
+			
+			klant = dbKlantDao.leesParticulier(id);
+			
+			variabelVeld1 = ((DbParticulier) klant).getVoornaam();
+			variabelVeld2 = ((DbParticulier) klant).getNaam();
+			aanspreeknaam = variabelVeld1.concat(" ").concat(variabelVeld2);
+			
+			
+		} else if (type.equals("bedrijf")) {
+			
+			klant = dbKlantDao.leesBedrijf(id);
+			
+			variabelVeld1 = ((DbBedrijf) klant).getBedrijfnaam();
+			variabelVeld2 = ((DbBedrijf) klant).getBtwNummer();
+			aanspreeknaam = variabelVeld1;
+			
+		}
+
+		/*
+		 * de adreslijst van deze klant ophalen
+		 */
+		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+		ArrayList<Adres> adreslijst = (ArrayList<Adres>) adresDaoAdapter.leesWaarKlantId(id);
+
+		ListIterator<Adres> adresLijstIt = adreslijst.listIterator();
+		while (adresLijstIt.hasNext()) {
+			Adres adres = adresLijstIt.next();
+
+			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+			adres.setStaticmap(staticmap);
+
+			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
+			adres.setGooglemap(googlemap);
+
+		}
+
+		klant.setAdreslijst(adreslijst);
+		
+		// de opdrachtenlijst van deze klant ophalen
+		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+		opdrachtLijst = (ArrayList<DbOpdracht>) dbOpdrachtDao.leesWaarKlantId(id);
+
+		opdrachtMap = new HashMap<Integer, String>();
+		Iterator<DbOpdracht> dbOpdrachtIt = opdrachtLijst.iterator();
+		while (dbOpdrachtIt.hasNext()) {
+			DbOpdracht opdracht = dbOpdrachtIt.next();
+
+			int opdrachtId = opdracht.getId();
+			String opdrachtNaam = opdracht.getNaam();
+
+			opdrachtMap.put(opdrachtId, opdrachtNaam);
+		}
+		
 		request.setAttribute("id", id); // klant_id
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("variabelVeld1", variabelVeld1);
@@ -140,6 +224,9 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 		request.setAttribute("variabelVeld2", variabelVeld2);
 		request.setAttribute("variabelVeldnaam2", variabelVeldnaam2);
 
+		request.setAttribute("klant", klant);
+		request.setAttribute("opdrachtMap", opdrachtMap);
+		
 		RequestDispatcher view = request.getRequestDispatcher("/KlantDetail.jsp");
 		view.forward(request, response);
 	}
@@ -160,9 +247,8 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 	public String inputValidatie(String[] teValideren) {
 		String straat = teValideren[0];
 		String nummerString = teValideren[1];
-		String bus = teValideren[2];
-		String postcodeString = teValideren[3];
-		String plaats = teValideren[4];
+		String postcodeString = teValideren[2];
+		String plaats = teValideren[3];
 		
 		String inputValidatieErrorMsg = "";
 		

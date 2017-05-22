@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.DbPersoonDao;
+import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.model.Werkgever;
@@ -52,7 +53,12 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 		String gebruikersnaam = request.getParameter("gebruikersnaam").trim();
 		
 		HttpSession session = request.getSession();
-		werkgever = (Werkgever) session.getAttribute("werkgever");
+
+		int gebruikerId = (int) session.getAttribute("gebruikerId");
+
+		WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+
+		werkgever = (Werkgever) wDao.lees(gebruikerId);
 		
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{naam, voornaam, geboortedatum, email, gebruikersnaam});
@@ -80,16 +86,8 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				gebruiker.setBevoegdheidId(werkgever.getBevoegdheidID());
 				gebruiker.setPersoonId(werkgever.getPersoonId());
 				
-				Thread thread = new Thread(new Runnable(){
-
-					@Override
-					public void run() {
-						
-						dao.wijzig(gebruiker);	
-					}	
-				});
-				thread.start();
-				
+				dao.wijzig(gebruiker);	
+								
 				werkgever.setEmail(email);
 				werkgever.setGebruikersnaam(gebruikersnaam);
 			}
@@ -106,21 +104,14 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				persoon.setVoornaam(voornaam);
 				persoon.setGeboortedatum(datum);
 
-				Thread thread = new Thread(new Runnable(){
-
-					@Override
-					public void run() {
-						dao.wijzig(persoon);		
-					}
-				});
-				thread.start();
-
+				dao.wijzig(persoon);		
+				
 				werkgever.setNaam(naam);
 				werkgever.setVoornaam(voornaam);
 				werkgever.setGeboortedatum(datum);
 			}
-
-			session.setAttribute("werkgever", werkgever);
+		
+			request.setAttribute("werkgever", werkgever);
 			
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
@@ -195,7 +186,6 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 					}	
 				}
 		}
-
 		return inputValidatieErrorMsg;
 	}
 

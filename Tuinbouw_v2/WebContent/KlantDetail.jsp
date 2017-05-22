@@ -149,7 +149,7 @@
 						</c:forEach>
 						<div class = "tab-pane fade" id = "nieuwAdres">
 							<div>
-								<form action="bedrijfsGegevensAdresOpslaan" method="post">
+								<form action="klantAdresOpslaan" method="post">
 									<div class = "inputvelden form-group">
 										<label class = "control-label col-sm-2" for="straat">straat: </label>
 										<div class = "col-sm-10">

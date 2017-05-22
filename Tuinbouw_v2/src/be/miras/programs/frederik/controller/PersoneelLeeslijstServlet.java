@@ -14,7 +14,6 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.PersoneelDaoAdapter;
 import be.miras.programs.frederik.model.Personeel;
-import be.miras.programs.frederik.util.SessieOpruimer;
 
 /**
  * @author Frederik Vanden Bussche
@@ -54,10 +53,10 @@ public class PersoneelLeeslijstServlet extends HttpServlet {
 
 			List<Personeel> personeelLijst = new ArrayList<Personeel>();
 			personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
-
-			SessieOpruimer.AttributenVerwijderaar(session);
 			
-			session.setAttribute("personeelLijst", personeelLijst);
+			
+
+			request.setAttribute("personeelLijst", personeelLijst);
 
 			view = request.getRequestDispatcher("/Personeelsbeheer.jsp");
 

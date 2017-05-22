@@ -18,7 +18,9 @@ import be.miras.programs.frederik.dao.ICRUD;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.dbo.DbWerknemer;
+import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Personeel;
+import be.miras.programs.frederik.util.GoogleApis;
 
 /**
   * @author Frederik Vanden Bussche
@@ -28,8 +30,6 @@ import be.miras.programs.frederik.model.Personeel;
  *
  */
 public class PersoneelDaoAdapter implements ICRUD{
-	private static final Logger LOGGER = Logger.getLogger(PersoneelDaoAdapter.class);
-	private final String TAG = "PersoneelDaoAdapter: ";
 	
 	@Override
 	public int voegToe(Object o) {
@@ -69,36 +69,48 @@ public class PersoneelDaoAdapter implements ICRUD{
 
 	@Override
 	public Object lees(int id) {
+		
 		Personeel personeel = new Personeel();
 		
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "FROM Personeel where id = :id";
-		List<Personeel> lijst = new ArrayList<Personeel>();
-		try {
-			transaction = session.getTransaction();
-			session.beginTransaction();
-			Query q = session.createQuery(query);
-			q.setParameter("id", id);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+		DbPersoon dbPersoon = new DbPersoon();
+		DbWerknemer dbWerknemer = new DbWerknemer();	
+		DbGebruiker dbGebruiker = new DbGebruiker();
+		
+		DbPersoonDao dbPersoonDao = new DbPersoonDao();
+		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
+		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
+		
+		dbWerknemer = dbWerknemerDao.leesWaarPersoonId(id);
+		
+		dbPersoon = (DbPersoon) dbPersoonDao.lees(id);
+		
+		dbGebruiker = (DbGebruiker) dbGebruikerDao.leesWaarPersoonId(id);
+		
+		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+		List<Adres> adresLijst = adresDaoAdapter.leesWaarPersoonId(id);
+		
+		// de googleApis van dit personeelslid ophalen
+		ListIterator<Adres> adresLijstIt = adresLijst.listIterator();
+		while (adresLijstIt.hasNext()) {
+			Adres adres = adresLijstIt.next();
+			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
+			adres.setStaticmap(staticmap);
 
-		} finally {
-			session.close();
-		}
-		if (!lijst.isEmpty()) {
-			personeel = lijst.get(0);
+			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
+			adres.setGooglemap(googlemap);
 		}
 		
+		personeel.setPersoonId(dbPersoon.getId());
+		personeel.setWerknemerId(dbWerknemer.getId());
+		personeel.setGebruikerId(dbGebruiker.getId());
+		personeel.setVoornaam(dbPersoon.getVoornaam());
+		personeel.setNaam(dbPersoon.getNaam());
+		personeel.setGeboortedatum(dbPersoon.getGeboortedatum());
+		personeel.setAanwervingsdatum(dbWerknemer.getAanwervingsdatum());
+		personeel.setLoon(dbWerknemer.getLoon());
+		personeel.setEmail(dbGebruiker.getEmail());
+
+		personeel.setAdreslijst((ArrayList<Adres>) adresLijst);
 		return personeel;
 	}
 

@@ -8,6 +8,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbKlantAdres;
 
 /**
@@ -317,7 +318,45 @@ public class DbKlantAdresDao implements ICRUD {
 		}
 		
 		return klantAdres;
-	};
+	}
+
+	/**
+	 * @param adresId int
+	 * @return boolean
+	 * 
+	 * return true indien de adresId voorkomt in DbKlantAdres-tabel
+	 */
+	public boolean isInGebruik(int adresId) {
+		boolean isInGebruik = true;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "FROM DbKlantAdres where adresId = :adresId";
+		List<DbAdres> lijst = new ArrayList<DbAdres>();
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("adresId", adresId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "isInGebruik(adresId) " + adresId + " ", e);
+		} finally {
+			session.close();
+		}
+		if (lijst.isEmpty()) {
+			isInGebruik = false;
+		}
+
+		return isInGebruik;
+	}
 
 	
 }

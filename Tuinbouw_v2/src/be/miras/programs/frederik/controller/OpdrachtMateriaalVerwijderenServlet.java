@@ -1,8 +1,6 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ListIterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -13,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.DbOpdrachtMateriaalDao;
-import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.dao.adapter.OpdrachtDetailDaoAdapter;
 import be.miras.programs.frederik.model.OpdrachtDetailData;
 import be.miras.programs.frederik.util.Datatype;
 
@@ -45,33 +43,17 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 		HttpSession session = request.getSession();
-		OpdrachtDetailData opdrachtDetailData = (OpdrachtDetailData) session.getAttribute("opdrachtDetailData");
+		int opdrachtId = (int) session.getAttribute("id");
 
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
 
-		// verwijderen uit db
-		Thread thread = new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				dbOpdrachtMateriaalDao.verwijder(id);
-				
-			}
-		});
-		thread.start();
+		dbOpdrachtMateriaalDao.verwijderWaarOpdrachtIdEnMateriaalId(opdrachtId, id);
 		
-
-		// verwijdernen uit opdrachtdetailData.opdracht.materiaalLijst
-		List<Materiaal> gebruiktemateriaalLijst = opdrachtDetailData.getOpdracht().getGebruiktMateriaalLijst();
-
-		ListIterator<Materiaal> it = gebruiktemateriaalLijst.listIterator();
-		while (it.hasNext()) {
-			Materiaal m = it.next();
-			if (m.getId() == id) {
-				it.remove();
-			}
-		}
-
+		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
+		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
+		
+		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
+		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);
 	}

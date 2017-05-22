@@ -266,5 +266,39 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		return isKomtvoor;
 	}
 
+		/**
+	 * @param opdrachtId int
+	 * @param materiaalId int
+	 * 
+	 * verwijder alle DbOpdrachtMateriaal met een bepaalde opdrachtId EN materiaalId
+	 */
+	public void verwijderWaarOpdrachtIdEnMateriaalId(int opdrachtId, int materiaalId) {
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "DELETE FROM DbOpdrachtMateriaal "
+						+ "where opdrachtId = :opdrachtId "
+						+ "AND materiaalId = :materiaalId";
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("opdrachtId", opdrachtId);
+			q.setParameter("materiaalId", materiaalId);
+			q.executeUpdate();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "verwijderWaarOpdrachtIdEnMateriaalId(opdrachtId, materiaalId) "
+			+ opdrachtId + " " + materiaalId + " ", e);
+		} finally {
+			session.close();
+		}
+	}
 	
 }

@@ -1,8 +1,7 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,8 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import be.miras.programs.frederik.dao.DbKlantDao;
+import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
-import be.miras.programs.frederik.model.Planning;
+import be.miras.programs.frederik.dao.adapter.TaakDaoAdapter;
+import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datatype;
 
@@ -50,33 +52,36 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 
 		} else {
 
-			int id = Datatype.stringNaarInt(request.getParameter("id"));
-
-			Taak taak = (Taak) session.getAttribute("taak");
-
-			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakdao = new DbWerknemerOpdrachtTaakDao();
-
-			Thread thread = new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					dbWerknemerOpdrachtTaakdao.verwijder(id);
-					
-				}});
-			thread.start();
+			int planningId = Integer.parseInt(request.getParameter("planningId"));
+			int taakId = Integer.parseInt(request.getParameter("taakId"));
+			int opdrachtId = (int) session.getAttribute("id");
 			
-			List<Planning> planningLijst = taak.getPlanningLijst();
-			ListIterator<Planning> it = planningLijst.listIterator();
-			while (it.hasNext()) {
-				Planning p = it.next();
-				if (p.getId() == id) {
-					it.remove();
-				}
-			}
+			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakdao = new DbWerknemerOpdrachtTaakDao();
+			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+			DbKlantDao dbKlantDao = new DbKlantDao();
+			
+			dbWerknemerOpdrachtTaakdao.verwijder(planningId);
+			
+			TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
+			Taak taak = taakDaoAdapter.haalTaak(taakId);
+			HashMap<Integer, String> werknemerMap = taakDaoAdapter.geefWerknemerMap();
+			
+			String[] klantIdEnNaam = dbOpdrachtDao.selectKlantIdEnNaam(opdrachtId);
+			int klantId = Datatype.stringNaarInt(klantIdEnNaam[0]);
+			String opdrachtNaam = klantIdEnNaam[1];
+			
+			DbKlant dbKlant = (DbKlant) dbKlantDao.lees(klantId);
+			String klantNaam = dbKlant.geefAanspreekNaam();
+			
+			request.setAttribute("klantNaam", klantNaam);
+			request.setAttribute("opdrachtNaam", opdrachtNaam);
+			request.setAttribute("taak", taak);
+			request.setAttribute("id", taakId);
+			request.setAttribute("werknemerMap", werknemerMap);
 
 			view = request.getRequestDispatcher("/Taakbeheer.jsp");
-
 		}
+		
 		view.forward(request, response);
 	}
 
