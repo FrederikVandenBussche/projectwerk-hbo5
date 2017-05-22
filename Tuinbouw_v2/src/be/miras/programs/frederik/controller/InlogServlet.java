@@ -1,6 +1,7 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,6 +16,7 @@ import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dbo.DbBevoegdheid;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.util.InputValidatieStrings;
+import be.miras.programs.frederik.util.SHA1;
 
 /**
  * @author Frederik Vanden Bussche
@@ -59,7 +61,14 @@ public class InlogServlet extends HttpServlet {
 		} else {
 			
 			if (dbGebruiker != null && wachtwoord != null) {
-				if (wachtwoord.equals(dbGebruiker.getWachtwoord())) {
+				String encryptie = null;
+				try {
+					encryptie = SHA1.Sha1(wachtwoord);
+				} catch (NoSuchAlgorithmException e) {
+					e.printStackTrace();
+				}
+				
+				if (encryptie.equals(dbGebruiker.getWachtwoord())) {
 					
 					DbBevoegdheid dbBevoegdheid = (DbBevoegdheid) dbBevoegdheidDao.lees(dbGebruiker.getBevoegdheidId());
 					

@@ -1,6 +1,7 @@
 package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.adapter.WerkgeverDaoAdapter;
 import be.miras.programs.frederik.model.Werkgever;
 import be.miras.programs.frederik.util.InputValidatieStrings;
+import be.miras.programs.frederik.util.SHA1;
 import be.miras.programs.frederik.util.InputValidatie;
 
 /**
@@ -66,7 +68,13 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 			if (oudWachtwoord.equals(daoWachtwoord)) {
 				if (nieuwWachtwoord1.equals(nieuwWachtwoord2)) {
 					if (nieuwWachtwoord1.length() > 8){
-						dao.wijzigWachtwoord(id, nieuwWachtwoord1);
+						String encryptie = null;
+						try {
+							encryptie = SHA1.Sha1(nieuwWachtwoord1);
+						} catch (NoSuchAlgorithmException e) {
+							e.printStackTrace();
+						}
+						dao.wijzigWachtwoord(id, encryptie);
 						
 					} else {
 						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het nieuwe wachtwoord moet tenminste 8 karakters lang zijn.");
