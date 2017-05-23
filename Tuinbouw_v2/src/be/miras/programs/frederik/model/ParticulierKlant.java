@@ -7,9 +7,14 @@ package be.miras.programs.frederik.model;
  *
  */
 public class ParticulierKlant extends Klant implements Ivergelijk {
+	
 	private String voornaam;
 	private String familienaam;
 
+	
+	public ParticulierKlant(){
+	}
+	
 	/**
 	 * @return the voornaam String
 	 */

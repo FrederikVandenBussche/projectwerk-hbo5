@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbOpdrachtTaak;
  *
  */
 public class DbOpdrachtTaakDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbOpdrachtTaakDao.class);
 	private final String TAG = "DbOpdrachtTaakDao: ";
+	
+	
+	public DbOpdrachtTaakDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbOpdrachtTaak opdrachtTaak = (DbOpdrachtTaak)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbOpdrachtTaak where id = :id";
 		List<DbOpdrachtTaak> lijst = new ArrayList<DbOpdrachtTaak>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			opdrachtTaak = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbOpdrachtTaak opdrachtTaak = (DbOpdrachtTaak)o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtTaak where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -209,6 +219,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 				+ "WHERE opdrachtId = :opdrachtId"
 				+ " AND taakId = :taakId";
 		Transaction transaction = null;
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -230,7 +241,6 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 	}
 
 	/**
@@ -241,13 +251,12 @@ public class DbOpdrachtTaakDao implements ICRUD {
 	 */
 	public Long hoeveelMetTaakId(int  taakId) {
 		Long aantal = Long.MIN_VALUE;
-		
 		String query = "SELECT COUNT(*) FROM DbOpdrachtTaak "
 				+ "where taakId = :taakId";
-		
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		List<Long> results = null;
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -284,6 +293,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtTaak where opdrachtId = :opdrachtId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -316,6 +326,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "SELECT vooruitgangId FROM DbOpdrachtTaak WHERE opdrachtId = :opdrachtId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -335,6 +346,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		return lijst;
 	}
 
@@ -349,6 +361,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "SELECT taakId FROM DbOpdrachtTaak WHERE opdrachtId = :opdrachtId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -368,6 +381,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		return lijst;
 	}
 
@@ -383,6 +397,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbOpdrachtTaak where taakId = :taakId";
 		List<DbOpdrachtTaak> lijst = new ArrayList<DbOpdrachtTaak>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -402,6 +417,7 @@ public class DbOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			opdrachtTaak = lijst.get(0);
 		}

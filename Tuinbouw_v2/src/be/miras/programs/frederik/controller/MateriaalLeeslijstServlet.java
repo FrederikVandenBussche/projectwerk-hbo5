@@ -22,7 +22,9 @@ import be.miras.programs.frederik.model.Materiaal;
  */
 @WebServlet("/MateriaalLeeslijstServlet")
 public class MateriaalLeeslijstServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -51,13 +53,12 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 		} else {
 			
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-			
+			List<Materiaal> lijst = new ArrayList<Materiaal>();
 			Materiaal m = new Materiaal();
+			
 			// voor nieuw materiaal : id = -1
 			m.setId(-1);
 
-			List<Materiaal> lijst = new ArrayList<Materiaal>();
-					
 			lijst = (List<Materiaal>) (Object) dao.leesAlle();
 			
 			request.setAttribute("materiaalLijst", lijst);
@@ -65,6 +66,7 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
 		}
+		
 		view.forward(request, response);
 	}
 

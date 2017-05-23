@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbBevoegdheid;
  *
  */
 public class DbBevoegdheidDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbBevoegdheidDao.class);
 	private final String TAG = "DbBevoegdheidDao: ";
+	
+	
+	public DbBevoegdheidDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
+		
 		try{
 			DbBevoegdheid bevoegdheid = (DbBevoegdheid)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbBevoegdheidDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbBevoegdheidDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbBevoegdheid where id = :id";
 		List<DbBevoegdheid> lijst = new ArrayList<DbBevoegdheid>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbBevoegdheidDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			bevoegdheid = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbBevoegdheidDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbBevoegdheid bevoegdheid  = (DbBevoegdheid)o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbBevoegdheidDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbBevoegdheid where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();

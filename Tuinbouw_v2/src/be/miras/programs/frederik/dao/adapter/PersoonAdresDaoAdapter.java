@@ -31,8 +31,13 @@ import be.miras.programs.frederik.model.Adres;
  *
  */
 public class PersoonAdresDaoAdapter implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(PersoonAdresDaoAdapter.class);
 	private final String TAG = "PersoonAdresDaoAdapter: ";
+	
+	
+	public PersoonAdresDaoAdapter(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
@@ -85,13 +90,11 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		dbPersoonAdres.setPersoonId(dbPersoonId);
 		dbPersoonAdresDao.voegToe(dbPersoonAdres);
 		
-		
 		return dbAdresId;
 	}
 
 	@Override
 	public Object lees(int id) {
-		
 		Adres adres = new Adres();
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -135,10 +138,8 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 
 	@Override
 	public void verwijder(int adresId) {
-		
 		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
 		DbPersoonAdres dbPersoonAdres = null;
-		
 		
 		// persoonId ophalen
 		dbPersoonAdres =  (DbPersoonAdres) dbPersoonAdresDao.lees(adresId);
@@ -176,7 +177,6 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 				dbGemeenteDao.verwijder(gemeenteId);
 			}
 		}
-		
 	}
 
 	/**
@@ -191,9 +191,7 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 	public List<Adres> leesSelectief(String persoonOfKlant, int id){
 		
 		List<Adres> adreslijst = new ArrayList<Adres>();
-
 		List<Integer> dbadresIdLijst = null;
-	
 		DbPersoonAdresDao dbpersoonadresdao = null;
 		DbKlantAdresDao dbklantadresdao = null;
 		DbAdresDao dbadresdao = new DbAdresDao();
@@ -203,7 +201,6 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 		if (persoonOfKlant.equals("persoon")){
 			
 			dbpersoonadresdao = new DbPersoonAdresDao();
-			
 			dbadresIdLijst = dbpersoonadresdao.leesLijst(id);
 
 		} else if (persoonOfKlant.equals("klant")){		
@@ -265,7 +262,6 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			int adresId = it.next();
 			
 			//straatId en gemeenteId ophalen
-			
 			DbAdres dbadres = (DbAdres) dbAdresdao.lees(adresId);
 			int straatId = dbadres.getStraatId();
 			int gemeenteId = dbadres.getGemeenteId();
@@ -273,17 +269,20 @@ public class PersoonAdresDaoAdapter implements ICRUD {
 			// delete dbAdres 
 			boolean adresPersoonInGebruik = dbPersoonAdresDao.isInGebruik(adresId);
 			boolean adresKlantInGebruik = dbKlantAdresDao.isInGebruik(adresId);
+		
 			if (!adresPersoonInGebruik && !adresKlantInGebruik){
 				dbAdresdao.verwijder(adresId);
 				// indien de straat nergens anders gebruikt wordt.
 				// deze uit de db verwijderen
 				boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
+				
 				if(!straatInGebruik){
 					dbStraatDao.verwijder(straatId);
 				}
 				// indien de gemeente nergens anders gebruikt wordt
 				// deze uit de db verwijderen
 				boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
+				
 				if(!gemeenteInGebruik){
 					dbGemeenteDao.verwijder(gemeenteId);
 				}

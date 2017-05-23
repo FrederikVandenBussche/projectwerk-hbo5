@@ -25,8 +25,10 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/KlantOpslaanServlet")
 public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie {
+	
 	private static final long serialVersionUID = 1L;
 	private String type;
+	
 	
 	/**
 	 * @see HttpServlet#HttpServlet()

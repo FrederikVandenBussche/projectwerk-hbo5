@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbParticulier;
  *
  */
 public class DbParticulierDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbParticulierDao.class);
 	private final String TAG = "DbParticulierDao: ";
+	
+	
+	public DbParticulierDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbParticulier particulier = (DbParticulier)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbParticulierDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbParticulierDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbParticulier where id = :id";
 		List<DbParticulier> lijst = new ArrayList<DbParticulier>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbParticulierDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			particulier = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbParticulierDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbParticulier particulier = (DbParticulier)o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbParticulierDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbParticulier where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();

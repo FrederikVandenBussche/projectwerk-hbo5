@@ -17,6 +17,9 @@ public class PersoneelbeheerTakenlijstTaak {
 	private String klantnaam;
 	private String opdrachtnaam;
 	private String taaknaam;
+	
+	public PersoneelbeheerTakenlijstTaak(){
+	}
 
 	/**
 	 * @return the dbWerknemerOpdrachtTaakId int

@@ -26,8 +26,10 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/TaakGeplandeWerknemerVerwijderen")
 public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -48,8 +50,8 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 		RequestDispatcher view = null;
 
 		if (isIngelogd == null || isIngelogd == false) {
+			
 			view = request.getRequestDispatcher("/logout");
-
 		} else {
 
 			int planningId = Integer.parseInt(request.getParameter("planningId"));
@@ -59,10 +61,10 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakdao = new DbWerknemerOpdrachtTaakDao();
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			DbKlantDao dbKlantDao = new DbKlantDao();
+			TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
 			
 			dbWerknemerOpdrachtTaakdao.verwijder(planningId);
 			
-			TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
 			Taak taak = taakDaoAdapter.haalTaak(taakId);
 			HashMap<Integer, String> werknemerMap = taakDaoAdapter.geefWerknemerMap();
 			

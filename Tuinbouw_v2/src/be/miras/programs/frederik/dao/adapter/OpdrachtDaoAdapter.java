@@ -13,10 +13,16 @@ import be.miras.programs.frederik.dbo.DbOpdracht;
 import be.miras.programs.frederik.dbo.DbParticulier;
 import be.miras.programs.frederik.model.Opdracht;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * adapter die het model opdracht koppelt aan de databankobjecten DbOpdracht en DbKlant
+ *
+ */
 public class OpdrachtDaoAdapter {
 
+	
 	public OpdrachtDaoAdapter() {
-		super();
 	}
 	
 	/**

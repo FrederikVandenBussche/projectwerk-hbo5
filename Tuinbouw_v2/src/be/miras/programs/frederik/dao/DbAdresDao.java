@@ -17,8 +17,13 @@ import be.miras.programs.frederik.dbo.DbAdres;
  *
  */
 public class DbAdresDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbAdresDao.class);
 	private final String TAG = "DbAdresDao: ";
+	
+	
+	public DbAdresDao(){
+	}
 
 	@Override
 	public int voegToe(Object o) {
@@ -45,6 +50,7 @@ public class DbAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		return id;
 	}
 
@@ -56,6 +62,7 @@ public class DbAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbAdres where id = :id";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -75,6 +82,7 @@ public class DbAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			adres = lijst.get(0);
 		}
@@ -96,6 +104,7 @@ public class DbAdresDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbAdres where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -129,6 +138,7 @@ public class DbAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbAdres where straatId = :straatId";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -148,6 +158,7 @@ public class DbAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (lijst.isEmpty()) {
 			isInGebruik = false;
 		}
@@ -167,6 +178,7 @@ public class DbAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbAdres where gemeenteId = :gemeenteId";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -186,6 +198,7 @@ public class DbAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (lijst.isEmpty()) {
 			isInGebruik = false;
 		}

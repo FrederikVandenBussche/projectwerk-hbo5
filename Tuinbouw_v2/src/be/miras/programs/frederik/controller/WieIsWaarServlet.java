@@ -41,8 +41,10 @@ import be.miras.programs.frederik.model.WieIsWaar;
  */
 @WebServlet("/WieIsWaarServlet")
 public class WieIsWaarServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
        
+	
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -63,6 +65,7 @@ public class WieIsWaarServlet extends HttpServlet {
 			view = request.getRequestDispatcher("/logout");
 
 		} else {
+			
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 			DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 			DbPersoonDao dbPersoonDao = new DbPersoonDao();
@@ -74,22 +77,15 @@ public class WieIsWaarServlet extends HttpServlet {
 			DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 			List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = new ArrayList<DbWerknemerOpdrachtTaak>();
 			DbStatusDao dbStatusdao = new DbStatusDao();
-			
 			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
-			
 			DbPersoon dbPersoon = new DbPersoon();
 			DbOpdracht dbOpdracht = new DbOpdracht();
 			DbKlant dbKlant = null;
 			DbKlantAdres dbKlantAdres = new DbKlantAdres();
 			Adres adres = new Adres();
-			
-
-			
 			List<WieIsWaar> wieIsWaarLijst = new ArrayList<WieIsWaar>();
-			
 			Date vandaag = new Date();
-			
-			
+
 			dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao.lees(vandaag);
 			
 			Iterator<DbWerknemerOpdrachtTaak> dbwotlIt = dbWerknemerOpdrachtTaakLijst.iterator();
@@ -109,14 +105,13 @@ public class WieIsWaarServlet extends HttpServlet {
 				dbPersoon = (DbPersoon) dbPersoonDao.lees(persoonId);
 				String werknemerNaam = dbPersoon.getVoornaam().concat(" ").concat(dbPersoon.getNaam());
 				
-				
 				dbOpdracht = (DbOpdracht) dbOpdrachtDao.lees(opdrachtId);
 				String opdrachtNaam = dbOpdracht.getNaam();
 								
 				String taakNaam = dbTaakDao.selectNaam(taakId);
 				
 				int klantAdresId = dbOpdracht.getKlantAdresId();
-				
+
 				dbKlantAdres = dbKlantAdresDao.select(klantAdresId);
 				int klantId = dbKlantAdres.getKlantId();
 				int adresId = dbKlantAdres.getAdresId();
@@ -126,11 +121,13 @@ public class WieIsWaarServlet extends HttpServlet {
 				klantNaam = dbKlant.geefAanspreekNaam();
 				adres = (Adres) adresDaoAdapter.lees(adresId);
 				String straatEnNummer = null;
+				
 				if (adres.getBus() != null && !adres.getBus().isEmpty()) {
 					straatEnNummer =  adres.getStraat() + " " + adres.getNummer() + " " + adres.getBus();
 				} else {
 					straatEnNummer = adres.getStraat() + " " + adres.getNummer();
 				}
+				
 				String postcodeEnPlaats = adres.getPostcode() + " " + adres.getPlaats();
 				
 				DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakDao.leesWaarTaakId(taakId);
@@ -138,6 +135,7 @@ public class WieIsWaarServlet extends HttpServlet {
 				
 				// statusId == 1 betekent "niet gestart"
 				if (dbVooruitgang.getStatusId() > 1){
+					
 					DbStatus dbStatus = (DbStatus) dbStatusdao.lees(dbVooruitgang.getStatusId());
 					String statusNaam = dbStatus.getNaam();
 					
@@ -158,6 +156,7 @@ public class WieIsWaarServlet extends HttpServlet {
 			
 			view = request.getRequestDispatcher("/WieIsWaar.jsp");
 		}
+		
 		view.forward(request, response);
 	}
 

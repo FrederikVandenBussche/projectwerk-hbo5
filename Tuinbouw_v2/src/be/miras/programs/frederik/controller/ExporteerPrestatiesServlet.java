@@ -53,6 +53,7 @@ import be.miras.programs.frederik.util.Datum;
  */
 @WebServlet("/ExporteerPrestatiesServlet")
 public class ExporteerPrestatiesServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(ExporteerPrestatiesServlet.class);
 	private final String TAG = "ExporteerPrestatiesServlet: ";
@@ -85,10 +86,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			String klantnaam = (String) session.getAttribute("aanspreeknaam");
 			int id = (int) session.getAttribute("klantId");
 			
-			// de opdrachtenlijst van deze klant ophalen
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
-			List<DbOpdracht> dbOpdrachtLijst = (ArrayList<DbOpdracht>) dbOpdrachtDao.leesWaarKlantId(id);
-			
 			DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 			DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 			DbTaakDao dbTaakDao = new DbTaakDao();
@@ -96,8 +94,11 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			DbStatusDao dbStatusDao = new DbStatusDao();
 			DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 			DbPersoonDao dbPersoonDao = new DbPersoonDao();
-			
 			ExcelData excelData = new ExcelData();
+			
+			// de opdrachtenlijst van deze klant ophalen
+			List<DbOpdracht> dbOpdrachtLijst = (ArrayList<DbOpdracht>) dbOpdrachtDao.leesWaarKlantId(id);
+			
 			excelData.setKlantNaam(klantnaam);
 			
 			Date begindatum = Datum.creeerDatum(begindatumString);
@@ -114,6 +115,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 					
 					if(begindatum == null || dbOpdracht.getStartdatum().after(begindatum)){
 						if(einddatum == null || dbOpdracht.getEinddatum().before(einddatum)){
+							
 							Opdracht opdracht = new Opdracht();
 							opdracht.setId(dbOpdracht.getId());
 							opdracht.setKlantId(dbOpdracht.getKlantId());
@@ -136,6 +138,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 						
 						if(begindatum == null || dbOpdracht.getStartdatum().after(begindatum)){
 							if(einddatum == null || dbOpdracht.getEinddatum().before(einddatum)){
+								
 								Opdracht opdracht = new Opdracht();
 								opdracht.setId(dbOpdracht.getId());
 								opdracht.setKlantId(dbOpdracht.getKlantId());
@@ -164,6 +167,8 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 					DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakIt.next();
 					
 					Taak taak = new Taak();
+					List<Planning> planningLijst = new ArrayList<Planning>();
+					
 					taak.setId(dbOpdrachtTaak.getTaakId());
 					taak.setOpdrachtId(opdracht.getId());
 					
@@ -177,11 +182,8 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 					DbStatus dbStatus = (DbStatus) dbStatusDao.lees(dbVooruitgang.getStatusId());
 					taak.setStatus(dbStatus.getNaam());
 					
-					// er is voor elke taak een planningLijst
-					
-					List<Planning> planningLijst = new ArrayList<Planning>();
-					
 					List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao.leesWaarTaakId(taak.getId());
+					
 					Iterator<DbWerknemerOpdrachtTaak> dbWOTIt = dbWerknemerOpdrachtTaakLijst.iterator();
 					while(dbWOTIt.hasNext()){
 						DbWerknemerOpdrachtTaak dwot = dbWOTIt.next();
@@ -207,17 +209,16 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 					taakLijst.add(taak);
 				}
 				opdracht.setTaakLijst(taakLijst);
-				
 			}
 			
 			excelData.setOpdrachtLijst(opdrachtLijst);
 			
 			ServletOutputStream servletOutputStream = response.getOutputStream();
 			
-			
 			response.setContentType("application/vnd.ms-excel");
 			
 			String PATH = "c:/tuinbouwbedrijf/prestaties/";
+			
 			Date datum = new Date();
 			int dag = datum.getDate();
 			int maand = datum.getMonth();

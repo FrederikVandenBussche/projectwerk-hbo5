@@ -26,6 +26,7 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
  */
 @WebServlet("/AdresOpslaanServlet")
 public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputValidatie {
+	
 	private static final long serialVersionUID = 1L;
 
 	
@@ -46,7 +47,6 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 
 		String aanspreeknaam = request.getParameter("aanspreeknaam");
 		String opslaanBtnNaam = request.getParameter("buttonNaam");
-
 		String straat = request.getParameter("straat").trim();
 		String nummerString = request.getParameter("nr").trim();
 		String bus = request.getParameter("bus").trim();
@@ -62,8 +62,9 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
 
 		if (inputValidatieErrorMsg.isEmpty()) {
-			Adres adres = new Adres();
+			
 			PersoonAdresDaoAdapter persoonAdresDaoAdapter = new PersoonAdresDaoAdapter();
+			Adres adres = new Adres();
 
 			int nr = 0;
 			int postcode = 0;
@@ -95,7 +96,6 @@ public class PersoneelAdresOpslaanServlet extends HttpServlet implements IinputV
 		Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
 		
 		request.setAttribute("personeelslid", personeel);
-		
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("buttonNaam", opslaanBtnNaam);
 		

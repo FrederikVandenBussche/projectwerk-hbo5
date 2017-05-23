@@ -8,7 +8,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbParticulier;
@@ -20,14 +19,20 @@ import be.miras.programs.frederik.dbo.DbParticulier;
  *
  */
 public class DbKlantDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbKlantDao.class);
 	private final String TAG = "DbKlantDao: ";
+	
+	
+	public DbKlantDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbKlant klant = (DbKlant)o;
 			session.beginTransaction();
@@ -47,6 +52,7 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -57,6 +63,7 @@ public class DbKlantDao implements ICRUD {
 		String query = "FROM DbKlant where id = :id";
 		List<DbKlant> lijst = new ArrayList<DbKlant>();
 		DbKlant dbKlant = null;
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -76,6 +83,7 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			dbKlant = lijst.get(0);
 		}
@@ -108,16 +116,16 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbKlant klant = (DbKlant)o;
 			session.beginTransaction();
@@ -143,6 +151,7 @@ public class DbKlantDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlant where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -193,8 +202,8 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
@@ -227,8 +236,8 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
@@ -244,6 +253,7 @@ public class DbKlantDao implements ICRUD {
 		String query = "FROM DbParticulier where id = :id";
 		List<DbKlant> lijst = new ArrayList<DbKlant>();
 		DbKlant dbKlant = new DbParticulier();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -263,9 +273,11 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			dbKlant = lijst.get(0);
 		}
+		
 		return dbKlant;
 	}
 	
@@ -281,6 +293,7 @@ public class DbKlantDao implements ICRUD {
 		String query = "FROM DbBedrijf where id = :id";
 		List<DbKlant> lijst = new ArrayList<DbKlant>();
 		DbKlant dbKlant = new DbBedrijf();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -300,13 +313,13 @@ public class DbKlantDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			dbKlant = lijst.get(0);
 		}
+		
 		return dbKlant;
 	}
 
 	
-
-
 }

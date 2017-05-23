@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbPersoon;
  *
  */
 public class DbPersoonDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbPersoonDao.class);
 	private final String TAG = "DbPersoonDao: ";
+	
+	
+	public DbPersoonDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
+		
 		try {
 			DbPersoon persoon = (DbPersoon) o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbPersoonDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbPersoonDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbPersoon where id = :id";
 		List<DbPersoon> lijst = new ArrayList<DbPersoon>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbPersoonDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			persoon = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbPersoonDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbPersoon persoon = (DbPersoon) o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbPersoonDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbPersoon where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -170,15 +180,14 @@ public class DbPersoonDao implements ICRUD {
 	 */
 	public List<DbPersoon> lees(int[] idLijst) {
 		List<DbPersoon> persoonLijst = new ArrayList<DbPersoon>();
-
 		String query = "FROM DbPersoon where id = :id";
 		
 		for (int i = 0; i < idLijst.length; i++) {
-
 			Session session = HibernateUtil.openSession();
 			Transaction transaction = null;
 			transaction = session.getTransaction();
 			List<DbPersoon> lijst = new ArrayList<DbPersoon>();
+			
 			try {
 				session.beginTransaction();
 				transaction = session.getTransaction();
@@ -198,6 +207,7 @@ public class DbPersoonDao implements ICRUD {
 			} finally {
 				session.close();
 			}
+			
 			if (!lijst.isEmpty()) {
 				DbPersoon persoon = lijst.get(0);
 				persoonLijst.add(persoon);

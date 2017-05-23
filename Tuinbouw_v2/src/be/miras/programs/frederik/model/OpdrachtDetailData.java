@@ -27,7 +27,6 @@ public class OpdrachtDetailData {
 	private String googlemap;
 
 	public OpdrachtDetailData() {
-		super();
 	}
 
 	/**

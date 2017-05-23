@@ -37,7 +37,7 @@ import be.miras.programs.frederik.dbo.DbOpdrachtTaak;
 import be.miras.programs.frederik.dbo.DbTypeMateriaal;
 import be.miras.programs.frederik.dbo.DbVooruitgang;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
-import be.miras.programs.frederik.export.Factuur;
+import be.miras.programs.frederik.export.FactuurData;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Materiaal;
 import be.miras.programs.frederik.model.Opdracht;
@@ -57,6 +57,7 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
  */
 @WebServlet("/FacturatieDetailServlet")
 public class FacturatieDetailServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 	
 
@@ -87,17 +88,21 @@ public class FacturatieDetailServlet extends HttpServlet {
 		
 		int gebruikerId = (int) session.getAttribute("gebruikerId");
 		
-		Factuur factuur = new Factuur();
+		FactuurData factuurData = new FactuurData();
 		
-		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		DbStatusDao dbStatusDao = new DbStatusDao();
 		DbKlantDao dbKlantDao = new DbKlantDao();
+		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+		WerkgeverDaoAdapter werkgeverDaoAdapter = new WerkgeverDaoAdapter();
+		List<DbKlant> klantlijst = new ArrayList<DbKlant>();
+		List<Verplaatsing> verplaatsingLijst = new ArrayList<Verplaatsing>();
+		List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
+		List<Verplaatsing> teFacturerenVerplaatsingLijst = new ArrayList<Verplaatsing>();
 		
 		//klantlijst ophalen
-		List<DbKlant> klantlijst = new ArrayList<DbKlant>();
 		klantlijst = (List<DbKlant>) (Object) dbKlantDao.leesAlle();
 		
 		//geselecteerde klant zoeken
@@ -105,15 +110,14 @@ public class FacturatieDetailServlet extends HttpServlet {
 		while(klantIt.hasNext()){
 			DbKlant k = klantIt.next();
 			if (k.getId() == klantId){
-				factuur.setKlantNaam(k.geefAanspreekNaam());
+				factuurData.setKlantNaam(k.geefAanspreekNaam());
 				if(k.getClass().getSimpleName().equals("DbBedrijf")){
-					factuur.setBtwAanrekenen(false);
+					factuurData.setBtwAanrekenen(false);
 				} else {
-					factuur.setBtwAanrekenen(true);
+					factuurData.setBtwAanrekenen(true);
 				}
 			}
 		}
-		
 		//aanmaakdatum + vervaldatum instellen
 		Date aanmaakDatum = new Date();
 		Date vervalDatum = berekenVervalDatum(aanmaakDatum);
@@ -131,17 +135,11 @@ public class FacturatieDetailServlet extends HttpServlet {
 		}
 		
 		// adresgegevens van tuinbouwbedrijf
-		WerkgeverDaoAdapter werkgeverDaoAdapter = new WerkgeverDaoAdapter();
 		Werkgever werkgever = (Werkgever) werkgeverDaoAdapter.lees(gebruikerId);
 		
 		Adres bedrijfAdres = werkgever.getAdreslijst().get(0);
-		factuur.setBedrijfsAdres(bedrijfAdres);
-		factuur.setBedrijfsEmail(werkgever.getEmail());
-		
-		List<Verplaatsing> verplaatsingLijst = new ArrayList<Verplaatsing>();
-	
-		// kies opdrachten die afgewerkt zijn 
-		List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
+		factuurData.setBedrijfsAdres(bedrijfAdres);
+		factuurData.setBedrijfsEmail(werkgever.getEmail());
 		
 		int benodigdeStatusId = dbStatusDao.lees("Afgewerkt");
 		int gefactureerdStatusId = dbStatusDao.lees("Gefactureerd");
@@ -153,6 +151,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 		while (dbOpdrachtLijstIterator.hasNext()){
 			
 			DbOpdracht dbOpdracht = dbOpdrachtLijstIterator.next();
+			
 			//Een opdracht is afgewerkt als alle dbOpdrachtTaken afgewerkt zijn
 			boolean isAfgewerkt = true;
 						
@@ -206,18 +205,21 @@ public class FacturatieDetailServlet extends HttpServlet {
 				//Haal de taaklijst op van deze opdracht
 				List<DbOpdrachtTaak> afgewerktDbOpdrachtTaakLijst = new ArrayList<DbOpdrachtTaak>();
 				afgewerktDbOpdrachtTaakLijst = dbOpdrachtTaakDao.leesLijst(dbOpdracht.getId());
+				
 				Iterator<DbOpdrachtTaak> afgewerktDbOpdrachtTaakLijstIterator = afgewerktDbOpdrachtTaakLijst.iterator();
 				while (afgewerktDbOpdrachtTaakLijstIterator.hasNext()){
 					DbOpdrachtTaak dot = afgewerktDbOpdrachtTaakLijstIterator.next();
+					
+					Taak taak = new Taak();
+					List<Planning> planningLijst = new ArrayList<Planning>();
+					
 					int taakId = dot.getTaakId();
 					String taakNaam = dbTaakDao.selectNaam(taakId);
 					
-					Taak taak = new Taak();
 					taak.setTaakNaam(taakNaam);
 					taak.setOpmerking(dot.getOpmerking());
 					
 					//stel planningLijst op 
-					List<Planning> planningLijst = new ArrayList<Planning>();
 					List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao.leesWaarTaakId(taakId);
 					
 					Iterator<DbWerknemerOpdrachtTaak> dbwotlIt = dbWerknemerOpdrachtTaakLijst.iterator();
@@ -238,9 +240,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 							planningLijst.add(planning);
 						}
 					}
-					
 					taak.setPlanningLijst(planningLijst);
-					
 					taakLijst.add(taak);	
 				}
 				
@@ -318,8 +318,6 @@ public class FacturatieDetailServlet extends HttpServlet {
 		}
 		// er is een lijst met alle verplaatsingen apart
 		// een lijst met alle verplaatsingen per werknemer is nodig
-		List<Verplaatsing> teFacturerenVerplaatsingLijst = new ArrayList<Verplaatsing>();
-		
 		Iterator<Verplaatsing> verplaatsingLijstIt = verplaatsingLijst.iterator();
 		while (verplaatsingLijstIt.hasNext()){
 			Verplaatsing verplaatsing = verplaatsingLijstIt.next();
@@ -328,11 +326,13 @@ public class FacturatieDetailServlet extends HttpServlet {
 			ListIterator<Verplaatsing> teFacturerenVerplaatsingIt = teFacturerenVerplaatsingLijst.listIterator();
 			while (teFacturerenVerplaatsingIt.hasNext()){
 				Verplaatsing teFacturerenVerplaatsing = teFacturerenVerplaatsingIt.next();
+				
 				if( teFacturerenVerplaatsing.getOpdrachtId() == verplaatsing.getOpdrachtId()
 						&& teFacturerenVerplaatsing.getDag().getDate() == verplaatsing.getDag().getDate()
 						&& teFacturerenVerplaatsing.getDag().getMonth() == verplaatsing.getDag().getMonth()
 						&& teFacturerenVerplaatsing.getDag().getYear() == verplaatsing.getDag().getYear()
 						){
+					
 					verplaatsingGevonden = true;
 					int aantalVerplaatsingen = teFacturerenVerplaatsing.getAantalVerplaatsingen();
 					aantalVerplaatsingen += verplaatsing.getAantalVerplaatsingen();
@@ -341,6 +341,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 			}
 		
 			if (!verplaatsingGevonden){
+				
 				Verplaatsing nieuweVerplaatsing = new Verplaatsing();
 				nieuweVerplaatsing.setDag(verplaatsing.getDag());
 				nieuweVerplaatsing.setOpdrachtId(verplaatsing.getOpdrachtId());
@@ -350,14 +351,13 @@ public class FacturatieDetailServlet extends HttpServlet {
 			}
 		}
 		
-		factuur.setVerplaatsingLijst(teFacturerenVerplaatsingLijst);		
-		
-		factuur.setAanmaakDatum(aanmaakDatum);
-		factuur.setVervalDatum(vervalDatum);
-		factuur.setOpdrachtLijst(opdrachtLijst);
+		factuurData.setVerplaatsingLijst(teFacturerenVerplaatsingLijst);		
+		factuurData.setAanmaakDatum(aanmaakDatum);
+		factuurData.setVervalDatum(vervalDatum);
+		factuurData.setOpdrachtLijst(opdrachtLijst);
 		
 		RequestDispatcher view = null;
-		if (factuur.getOpdrachtLijst().isEmpty()){
+		if (factuurData.getOpdrachtLijst().isEmpty()){
 			
 			// andere initialisaties
 			Map<Integer, String> klantMap = new HashMap<Integer, String>();
@@ -371,8 +371,8 @@ public class FacturatieDetailServlet extends HttpServlet {
 				String itKlantNaam = dbKlant.geefAanspreekNaam();
 
 				klantMap.put(itKlantId, itKlantNaam);
-
 			}
+			
 			String factuurmessage = InputValidatieStrings.FactuurMessage;
 			
 			request.setAttribute("factuurmessage", factuurmessage);
@@ -381,7 +381,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 			view = request.getRequestDispatcher("/Facturatie.jsp");
 		} else {
 			session.setAttribute("adresMap", adresMap);
-			session.setAttribute("factuur", factuur);
+			session.setAttribute("factuur", factuurData);
 			
 			view = request.getRequestDispatcher("/FacturatieDetail.jsp");
 		}

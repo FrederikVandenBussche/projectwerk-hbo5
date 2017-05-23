@@ -16,7 +16,6 @@ public class ExcelData {
 	private List<Opdracht> opdrachtLijst;
 
 	public ExcelData() {
-		super();
 	}
 
 	/**

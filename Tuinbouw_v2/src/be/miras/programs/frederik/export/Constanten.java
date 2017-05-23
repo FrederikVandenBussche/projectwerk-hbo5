@@ -7,6 +7,7 @@ package be.miras.programs.frederik.export;
  *
  */
 public class Constanten {
+	
 	protected final static String Bedrijfsnaam = "Tuinbouwbedrijf Hitek";
 	protected final static int FactuurVervalTijd = 1; //aantal maanden
 	protected final static int Uurloon = 50;

@@ -22,8 +22,10 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/AdresVerwijderenServlet")
 public class PersoneelAdresVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -42,7 +44,6 @@ public class PersoneelAdresVerwijderenServlet extends HttpServlet {
 		String aanspreeknaam = request.getParameter("aanspreeknaam");
 		String opslaanBtnNaam = request.getParameter("buttonNaam");
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres_id"));
-
 		HttpSession session = request.getSession();
 		int persoonId = (int) session.getAttribute("id");
 
@@ -54,7 +55,6 @@ public class PersoneelAdresVerwijderenServlet extends HttpServlet {
 		Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
 		
 		request.setAttribute("personeelslid", personeel);
-
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("buttonNaam", opslaanBtnNaam);
 

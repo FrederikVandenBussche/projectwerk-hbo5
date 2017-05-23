@@ -22,8 +22,10 @@ import be.miras.programs.frederik.model.Personeel;
  */
 @WebServlet("/PersoneelLeeslijstServlet")
 public class PersoneelLeeslijstServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -50,12 +52,10 @@ public class PersoneelLeeslijstServlet extends HttpServlet {
 		} else {
 
 			PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
-
 			List<Personeel> personeelLijst = new ArrayList<Personeel>();
+			
 			personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
 			
-			
-
 			request.setAttribute("personeelLijst", personeelLijst);
 
 			view = request.getRequestDispatcher("/Personeelsbeheer.jsp");

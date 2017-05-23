@@ -9,14 +9,11 @@ function setup(){
 	if(tekst.length <= 14){
 		
 		$("#adressen").hide();
-		$("#personeelVerwijderen").hide();
-		
-	
+		$("#personeelVerwijderen").hide();	
 	} else {
 	
 		$("#adressen").show();
-		$("#personeelVerwijderen").show();
-		
+		$("#personeelVerwijderen").show();	
 	}
 }
 

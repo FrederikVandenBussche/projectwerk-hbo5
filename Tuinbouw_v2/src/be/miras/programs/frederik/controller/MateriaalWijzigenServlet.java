@@ -24,7 +24,9 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/MateriaalWijzigenServlet")
 public class MateriaalWijzigenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -47,21 +49,18 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 		RequestDispatcher view = null;
 
 		if (isIngelogd == null || isIngelogd == false) {
+			
 			view = request.getRequestDispatcher("/logout");
-
 		} else {
 
 			int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-			
 			List<Materiaal> lijst = new ArrayList<Materiaal>();
+			Materiaal materiaal = new Materiaal();
 			
 			lijst = (List<Materiaal>) (Object) dao.leesAlle();
-					
-
-			Materiaal materiaal = new Materiaal();
-
+			
 			Iterator<Materiaal> it = lijst.iterator();
 			while (it.hasNext()) {
 				Materiaal m = it.next();
@@ -71,7 +70,6 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 			}
 
 			request.setAttribute("materiaalLijst", lijst);
-			
 			request.setAttribute("materiaal", materiaal);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");

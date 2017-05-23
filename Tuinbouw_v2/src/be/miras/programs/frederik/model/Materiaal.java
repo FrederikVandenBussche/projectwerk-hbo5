@@ -7,12 +7,16 @@ package be.miras.programs.frederik.model;
  *
  */
 public class Materiaal implements Ivergelijk {
+	
 	private int id;
 	private String naam;
 	private String eenheidsmaat;
 	private double eenheidsprijs;
 	private String soort;
 	private double hoeveelheid;
+	
+	public Materiaal(){
+	}
 
 	/**
 	 * @return the id int

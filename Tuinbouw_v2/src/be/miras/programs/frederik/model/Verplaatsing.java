@@ -5,18 +5,19 @@ import java.util.Date;
 /**
  * @author Frederik Vanden Bussche
  * 
- *         de verplaatsing van een werknemer
+ *        class met een verplaatsing van een werknemer
  *
  */
 public class Verplaatsing {
+	
 	private Date dag;
 	private int werknemerId;
 	private int opdrachtId;
 	private double aantalKm;
 	private int aantalVerplaatsingen;
 
+	
 	public Verplaatsing() {
-		super();
 	}
 
 	/**
@@ -94,5 +95,5 @@ public class Verplaatsing {
 		this.aantalVerplaatsingen = aantalVerplaatsingen;
 	}
 
-	
+
 }

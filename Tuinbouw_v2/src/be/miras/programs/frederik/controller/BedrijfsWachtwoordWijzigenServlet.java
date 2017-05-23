@@ -25,8 +25,10 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/BedrijfsWachtwoordWijzigenServlet")
 public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements IinputValidatie{
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -64,7 +66,13 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 			int id = werkgever.getGebruikerId();
 
 			String daoWachtwoord = (String) dao.leesWachtwoord(id);
-
+			
+			try {
+				oudWachtwoord = SHA1.Sha1(oudWachtwoord);
+			} catch (NoSuchAlgorithmException e1) {
+				e1.printStackTrace();
+			}
+			
 			if (oudWachtwoord.equals(daoWachtwoord)) {
 				if (nieuwWachtwoord1.equals(nieuwWachtwoord2)) {
 					if (nieuwWachtwoord1.length() > 8){
@@ -87,13 +95,14 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 				
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het oude wachtwoord niet gekend.");
 			}
-		} WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+		} 
+		
+		WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
 		Werkgever werkgever = new Werkgever();
 
 		werkgever = (Werkgever) wDao.lees(gebruikerId);
 		
 		request.setAttribute("werkgever", werkgever);
-
 		request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 
 		RequestDispatcher view = request.getRequestDispatcher("/Bedrijfsgegevens.jsp");

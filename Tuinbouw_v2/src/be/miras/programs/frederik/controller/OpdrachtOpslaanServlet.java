@@ -39,6 +39,7 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/OpdrachtOpslaanServlet")
 public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidatie{
+	
 	private static final long serialVersionUID = 1L;
 	private int id;
 
@@ -83,23 +84,25 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			DbKlantDao dbKlantDao = new DbKlantDao();
 			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 			Opdracht opdracht = new Opdracht();
-			
+			// hashmap met klantnamen
+			Map<Integer, String> klantNaamMap = new HashMap<Integer, String>();
 			HashMap<Integer, String> adresMap = new HashMap<Integer, String>();
 			
 			int teWijzigenKlantId = Integer.MIN_VALUE;
 			int teWijzigenAdresId = Integer.MIN_VALUE;
 			
-			// hashmap met klantnamen
-			Map<Integer, String> klantNaamMap = new HashMap<Integer, String>();
 			ArrayList<DbKlant> klantLijst = (ArrayList<DbKlant>) (Object) dbKlantDao.leesAlle();
+			
 			Iterator<DbKlant> it = klantLijst.iterator();
 			while (it.hasNext()) {
 				DbKlant dbKlant = it.next();
+				
 				int itKlantId = dbKlant.getId();
 				String itKlantNaam = dbKlant.geefAanspreekNaam();
-				if (itKlantNaam.equals(klantNaam)){
+				
+				if (itKlantNaam.equals(klantNaam))
 					teWijzigenKlantId = itKlantId;
-				}
+				
 				klantNaamMap.put(itKlantId, itKlantNaam);
 			}
 			
@@ -116,22 +119,27 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			Iterator<Adres> adresIter = adresLijst.iterator();
 			while (adresIter.hasNext()) {
 				Adres adres = adresIter.next();
-				if (adres.toString().equals(adresKeuze)){
+				
+				if (adres.toString().equals(adresKeuze))
 					teWijzigenAdresId = adres.getId();
-				}
+				
 				adresMap.put(adres.getId(), adres.toString());
 			}
 
 			opdracht.setId(this.id);
 			opdracht.setKlantId(klantId);
 			opdracht.setKlantNaam(klantNaam);
+			
 			if (opdrachtNaam == null || opdrachtNaam.isEmpty()) {
 				opdrachtNaam = "onbekend";
 			}
+			
 			opdracht.setOpdrachtNaam(opdrachtNaam);
+			
 			if (beginDatum != null) {
 				opdracht.setStartDatum(beginDatum);
 			}
+			
 			if (eindDatum != null) {
 				opdracht.setEindDatum(eindDatum);
 			}
@@ -300,7 +308,6 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			
 			request.setAttribute("id", this.id);
 			request.setAttribute("opdrachtDetailData", opdrachtDetailData);
-			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
 			view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
@@ -309,7 +316,6 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(this.id);
 			
 			request.setAttribute("opdrachtDetailData", opdrachtDetailData);
-			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
 			view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
@@ -358,20 +364,27 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			
 			//inputvalidatie voor aanmaak van een nieuwe opdracht
 			msg = InputValidatie.correcteDatum(startDatumString);
+			
 			if (msg!= null) {
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.StartDatum).concat(msg);
 			} else {
 				Date datum = Datum.creeerDatum(startDatumString);
 				Date nu = new Date();
 				nu.setDate(nu.getDate() - 1);
+				
 				if (datum.before(nu)){
 					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.StartDatumToekomst);
 				}
 			}
 			
+			String datumControle = msg;
 			msg = InputValidatie.correcteDatum(eindDatumString);
-			if (msg!= null) {
-				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.EindDatum).concat(msg);
+			
+			if (datumControle != null || msg != null) {
+				
+				if (msg != null){
+					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.EindDatum).concat(msg);					
+				}
 			} else {
 				Date startdatum = Datum.creeerDatum(startDatumString);
 				Date einddatum = Datum.creeerDatum(eindDatumString);
@@ -391,13 +404,16 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			 * 
 			 */
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+			
 			DbOpdracht dbOpdracht = (DbOpdracht) dbOpdrachtDao.lees(this.id);
 			Date vorigeBeginDatum = dbOpdracht.getStartdatum();
 			Date vorigeEindDatum = dbOpdracht.getEinddatum();
 			
 			// mogelijkheid 2
 			if (!startDatumString.trim().isEmpty() && eindDatumString.isEmpty()){
+				
 				msg = InputValidatie.correcteDatum(startDatumString);
+				
 				if (msg != null){
 					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.StartDatum).concat(msg);
 				} else {
@@ -411,6 +427,7 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 			// mogelijkheid 3
 			if (startDatumString.trim().isEmpty() && !eindDatumString.trim().isEmpty()){
 				msg = InputValidatie.correcteDatum(eindDatumString);
+				
 				if (msg != null){
 					inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.EindDatum).concat(msg);
 				} else {
@@ -423,7 +440,6 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 				}
 			}
 			// mogelijkheid 4 ==> zie if ( id < 0)
-
 		}
 		
 		return inputValidatieErrorMsg;

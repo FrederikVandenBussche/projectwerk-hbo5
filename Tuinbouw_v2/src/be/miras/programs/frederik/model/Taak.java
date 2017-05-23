@@ -9,6 +9,7 @@ import java.util.List;
  *
  */
 public class Taak implements Ivergelijk {
+	
 	private int id;
 	private int opdrachtId;
 	private String taakNaam;
@@ -18,6 +19,10 @@ public class Taak implements Ivergelijk {
 	private String status;
 	private List<Planning> planningLijst;
 	private List<Planning> gewerkteUrenLijst;
+	
+	
+	public Taak(){
+	}
 
 	/**
 	 * @return the id int

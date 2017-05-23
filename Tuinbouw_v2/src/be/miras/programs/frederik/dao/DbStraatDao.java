@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbStraat;
  *
  */
 public class DbStraatDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbStraatDao.class);
 	private final String TAG = "DbStraatDao: ";
+	
+	
+	public DbStraatDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbStraat straat = (DbStraat)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbStraatDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbStraatDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbStraat where id = :id";
 		List<DbStraat> lijst = new ArrayList<DbStraat>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbStraatDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			straat = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbStraatDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbStraat straat = (DbStraat)o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbStraatDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbStraat where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -168,14 +178,12 @@ public class DbStraatDao implements ICRUD {
 	 * return id van DbStraat met een bepaalde naam
 	 */
 	public int geefIdVan(String straat) {
-		
 		int id = Integer.MIN_VALUE;
 		List<DbStraat> lijst = new ArrayList<DbStraat>();
-		
 		String query = "FROM DbStraat where naam = :naam"; 
-		
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -195,6 +203,7 @@ public class DbStraatDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()){
 			DbStraat dbStraat = lijst.get(0);
 			id = dbStraat.getId();

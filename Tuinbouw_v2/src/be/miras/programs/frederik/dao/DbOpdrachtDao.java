@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbOpdracht;
  *
  */
 public class DbOpdrachtDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbOpdrachtDao.class);
 	private final String TAG = "DbOpdrachtDao: ";
+	
+	
+	public DbOpdrachtDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbOpdracht opdracht = (DbOpdracht)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbOpdracht where id = :id";
 		List<DbOpdracht> lijst = new ArrayList<DbOpdracht>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			opdracht = lijst.get(0);
 		}
@@ -105,8 +114,8 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
@@ -114,6 +123,7 @@ public class DbOpdrachtDao implements ICRUD {
 	public void wijzig(Object o) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbOpdracht opdracht = (DbOpdracht)o;
 			session.beginTransaction();
@@ -139,6 +149,7 @@ public class DbOpdrachtDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdracht where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -169,7 +180,6 @@ public class DbOpdrachtDao implements ICRUD {
 	 * String[1] : opdrachtNaam
 	 */
 	public String[] selectKlantIdEnNaam(int id) {
-		
 		String[] returnData = new String[2];
 		List<Object[]> lijst = new ArrayList<Object[]>();
 		String query = "SELECT klantId, naam FROM DbOpdracht WHERE id = :id"; 
@@ -195,6 +205,7 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()){
 			Object[]  o = lijst.get(0);
 			returnData[0] = String.valueOf((int) o[0]);
@@ -235,10 +246,8 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 
 		return lijst;
-		
 	}
 
 	/**
@@ -273,9 +282,11 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()){
 			klantAdresId = lijst.get(0);
 		}
+		
 		return klantAdresId;
 	}
 
@@ -311,9 +322,11 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()){
 			klantId = lijst.get(0);
 		}
+		
 		return klantId;
 	}
 	
@@ -328,6 +341,7 @@ public class DbOpdrachtDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT COUNT(id) FROM DbOpdracht where klantAdresId = :klantAdresId";
 		List<Long> lijst = new ArrayList<Long>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -347,6 +361,7 @@ public class DbOpdrachtDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			Long aantal = lijst.get(0);
 			if (aantal > 0){
@@ -358,5 +373,4 @@ public class DbOpdrachtDao implements ICRUD {
 	}
 
 
-	
 }

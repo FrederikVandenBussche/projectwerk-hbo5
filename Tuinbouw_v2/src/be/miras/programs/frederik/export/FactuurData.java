@@ -13,7 +13,7 @@ import be.miras.programs.frederik.model.Verplaatsing;
  *         De benodigde factuurdata om een factuur in pdf vorm op te stellen
  *
  */
-public class Factuur {
+public class FactuurData {
 	private Date aanmaakDatum;
 	private Date vervalDatum;
 	private String klantNaam;
@@ -24,8 +24,7 @@ public class Factuur {
 	private String bedrijfsEmail;
 	private List<Verplaatsing> verplaatsingLijst;
 
-	public Factuur() {
-		super();
+	public FactuurData() {
 	}
 
 	/**

@@ -25,7 +25,9 @@ import be.miras.programs.frederik.util.SHA1;
  */
 @WebServlet("/InlogServlet")
 public class InlogServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -50,6 +52,7 @@ public class InlogServlet extends HttpServlet {
 		
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 		DbBevoegdheidDao dbBevoegdheidDao = new DbBevoegdheidDao();
+		
 		DbGebruiker dbGebruiker = dbGebruikerDao.getGebruiker(gebruikersnaam);
 		
 		boolean isIngelogd = false;
@@ -80,7 +83,6 @@ public class InlogServlet extends HttpServlet {
 						
 						errorMsg = InputValidatieStrings.InlogBevoegdheid;
 					}
-
 				} else {
 					
 					errorMsg = InputValidatieStrings.InlogWachtwoordNietCorrect;
@@ -99,7 +101,6 @@ public class InlogServlet extends HttpServlet {
 			RequestDispatcher view = request.getRequestDispatcher("/opdrachtenMenu");
 			view.forward(request, response);
 		} else {
-			
 			request.setAttribute("errorMsg", errorMsg);
 			
 			RequestDispatcher view = request.getRequestDispatcher("/main.jsp");

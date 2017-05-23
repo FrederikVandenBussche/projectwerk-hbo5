@@ -31,8 +31,10 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/PersoneelToonTakenlijstServlet")
 public class PersoneelToonTakenlijstServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -63,9 +65,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			DbTaakDao dbTaakDao = new DbTaakDao();
 			DbKlantDao dbKlantDao = new DbKlantDao();
-			
 			PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
-
 			List<PersoneelbeheerTakenlijstTaak> lijst = new ArrayList<PersoneelbeheerTakenlijstTaak>();
 
 			Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
@@ -82,10 +82,9 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 			List<Object> objectenLijst = new ArrayList<Object>();
 			objectenLijst = dbWerknemerOpdrachtTaakDao.leesOpdrachtIdTaakIdBeginuur(werknemerId);
 			Iterator<Object> iter = objectenLijst.iterator();
-
 			while (iter.hasNext()) {
-				
 				Object[] obj = (Object[]) iter.next();
+				
 				PersoneelbeheerTakenlijstTaak taak = new PersoneelbeheerTakenlijstTaak();
 
 				int dbWerknemerOpdrachtTaakId = (int) obj[0];
@@ -113,9 +112,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 			}
 			
 			session.setAttribute("persoonId", persoonId);
-
 			request.setAttribute("personeelsnaam", persoonNaam);
-
 			request.setAttribute("takenLijst", lijst);
 
 			view = request.getRequestDispatcher("/PersoneelTakenlijst.jsp");

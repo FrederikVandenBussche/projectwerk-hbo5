@@ -25,11 +25,13 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
  */
 @WebServlet("/PersoneelOpslaanServlet")
 public class PersoneelOpslaanServlet extends HttpServlet implements IinputValidatie{
+	
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String geboortedatumString;
 	private String aanwervingsdatumString;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -65,12 +67,15 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 		if (inputValidatieErrorMsg.isEmpty()) {
 			
 			Personeel personeel = new Personeel();
+			List<Personeel> personeelLijst = new ArrayList<Personeel>();
 			
 			double loon = Double.parseDouble(loonString);
 			Date geboortedatum = null;
 			Date aanwervingsdatum = null;
+			
 			if (this.geboortedatumString != null)
 				geboortedatum = Datum.creeerDatum(geboortedatumString);
+			
 			if (this.aanwervingsdatumString != null)
 				aanwervingsdatum = Datum.creeerDatum(aanwervingsdatumString);
 
@@ -89,14 +94,17 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			} else {
 				// indien er iets gewijzigd werd, de wijzigingen opslaan
 				PersoneelDaoAdapter personeelAdapter = new PersoneelDaoAdapter();
+				
 				Personeel p = (Personeel) personeelAdapter.lees(id);
 				
 				if (personeel.getGeboortedatum() == null)
 						personeel.setGeboortedatum(p.getGeboortedatum());
+				
 				if (personeel.getAanwervingsdatum() == null)
 						personeel.setAanwervingsdatum(p.getAanwervingsdatum());
 					
 				if (p.isVerschillend(personeel, p)) {
+					
 					personeel.setPersoonId(this.id);
 					personeel.setWerknemerId(p.getWerknemerId());
 					personeel.setGebruikerId(p.getGebruikerId());
@@ -106,7 +114,6 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 				}
 			}
 		
-			List<Personeel> personeelLijst = new ArrayList<Personeel>();
 			personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
 			
 			request.setAttribute("personeelLijst", personeelLijst);

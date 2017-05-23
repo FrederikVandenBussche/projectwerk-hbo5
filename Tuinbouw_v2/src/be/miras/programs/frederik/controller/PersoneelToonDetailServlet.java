@@ -20,8 +20,10 @@ import be.miras.programs.frederik.model.Personeel;
  */
 @WebServlet("/PersoneelToonDetailServlet")
 public class PersoneelToonDetailServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -70,10 +72,8 @@ public class PersoneelToonDetailServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 
 		session.setAttribute("id", id);
-		
 		session.setAttribute("aanspreeknaam", aanspreeknaam);
 		session.setAttribute("buttonNaam", buttonNaam);
-
 		request.setAttribute("personeelslid", personeelslid);
 
 		RequestDispatcher view = this.getServletContext().getRequestDispatcher("/PersoneelDetail.jsp");

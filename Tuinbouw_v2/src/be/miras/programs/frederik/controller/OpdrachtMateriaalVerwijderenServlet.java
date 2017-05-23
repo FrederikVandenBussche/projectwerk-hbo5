@@ -22,6 +22,7 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/OpdrachtMateriaalVerwijderenServlet")
 public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 	
@@ -46,10 +47,10 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 		int opdrachtId = (int) session.getAttribute("id");
 
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
+		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
 
 		dbOpdrachtMateriaalDao.verwijderWaarOpdrachtIdEnMateriaalId(opdrachtId, id);
 		
-		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
 		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
 		
 		request.setAttribute("opdrachtDetailData", opdrachtDetailData);

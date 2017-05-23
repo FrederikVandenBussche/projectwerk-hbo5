@@ -9,6 +9,10 @@ import java.util.Date;
  *
  */
 public class Datum {
+	
+	
+	public Datum(){
+	}
 
 	/**
 	 * @param maandString String
@@ -70,7 +74,6 @@ public class Datum {
 	 */
 	public static Date creeerDatum(String datumString) {
 		if (datumString != null && !datumString.isEmpty()) {
-			String eersteLetter = datumString.substring(0, 1);
 			int jaar = 0;
 			int maand = 0;
 			int dag = 0;
@@ -99,8 +102,7 @@ public class Datum {
 					jaar = Datatype.stringNaarInt(datumString.substring(0, 4));
 					jaar = jaar - 1900;
 				}
-					
-					
+						
 			} else if (datumString.length() == 29) {
 				jaar = Datatype.stringNaarInt(datumString.substring(24, 28)) - 1900; // YYYY
 				String maandString = datumString.substring(4, 7);
@@ -137,7 +139,7 @@ public class Datum {
 	 * @param datum Date
 	 * @return String
 	 * 
-	 * genereer een string met het tijdstip ( 00:00;00)
+	 * genereer een string met het tijdstip (00:00;00)
 	 */
 	public static String tijdstipToString(Date datum) {
 		int uur = datum.getHours();

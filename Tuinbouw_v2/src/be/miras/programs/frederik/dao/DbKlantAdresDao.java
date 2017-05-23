@@ -18,14 +18,20 @@ import be.miras.programs.frederik.dbo.DbKlantAdres;
  *
  */
 public class DbKlantAdresDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbKlantAdresDao.class);
 	private final String TAG = "DbKlantAdresDao: ";
+	
+	
+	public DbKlantAdresDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
+		
 		try{
 			DbKlantAdres klantAdres = (DbKlantAdres)o;
 			session.beginTransaction();
@@ -45,6 +51,7 @@ public class DbKlantAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -55,6 +62,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbKlantAdres where klantId = :id";
 		List<DbKlantAdres> lijst = new ArrayList<DbKlantAdres>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -74,6 +82,7 @@ public class DbKlantAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			klantAdres = lijst.get(0);
 		}
@@ -83,7 +92,6 @@ public class DbKlantAdresDao implements ICRUD {
 
 	@Override
 	public List<Object> leesAlle() {
-
 		return null;
 	}
 
@@ -91,6 +99,7 @@ public class DbKlantAdresDao implements ICRUD {
 	public void wijzig(Object o) {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbKlantAdres klantAdres = (DbKlantAdres)o;
 			session.beginTransaction();
@@ -116,6 +125,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlantAdres where klantId = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -182,6 +192,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbKlantAdres where klantId = :id and adresId = :adresId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -201,8 +212,7 @@ public class DbKlantAdresDao implements ICRUD {
 			LOGGER.error("Exception: " + TAG + "verwijder(klantId, adresId) " + klantId + " " + adresId + " ", e);
 		} finally {
 			session.close();
-		}
-		
+		}	
 	}
 
 	/**
@@ -217,6 +227,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT adresId FROM DbKlantAdres where id = :id";
 		List<Integer> lijst = new ArrayList<Integer>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -236,6 +247,7 @@ public class DbKlantAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			eersteAdresId = lijst.get(0);
 		}
@@ -256,6 +268,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT id FROM DbKlantAdres where klantId = :klantId AND adresId = :adresId";
 		List<Integer> lijst = new ArrayList<Integer>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -276,9 +289,11 @@ public class DbKlantAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			id = lijst.get(0);
 		}
+		
 		return id;
 	}
 	
@@ -294,6 +309,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbKlantAdres where id = :id";
 		List<DbKlantAdres> lijst = new ArrayList<DbKlantAdres>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -313,6 +329,7 @@ public class DbKlantAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			klantAdres = lijst.get(0);
 		}
@@ -332,6 +349,7 @@ public class DbKlantAdresDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbKlantAdres where adresId = :adresId";
 		List<DbAdres> lijst = new ArrayList<DbAdres>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -351,6 +369,7 @@ public class DbKlantAdresDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (lijst.isEmpty()) {
 			isInGebruik = false;
 		}

@@ -28,9 +28,11 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/BedrijfsgegevensWijzigenServlet")
 public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements IinputValidatie {
+	
 	private static final long serialVersionUID = 1L;
 	private Werkgever werkgever;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -110,7 +112,6 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				werkgever.setVoornaam(voornaam);
 				werkgever.setGeboortedatum(datum);
 			}
-		
 			request.setAttribute("werkgever", werkgever);
 			
 		} else {

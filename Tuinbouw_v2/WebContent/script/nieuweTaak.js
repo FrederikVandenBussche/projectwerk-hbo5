@@ -10,11 +10,9 @@ function setup(){
 	if(!tekst.trim()){
 		
 		$("#werknemerOpdrachtTaak").hide();
-		
 	} else {
 	
 		$("#werknemerOpdrachtTaak").show();
-	
 	}
 }
 

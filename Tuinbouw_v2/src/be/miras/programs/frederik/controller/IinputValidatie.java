@@ -8,6 +8,8 @@ package be.miras.programs.frederik.controller;
  *
  */
 public interface IinputValidatie {
+	
+	
 	/**
 	 * @param teValideren
 	 *            String[] de te valideren String's
@@ -16,4 +18,6 @@ public interface IinputValidatie {
 	 * 
 	 */
 	String inputValidatie(String[] teValideren);
+	
+	
 }

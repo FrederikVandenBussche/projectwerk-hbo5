@@ -26,8 +26,10 @@ import be.miras.programs.frederik.util.Sorteer;
  */
 @WebServlet("/FacturatiebeheerServlet")
 public class FacturatiebeheerServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -44,7 +46,6 @@ public class FacturatiebeheerServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
-		
 		Boolean isIngelogd = (Boolean) session.getAttribute("isIngelogd");
 
 		RequestDispatcher view = null;
@@ -54,15 +55,12 @@ public class FacturatiebeheerServlet extends HttpServlet {
 
 		} else {
 
-			// DB initialiseren
 			DbKlantDao dbKlantDao = new DbKlantDao();
-			
 			List<DbKlant> klantlijst = new ArrayList<DbKlant>();
+			Map<Integer, String> klantMap = new HashMap<Integer, String>();
+			
 			klantlijst = (List<DbKlant>) (Object) dbKlantDao.leesAlle();
 			
-			// andere initialisaties
-			Map<Integer, String> klantMap = new HashMap<Integer, String>();
-
 			// er is een klantenlijst nodig
 			Iterator<DbKlant> klantIterator = klantlijst.iterator();
 			while (klantIterator.hasNext()) {

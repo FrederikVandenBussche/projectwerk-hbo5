@@ -9,6 +9,7 @@ import java.util.Date;
  *
  */
 public class Planning {
+	
 	private int id;
 	private String werknemer;
 	private int werknemerId;
@@ -17,6 +18,9 @@ public class Planning {
 	private int isAanwezig;
 	private double aantalUren;
 	private double aantalKm;
+	
+	public Planning(){
+	}
 
 	/**
 	 * @return the id int

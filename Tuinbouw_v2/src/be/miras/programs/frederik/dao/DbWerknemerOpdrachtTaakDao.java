@@ -10,8 +10,6 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
-import be.miras.programs.frederik.util.Datum;
-
 
 /**
  * @author Frederik Vanden Bussche
@@ -20,14 +18,20 @@ import be.miras.programs.frederik.util.Datum;
  *
  */
 public class DbWerknemerOpdrachtTaakDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbWerknemerOpdrachtTaakDao.class);
 	private final String TAG = "DbWerknemerOpdrachtTaakDao: ";
+	
+	
+	public DbWerknemerOpdrachtTaakDao(){
+	}
 
 	@Override
 	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
+		
 		try{
 			DbWerknemerOpdrachtTaak dwot = (DbWerknemerOpdrachtTaak)o;
 			session.beginTransaction();
@@ -47,6 +51,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -57,6 +62,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbWerknemerOpdrachtTaak where id = :id";
 		List<DbWerknemerOpdrachtTaak> lijst = new ArrayList<DbWerknemerOpdrachtTaak>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -76,6 +82,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			dwot = lijst.get(0);
 		}
@@ -89,7 +96,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		String query = "FROM DbWerknemerOpdrachtTaak"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -108,16 +115,16 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbWerknemerOpdrachtTaak dwot = (DbWerknemerOpdrachtTaak)o;
 			session.beginTransaction();
@@ -143,6 +150,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -175,7 +183,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		String query = "FROM DbWerknemerOpdrachtTaak where opdrachtTaakTaakId = :taakId"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -208,6 +216,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where opdrachtTaakOpdrachtId = :opdrachtId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -238,6 +247,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerknemerOpdrachtTaak where opdrachtTaakTaakId = :taakId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -257,7 +267,6 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 	}
 
 	/**
@@ -272,7 +281,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 				+ "FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -306,14 +315,12 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 	public List<DbWerknemerOpdrachtTaak> lees(Date datum) {
 		 int dag = datum.getDate();
 		 int maand = datum.getMonth() + 1;
-		 int jaar = datum.getYear() + 1900;
-		 	
+		 int jaar = datum.getYear() + 1900;	
 		 List<DbWerknemerOpdrachtTaak> lijst = new ArrayList<DbWerknemerOpdrachtTaak>();
 		 String query = "FROM DbWerknemerOpdrachtTaak "
 		 		+ "WHERE YEAR(beginuur) = :jaar "
 		 		+ "AND MONTH(beginuur) = :maand "
 		 		+ "AND DAY(beginuur) = :dag"; 
-		
 		 Session session = HibernateUtil.openSession();
 		 Transaction transaction = null;
 		 
@@ -354,6 +361,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT COUNT(id) FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId";
 		List<Long> lijst = new ArrayList<Long>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -373,6 +381,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			Long aantal = lijst.get(0);
 			if (aantal > 0){

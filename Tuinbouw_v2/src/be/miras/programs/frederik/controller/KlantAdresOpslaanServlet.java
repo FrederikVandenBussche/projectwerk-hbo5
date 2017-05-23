@@ -42,8 +42,10 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/KlantAdresOpslaanServlet")
 public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValidatie{
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -65,7 +67,6 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 		String variabelVeldnaam2 = request.getParameter("variabelVeldnaam2");
 		String variabelVeld2 = request.getParameter("variabelVeld2");
 		int id = Datatype.stringNaarInt(request.getParameter("klant_id"));
-		
 		String straat = request.getParameter("straat").trim();
 		String nummerString = request.getParameter("nr").trim();
 		String bus = request.getParameter("bus").trim();
@@ -93,6 +94,7 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			Adres adres = new Adres();
 
 			int gemeenteId = dbGemeenteDao.geefIdVan(postcode, plaats);
+			
 			if (gemeenteId < 0) {
 				DbGemeente gemeente = new DbGemeente();
 				gemeente.setNaam(plaats);
@@ -102,6 +104,7 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			}
 			
 			int straatId = dbStraatDao.geefIdVan(straat);
+			
 			if (straatId < 0) {
 				DbStraat dbStraat = new DbStraat();
 				dbStraat.setNaam(straat);
@@ -132,35 +135,32 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 
 			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 			adres.setGooglemap(googlemap);
-			
-
 		}else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
+		
 		// de klantDetails terug ophalen
 		DbKlant klant = null;
-
 		ArrayList<DbOpdracht> opdrachtLijst = null;
 		HashMap<Integer, String> opdrachtMap = null;
 
 		if (type.equals("particulier")) {
+			
 			klant = new DbParticulier();
 			variabelVeldnaam1 = "Voornaam";
 			variabelVeldnaam2 = "Naam";
-
 		} else if (type.equals("bedrijf")) {
+			
 			klant = new DbBedrijf();
 			variabelVeldnaam1 = "Naam";
 			variabelVeldnaam2 = "Btw nummer";
-
 		} else {
 			// Er is geen type klant gedefinieerd
 		}
 		
 		// het gaat niet om een nieuwe klant.
 		DbKlantDao dbKlantDao = new DbKlantDao();
-		
 		
 		// de klant met de corresponderende id opzoeken.
 		if (type.equals("particulier")) {
@@ -169,9 +169,7 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			
 			variabelVeld1 = ((DbParticulier) klant).getVoornaam();
 			variabelVeld2 = ((DbParticulier) klant).getNaam();
-			aanspreeknaam = variabelVeld1.concat(" ").concat(variabelVeld2);
-			
-			
+			aanspreeknaam = variabelVeld1.concat(" ").concat(variabelVeld2);	
 		} else if (type.equals("bedrijf")) {
 			
 			klant = dbKlantDao.leesBedrijf(id);
@@ -179,7 +177,6 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			variabelVeld1 = ((DbBedrijf) klant).getBedrijfnaam();
 			variabelVeld2 = ((DbBedrijf) klant).getBtwNummer();
 			aanspreeknaam = variabelVeld1;
-			
 		}
 
 		/*
@@ -197,7 +194,6 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 
 			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
 			adres.setGooglemap(googlemap);
-
 		}
 
 		klant.setAdreslijst(adreslijst);

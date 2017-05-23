@@ -30,7 +30,9 @@ import be.miras.programs.frederik.model.Opdracht;
  */
 @WebServlet("/OpdrachtbeheerServlet")
 public class OpdrachtLeeslijstServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
 	
     /**
      * @see HttpServlet#HttpServlet()
@@ -56,17 +58,14 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 		} else {
 			
 			List<Opdracht> opdrachtLijst = new ArrayList<Opdracht>();
-				
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			DbKlantDao dbKlantDao = new DbKlantDao();
 			
 			List<DbOpdracht> dbOpdrachtLijst = (List<DbOpdracht>) (Object) dbOpdrachtDao.leesAlle();
 			
-			Iterator<DbOpdracht> it = dbOpdrachtLijst.iterator();
-			DbOpdracht dbOpdracht = null;
-					
+			Iterator<DbOpdracht> it = dbOpdrachtLijst.iterator();	
 			while(it.hasNext()){
-				dbOpdracht = it.next();
+				DbOpdracht dbOpdracht = it.next();
 				
 				Opdracht opdracht = new Opdracht();
 				
@@ -110,12 +109,6 @@ public class OpdrachtLeeslijstServlet extends HttpServlet {
 		
 		}
 		view.forward(request, response);
-	}
-
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");
-		
-		doGet(request, response);
 	}
 	
 	

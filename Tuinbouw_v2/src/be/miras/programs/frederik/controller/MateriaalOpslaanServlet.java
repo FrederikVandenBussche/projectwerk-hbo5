@@ -24,7 +24,9 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/MateriaalOpslaanServlet")
 public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValidatie{
+	
 	private static final long serialVersionUID = 1L;
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -54,16 +56,18 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		Materiaal materiaal = null;
 				
 		if (inputValidatieErrorMsg.isEmpty()) {
-			// de Materialenlijst ophalen
+			materiaal = new Materiaal();
 			
 			double eenheidsprijs = 0;
 			
 			if (eenheidsprijsString != "") {
+			
 				eenheidsprijs = Datatype.stringNaarDouble(eenheidsprijsString);
 			} else {
+				
 				eenheidsprijs = 0;
 			}
-			materiaal = new Materiaal();
+			
 			materiaal.setNaam(naam);
 			materiaal.setSoort(soort);
 			materiaal.setEenheidsmaat(eenheidsmaat);
@@ -78,13 +82,12 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 				materiaal.setId(id);
 				dao.wijzig(materiaal);
 			}
-			
 		} else {
+			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);	
 			
 			// het materiaal ophalen zoals het was
 			materiaal = new Materiaal();
-			
 			materiaal = (Materiaal) dao.lees(id);
 		}
 		
@@ -93,7 +96,6 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		lijst = (List<Materiaal>) (Object) dao.leesAlle();
 		
 		request.setAttribute("materiaalLijst", lijst);
-
 		request.setAttribute("materiaal", materiaal);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
@@ -145,6 +147,7 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 			msg = InputValidatieStrings.EenheidsprijsNietCorrect;
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(msg);
 		}
+		
 		return inputValidatieErrorMsg;
 	}
 

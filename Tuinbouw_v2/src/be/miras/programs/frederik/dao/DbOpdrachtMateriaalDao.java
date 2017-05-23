@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbOpdrachtMateriaal;
  *
  */
 public class DbOpdrachtMateriaalDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbOpdrachtMateriaalDao.class);
 	private final String TAG = "DbOpdrachtMateriaalDao: ";
+	
+	
+	public DbOpdrachtMateriaalDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbOpdrachtMateriaal opdrachtMateriaal = (DbOpdrachtMateriaal)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbOpdrachtMateriaal where id = :id";
 		List<DbOpdrachtMateriaal> lijst = new ArrayList<DbOpdrachtMateriaal>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			opdrachtMateriaal = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbOpdrachtMateriaal opdrachtMateriaal = (DbOpdrachtMateriaal)o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtMateriaal where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -172,6 +182,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbOpdrachtMateriaal where opdrachtId = :opdrachtId";
 		List<DbOpdrachtMateriaal> lijst = new ArrayList<DbOpdrachtMateriaal>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -204,6 +215,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbOpdrachtMateriaal where opdrachtId = :opdrachtId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -237,6 +249,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT COUNT(id) FROM DbOpdrachtMateriaal where materiaalId = :materiaalId";
 		List<Long> lijst = new ArrayList<Long>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -256,6 +269,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			Long aantal = lijst.get(0);
 			if (aantal > 0){
@@ -278,6 +292,7 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 		String query = "DELETE FROM DbOpdrachtMateriaal "
 						+ "where opdrachtId = :opdrachtId "
 						+ "AND materiaalId = :materiaalId";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -300,5 +315,6 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 			session.close();
 		}
 	}
+	
 	
 }

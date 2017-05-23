@@ -1,13 +1,11 @@
 package be.miras.programs.frederik.dao.adapter;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import be.miras.programs.frederik.dao.DbKlantAdresDao;
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dao.DbOpdrachtDao;
 import be.miras.programs.frederik.dbo.DbBedrijf;
@@ -22,7 +20,17 @@ import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.GoogleApis;
 import be.miras.programs.frederik.util.Sorteer;
 
+/**
+ * @author Frederik Vanden Bussche
+ * 
+ * adapter die het object OpdrachtDetail koppeld aan de databankobjecten
+ *
+ */
 public class OpdrachtDetailDaoAdapter {	
+	
+	
+	public OpdrachtDetailDaoAdapter(){
+	}
 	
 	/**
 	 * @param id int
@@ -33,8 +41,7 @@ public class OpdrachtDetailDaoAdapter {
 	public OpdrachtDetailData haalOpdrachtdetailDataOp(int id) {
 		// maak een lijst met alle klanten met hun aanspreeknaam
 		// op het scherm OpdrachtDedail.jsp wodt een keuzemenu samengesteld
-		// waardoor
-		// men een reeds bestaande klant kan kiezen
+		// waardoor men een reeds bestaande klant kan kiezen
 		DbKlant dbKlant = null;
 		
 		Map<Integer, String> klantNaamMap = new HashMap<Integer, String>();
@@ -84,7 +91,6 @@ public class OpdrachtDetailDaoAdapter {
 			opdracht.setOpdrachtNaam(dbOpdracht.getNaam());
 			opdracht.setStartDatum(dbOpdracht.getStartdatum());
 			opdracht.setEindDatum(dbOpdracht.getEinddatum());
-
 			
 			// aanspreeknaam definiëren
 			dbKlant = (DbKlant) dbKlantDao.lees(dbOpdracht.getKlantId());
@@ -135,17 +141,12 @@ public class OpdrachtDetailDaoAdapter {
 			opdracht.setGebruiktMateriaalLijst(gebruikteMaterialenLijst);
 		}
 		
-
 		OpdrachtDetailData opdrachtDetailData = new OpdrachtDetailData(aanspreeknaam, variabelveld1, variabelveld2,
 			buttonNaam, opdracht, klantNaamMap, adresString, adresMap, materiaalLijst, staticmap, googlemap);
 	
 	return opdrachtDetailData;
 	}
 	
-	/**
-	 * sorteer de KlantNaamMap alfabetisch op naam.
-	 */
-
 	/**
 	 * @param opdracht Opdracht
 	 * @return Opdracht
@@ -163,4 +164,5 @@ public class OpdrachtDetailDaoAdapter {
 		return opdracht;
 	}
 
+	
 }

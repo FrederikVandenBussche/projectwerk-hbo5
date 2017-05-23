@@ -26,7 +26,7 @@ import be.miras.programs.frederik.dao.DbStatusDao;
 import be.miras.programs.frederik.dao.DbVooruitgangDao;
 import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dbo.DbVooruitgang;
-import be.miras.programs.frederik.export.Factuur;
+import be.miras.programs.frederik.export.FactuurData;
 import be.miras.programs.frederik.export.GenereerPdf;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Opdracht;
@@ -39,9 +39,11 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/FacturatieDownloadServlet")
 public class FacturatieDownloadServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOGGER = Logger.getLogger(FacturatieDownloadServlet.class);
 	private final String TAG = "FacturatieDownloadServlet: ";
+	
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -59,11 +61,14 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		HttpSession session = request.getSession();
-		Factuur factuur = (Factuur) session.getAttribute("factuur");
+		FactuurData factuurData = (FactuurData) session.getAttribute("factuur");
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres"));
+		
 		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+		GenereerPdf genereerPdf = new GenereerPdf();
+		
 		Adres facturatieAdres = (Adres) adresDaoAdapter.lees(adresId);
-		factuur.setAdres(facturatieAdres);
+		factuurData.setAdres(facturatieAdres);
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
 
@@ -78,11 +83,10 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		int minuten = datum.getMinutes();
 		int seconden = datum.getSeconds();
 		String datumString = "_" + dag + "_" + maand + "_" + jaar + "_" + uur + "" + minuten + "" + seconden;
-		String fileNaam = factuur.getKlantNaam() + datumString + ".pdf";
+		String fileNaam = factuurData.getKlantNaam() + datumString + ".pdf";
 		String dest = PATH.concat(fileNaam);
 
-		GenereerPdf genereerPdf = new GenereerPdf();
-		genereerPdf.genereer(dest, factuur);
+		genereerPdf.genereer(dest, factuurData);
 
 		// open pdf in nieuw venster
 		File file = new File(dest);
@@ -91,11 +95,13 @@ public class FacturatieDownloadServlet extends HttpServlet {
 
 		BufferedInputStream bufferedInputStream = null;
 		BufferedOutputStream bufferedOutputStream = null;
+		
 		try {
 
 			InputStream inputStream = new FileInputStream(file);
 			bufferedInputStream = new BufferedInputStream(inputStream);
 			bufferedOutputStream = new BufferedOutputStream(servletOutputStream);
+			
 			byte[] buff = new byte[2048];
 			int bytesRead;
 			// read/write loop.
@@ -118,7 +124,7 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		
 		int gefactureerdId = dbStatusDao.lees("Gefactureerd");
-		List<Opdracht> opdrachtLijst = factuur.getOpdrachtLijst();
+		List<Opdracht> opdrachtLijst = factuurData.getOpdrachtLijst();
 		
 		Iterator<Opdracht> it = opdrachtLijst.iterator();
 		while (it.hasNext()){
@@ -126,15 +132,14 @@ public class FacturatieDownloadServlet extends HttpServlet {
 			
 			int opdrachtId = opdracht.getId();
 			
-			
-			
 			List<Integer> vooruitgangIds = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
 			
 			Iterator<Integer> vooruitgangIdsIt = vooruitgangIds.iterator();
 			while (vooruitgangIdsIt.hasNext()){
+				DbVooruitgang dbVooruitgang = new DbVooruitgang();
+				
 				int vooruitgangId = vooruitgangIdsIt.next();
 				
-				DbVooruitgang dbVooruitgang = new DbVooruitgang();
 				dbVooruitgang.setId(vooruitgangId);
 				dbVooruitgang.setPercentage(100);
 				dbVooruitgang.setStatusId(gefactureerdId);

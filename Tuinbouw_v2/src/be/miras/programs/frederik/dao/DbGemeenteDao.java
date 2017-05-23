@@ -18,14 +18,20 @@ import be.miras.programs.frederik.dbo.DbGemeente;
  *
  */
 public class DbGemeenteDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbGemeenteDao.class);
 	private final String TAG = "DbGemeenteDao: ";
+	
+	
+	public DbGemeenteDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
+		
 		try{
 			DbGemeente gemeente = (DbGemeente)o;
 			session.beginTransaction();
@@ -45,6 +51,7 @@ public class DbGemeenteDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -55,6 +62,7 @@ public class DbGemeenteDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbGemeente where id = :id";
 		List<DbGemeente> lijst = new ArrayList<DbGemeente>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -74,6 +82,7 @@ public class DbGemeenteDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			gemeente = lijst.get(0);
 		}
@@ -106,16 +115,16 @@ public class DbGemeenteDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbGemeente gemeente = (DbGemeente)o;
 			session.beginTransaction();
@@ -141,6 +150,7 @@ public class DbGemeenteDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbGemeente where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();

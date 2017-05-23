@@ -31,8 +31,8 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/TaakPlanningToevoegenServlet")
 public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputValidatie{
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = 1L;
 	private Date startVanOpdracht;
 	private Date eindeVanOpdracht;
 
@@ -89,7 +89,6 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			dbWerknemerOpdrachtTaak.setBeginuur(beginuur);
 			
 			dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
-			
 		} else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
@@ -141,8 +140,6 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			if(datum.before(nu)){
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumToekomst);
 			}
-			
-			
 			
 			if (datum.before(this.startVanOpdracht)){
 				inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.GeplandeDatumNaStartDatumOpdracht

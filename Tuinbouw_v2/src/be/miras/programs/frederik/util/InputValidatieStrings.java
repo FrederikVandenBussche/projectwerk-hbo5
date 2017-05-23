@@ -3,6 +3,7 @@ package be.miras.programs.frederik.util;
 /**
  * @author Frederik Vanden Bussche
  * 
+ * Util class met: 
  *         - String's die meegegeven worden in errormessages tijdens de
  *         inputvalidatie.
  *         - String's die meegegeven worden tijdens mislukte inlogpogingen
@@ -10,6 +11,7 @@ package be.miras.programs.frederik.util;
  */
 
 public class InputValidatieStrings {
+	
 	public static final String GeplandeDatum = " Geplande datum";
 	public static final String GeplandeDatumToekomst = " De geplande datum moet in de toekomst liggen.";
 	public static final String GeplandeDatumNaStartDatumOpdracht = " De geplande datum moet na de startdatum van de opdracht liggen: ";
@@ -61,4 +63,6 @@ public class InputValidatieStrings {
 	public static final String InlogGebruikersnaamNietGekend = " Deze gebruikersnaam is niet gekend. ";
 	public static final String InlogWachtwoordNietCorrect = " Het ingevoerde wachtwoord is onjuist. ";
 	public static final String InlogBevoegdheid = " Gebruiker is bekend, maar je hebt de rechten niet om hier in te loggen. ";
+
+
 }

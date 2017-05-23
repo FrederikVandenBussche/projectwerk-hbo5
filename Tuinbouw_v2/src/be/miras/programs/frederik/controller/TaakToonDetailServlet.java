@@ -25,6 +25,7 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/TaakToonDetailServlet")
 public class TaakToonDetailServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 
@@ -53,10 +54,10 @@ public class TaakToonDetailServlet extends HttpServlet {
 		} else {
 			int opdrachtId = (int) session.getAttribute("id");
 			
-			
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			DbKlantDao dbKlantDao = new DbKlantDao();
 			TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
+			Taak taak = null;
 			
 			String[] klantIdEnNaam = dbOpdrachtDao.selectKlantIdEnNaam(opdrachtId);
 			int klantId = Datatype.stringNaarInt(klantIdEnNaam[0]);
@@ -65,8 +66,6 @@ public class TaakToonDetailServlet extends HttpServlet {
 			DbKlant dbKlant = (DbKlant) dbKlantDao.lees(klantId);
 			String klantNaam = dbKlant.geefAanspreekNaam();
 
-			Taak taak = null;
-			
 			int taakId = Datatype.stringNaarInt(request.getParameter("taakId"));
 
 			// lijst van alle werknemers
@@ -74,6 +73,7 @@ public class TaakToonDetailServlet extends HttpServlet {
 
 			if (taakId < 0) {
 				// het gaat om de aanmaak van een nieuwe taak
+				
 				taak = new Taak();
 				taak.setId(Integer.MIN_VALUE);
 
@@ -88,14 +88,11 @@ public class TaakToonDetailServlet extends HttpServlet {
 			request.setAttribute("id", taakId);
 			request.setAttribute("werknemerMap", werknemerMap);
 
-			view = request.getRequestDispatcher("/Taakbeheer.jsp");
-			
+			view = request.getRequestDispatcher("/Taakbeheer.jsp");	
 		}
 		
 		view.forward(request, response);
 	}
-
-	
 
 	
 }

@@ -20,8 +20,10 @@ import be.miras.programs.frederik.model.Werkgever;
  */
 @WebServlet("/BedrijfsgegevensServlet")
 public class BedrijfsgegevensServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -53,8 +55,8 @@ public class BedrijfsgegevensServlet extends HttpServlet {
 		RequestDispatcher view = null;
 
 		if (isIngelogd == null || isIngelogd == false) {
+			
 			view = request.getRequestDispatcher("/logout");
-
 		} else {
 			
 			int gebruikerId = (int) session.getAttribute("gebruikerId");

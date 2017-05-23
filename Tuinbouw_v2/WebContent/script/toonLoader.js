@@ -6,6 +6,7 @@
  * verschijnt er een loader.
  * 
  */
+
 function setup(){
 	
 	$("#submit").on("click", function(){

@@ -23,6 +23,10 @@ public class Opdracht implements Ivergelijk {
 	private List<Taak> taakLijst;
 	private List<Materiaal> gebruiktMateriaalLijst;
 
+	
+	public Opdracht(){
+	}
+	
 	/**
 	 * @return the id int
 	 */

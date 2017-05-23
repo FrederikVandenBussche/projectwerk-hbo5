@@ -29,8 +29,10 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/OpdrachtMateriaalToevoegenServlet")
 public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements IinputValidatie {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -52,6 +54,8 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 		HttpSession session = request.getSession();
 		int opdrachtId = (int) session.getAttribute("id");
 		
+		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
+		
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{hoeveelheidString});
 		
@@ -67,9 +71,12 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 			List<Materiaal> materiaalLijst = (List<Materiaal>) (Object) materiaalDaoAdapter.leesAlle();
 
 			Iterator<Materiaal> it = materiaalLijst.iterator();
+			
 			while (it.hasNext()) {
 				Materiaal m = it.next();
+				
 				if (m.getId() == materiaalId) {
+					
 					materiaal = m;
 				}
 			}
@@ -85,7 +92,6 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
 		}
-		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
 		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
 		
 		request.setAttribute("opdrachtDetailData", opdrachtDetailData);

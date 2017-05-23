@@ -22,7 +22,9 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/MateriaalVerwijderenServlet")
 public class MateriaalVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -42,24 +44,24 @@ public class MateriaalVerwijderenServlet extends HttpServlet {
 		int id = Datatype.stringNaarInt(request.getParameter("id"));
 
 		DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
+		MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
+		Materiaal m = new Materiaal();
+		List<Materiaal> lijst = new ArrayList<Materiaal>();
+		
 		boolean isKomtVoor = dbOpdrachtMateriaalDao.isMateriaalKomtVoor(id);
 		
 		if (isKomtVoor){
+			
 			String errorMsg = "Kan dit materiaal niet verwijderen omdat deze nog gebruikt wordt in een opdracht.";
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 		} else {
-			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
+			
 			dao.verwijder(id);
 		}
 		
-		MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-		
-		Materiaal m = new Materiaal();
 		// voor nieuw materiaal : id = -1
 		m.setId(-1);
-
-		List<Materiaal> lijst = new ArrayList<Materiaal>();
-				
+	
 		lijst = (List<Materiaal>) (Object) dao.leesAlle();
 		
 		request.setAttribute("materiaalLijst", lijst);

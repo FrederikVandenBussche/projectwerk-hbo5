@@ -27,7 +27,9 @@ import be.miras.programs.frederik.util.InputValidatie;
  */
 @WebServlet("/BedrijfsgegevensAdresOpslaanServlet")
 public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements IinputValidatie {
+	
 	private static final long serialVersionUID = 1L;
+	
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -68,7 +70,6 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 
 			Adres adres = new Adres();
 			
-
 			adres.setStraat(straat);
 			adres.setNummer(nr);
 			adres.setBus(bus);
@@ -94,8 +95,8 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			request.setAttribute("werkgever", werkgever);
 			
 		} else {
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
 		
 		RequestDispatcher view = request.getRequestDispatcher("/bedrijfsgegevensMenu");

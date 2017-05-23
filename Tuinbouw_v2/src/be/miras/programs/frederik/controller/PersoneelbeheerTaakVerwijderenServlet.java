@@ -31,7 +31,9 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/PersoneelbeheerTaakVerwijderenServlet")
 public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
+	
 	
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -54,17 +56,13 @@ public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 		int persoonId = (int) session.getAttribute("persoonId");
 
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
-		
-		dbWerknemerOpdrachtTaakDao.verwijder(id);
-		
-		// de takenlijst terug ophalen
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		DbTaakDao dbTaakDao = new DbTaakDao();
 		DbKlantDao dbKlantDao = new DbKlantDao();
-		
 		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
-
 		List<PersoneelbeheerTakenlijstTaak> lijst = new ArrayList<PersoneelbeheerTakenlijstTaak>();
+		
+		dbWerknemerOpdrachtTaakDao.verwijder(id);
 
 		Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
 
@@ -77,14 +75,12 @@ public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 		List<Object> objectenLijst = new ArrayList<Object>();
 		objectenLijst = dbWerknemerOpdrachtTaakDao.leesOpdrachtIdTaakIdBeginuur(werknemerId);
 		Iterator<Object> iter = objectenLijst.iterator();
-
 		while (iter.hasNext()) {
-			
 			Object[] obj = (Object[]) iter.next();
+			
 			PersoneelbeheerTakenlijstTaak taak = new PersoneelbeheerTakenlijstTaak();
 
 			int dbWerknemerOpdrachtTaakId = (int) obj[0];
-
 			opdrachtId = (int) obj[1];
 			taakId = (int) obj[2];
 			startdatum = (Date) obj[3];
@@ -92,10 +88,8 @@ public class PersoneelbeheerTaakVerwijderenServlet extends HttpServlet {
 			String[] klantIdEnOpdrachtNaam = dbOpdrachtDao.selectKlantIdEnNaam(opdrachtId);
 			int klantId = Datatype.stringNaarInt(klantIdEnOpdrachtNaam[0]);
 			String opdrachtNaam = klantIdEnOpdrachtNaam[1];
-
 			String taakNaam = dbTaakDao.selectNaam(taakId);
 			DbKlant klant = (DbKlant) dbKlantDao.lees(klantId);
-
 			String klantNaam = klant.geefAanspreekNaam();
 
 			taak.setDbWerknemerOpdrachtTaakId(dbWerknemerOpdrachtTaakId);

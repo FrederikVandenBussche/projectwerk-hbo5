@@ -17,14 +17,19 @@ import be.miras.programs.frederik.dbo.DbVooruitgang;
  *
  */
 public class DbVooruitgangDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbVooruitgangDao.class);
 	private static String TAG = "DbVooruitgangDao: ";
+	
+	public DbVooruitgangDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbVooruitgang vooruitgang = (DbVooruitgang) o;
 			session.beginTransaction();
@@ -44,6 +49,7 @@ public class DbVooruitgangDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		return id;
 	}
 
@@ -54,6 +60,7 @@ public class DbVooruitgangDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbVooruitgang where id = :id";
 		List<DbVooruitgang> lijst = new ArrayList<DbVooruitgang>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +80,7 @@ public class DbVooruitgangDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			vooruitgang = lijst.get(0);
 		}
@@ -107,6 +115,7 @@ public class DbVooruitgangDao implements ICRUD {
 		}
 
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
@@ -115,6 +124,7 @@ public class DbVooruitgangDao implements ICRUD {
 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbVooruitgang vooruitgang = (DbVooruitgang) o;
 			session.beginTransaction();
@@ -140,6 +150,7 @@ public class DbVooruitgangDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbVooruitgang where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();

@@ -25,8 +25,10 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/PersoneelVerwijderServlet")
 public class PersoneelVerwijderServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -46,13 +48,11 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 		
 		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
 		PersoonAdresDaoAdapter persoonAdresDaoAdapter = new PersoonAdresDaoAdapter();
-
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
+		
 		int werknemerId = dbWerknemerDao.returnWerknemerId(id);
-		
 		boolean isKomtVoor = dbWerknemerOpdrachtTaakDao.isWerknemerKomtVoor(werknemerId);
-		
 		Personeel personeel = (Personeel) personeelDaoAdapter.lees(id);
 		
 		RequestDispatcher view = null;
@@ -61,17 +61,16 @@ public class PersoneelVerwijderServlet extends HttpServlet {
 			String errorMsg = "Kan dit personeelslid niet verwijderen omdat deze nog taken moet uitvoeren / uitgevoerd heeft.";
 			
 			request.setAttribute("personeelslid", personeel);
-			
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 			
 			view = request.getRequestDispatcher("/PersoneelDetail.jsp");
 		} else {
 			
-			persoonAdresDaoAdapter.verwijderVanPersoon(id);
+			List<Personeel> personeelLijst = new ArrayList<Personeel>();
 			
+			persoonAdresDaoAdapter.verwijderVanPersoon(id);
 			personeelDaoAdapter.verwijder(id);
 			
-			List<Personeel> personeelLijst = new ArrayList<Personeel>();
 			personeelLijst = (List<Personeel>) (Object) personeelDaoAdapter.leesAlle();
 			
 			request.setAttribute("personeelLijst", personeelLijst);

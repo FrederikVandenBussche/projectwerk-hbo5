@@ -11,6 +11,7 @@ import java.util.Date;
  */
 
 public class Personeel implements Ivergelijk {
+	
 	private int persoonId;
 	private int werknemerId;
 	private int gebruikerId;
@@ -21,6 +22,10 @@ public class Personeel implements Ivergelijk {
 	private double loon;
 	private String email;
 	private ArrayList<Adres> adreslijst;
+	
+	
+	public Personeel(){
+	}
 
 	/**
 	 * @return the persoonId int

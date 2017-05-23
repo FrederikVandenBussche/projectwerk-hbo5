@@ -24,6 +24,10 @@ import be.miras.programs.frederik.util.GoogleApis;
  *
  */
 public class WerkgeverDaoAdapter implements ICRUD {
+	
+	
+	public WerkgeverDaoAdapter(){
+	}
 
 	@Override
 	public int voegToe(Object o) {
@@ -51,12 +55,10 @@ public class WerkgeverDaoAdapter implements ICRUD {
 		adresLijst = adresDaoAdapter.leesSelectief("persoon", dbPersoon.getId());
 		
 		werkgever.setId(dbWerkgever.getId());
-		
 		werkgever.setPersoonId(dbPersoon.getId());
 		werkgever.setNaam(dbPersoon.getNaam());
 		werkgever.setVoornaam(dbPersoon.getVoornaam());
 		werkgever.setGeboortedatum(dbPersoon.getGeboortedatum());
-		
 		werkgever.setGebruikerId(dbGebruiker.getId());
 		werkgever.setEmail(dbGebruiker.getEmail());
 		werkgever.setWachtwoord(dbGebruiker.getWachtwoord());
@@ -91,5 +93,6 @@ public class WerkgeverDaoAdapter implements ICRUD {
 	@Override
 	public void verwijder(int id) {
 	}
-
+	
+	
 }

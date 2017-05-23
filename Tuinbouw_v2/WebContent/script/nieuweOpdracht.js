@@ -15,8 +15,6 @@ function setup(){
 		$("#taakMateriaalVerwijderen").hide();
 		$("#adresGegevens").hide();
 		$("#adresWijzigen").hide();
-		
-		
 	} else {
 	
 		$("#taakMateriaalVerwijderen").show();
@@ -25,6 +23,7 @@ function setup(){
 	}
 	
 	$("#klantenSelector").on("click", function(){
+		
 		$("#adresWijzigen").hide();
 	});
 }

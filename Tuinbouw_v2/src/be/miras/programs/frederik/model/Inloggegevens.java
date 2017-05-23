@@ -7,9 +7,13 @@ package be.miras.programs.frederik.model;
  *
  */
 public class Inloggegevens implements Ivergelijk {
+	
 	private int id;
 	private String gebruikersnaam;
 	private String paswoord;
+	
+	public Inloggegevens(){
+	}
 
 	/**
 	 * @return the id int

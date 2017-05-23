@@ -9,13 +9,15 @@
 function legeTabelVerbergen(){
    
     $("table").each(function(){
-        var aantalRijen = this.rows.length;
-       if(aantalRijen <= 1){
-           $(this).hide();
-       }
+        
+    	var aantalRijen = this.rows.length;
        
-    })
-    
+    	if(aantalRijen <= 1){
+          
+    		$(this).hide();
+       }  
+    });
+
 }
 
 $(legeTabelVerbergen);

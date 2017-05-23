@@ -8,7 +8,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import be.miras.programs.frederik.dbo.DbPersoon;
 import be.miras.programs.frederik.dbo.DbTypeMateriaal;
 
 
@@ -19,13 +18,18 @@ import be.miras.programs.frederik.dbo.DbTypeMateriaal;
  *
  */
 public class DbTypeMateriaalDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbTypeMateriaalDao.class);
+	
+	public DbTypeMateriaalDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		Session session = HibernateUtil.openSession();
 		int id = Integer.MIN_VALUE;
 		Transaction transaction = null;
+		
 		try{
 			DbTypeMateriaal typeMateriaal = (DbTypeMateriaal)o;
 			session.beginTransaction();
@@ -45,6 +49,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -55,6 +60,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbTypeMateriaal where id = :id";
 		List<DbTypeMateriaal> lijst = new ArrayList<DbTypeMateriaal>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -74,6 +80,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			typeMateriaal = lijst.get(0);
 		}
@@ -106,16 +113,16 @@ public class DbTypeMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbTypeMateriaal typeMateriaal = (DbTypeMateriaal)o;
 			session.beginTransaction();
@@ -141,6 +148,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbTypeMateriaal where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -174,6 +182,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "SELECT id FROM DbTypeMateriaal where naam = :naam";
 		List<Integer> lijst = new ArrayList<Integer>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -193,6 +202,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			id = lijst.get(0);
 		}

@@ -11,6 +11,7 @@ import java.util.Date;
  *         Een duidelijk overzicht van wie waar met wat bezit is
  */
 public class WieIsWaar {
+	
 	private Date startuur;
 	private Date einduur;
 	private String werknemer;
@@ -20,6 +21,10 @@ public class WieIsWaar {
 	private String opdracht;
 	private String taak;
 	private String status;
+	
+	
+	public WieIsWaar(){
+	}
 
 	/**
 	 * @return the startuur Date
@@ -65,8 +70,6 @@ public class WieIsWaar {
 	public void setWerknemer(String werknemer) {
 		this.werknemer = werknemer;
 	}
-
-	
 
 	/**
 	 * @return the klantNaam String

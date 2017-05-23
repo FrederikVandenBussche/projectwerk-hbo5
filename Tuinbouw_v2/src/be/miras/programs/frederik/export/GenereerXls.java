@@ -26,12 +26,19 @@ import be.miras.programs.frederik.util.GoogleApis;
  * Genereer een Xls file
  */
 public class GenereerXls {
+	
 	private static final Logger LOGGER = Logger.getLogger(GenereerXls.class);
 	private static final String TAG = "GenereerXls: ";
+	
+	public GenereerXls(){
+	}
 
 	/**
 	 * @param dest String : path + filename van de excel file
 	 * @param excelData ExcelData : de data die in de excel file geplaatst wordt
+	 * 
+	 * maak dirs indien nodig
+	 * creëer xls
 	 * 
 	 */
 	public void genereer(String dest, ExcelData excelData) {
@@ -44,6 +51,8 @@ public class GenereerXls {
 	/**
 	 * @param dest String : path + filename van de excel file
 	 * @param excelData ExcelData : de data die in de excel file geplaatst wordt
+	 * 
+	 * 	creëer xls file
 	 */
 	private void createXls(String dest, ExcelData excelData) {
 		HSSFWorkbook workbook = new HSSFWorkbook();
@@ -63,6 +72,7 @@ public class GenereerXls {
 
 		int rijenteller = 2;
 
+		//voor elke opdracht
 		Iterator<Opdracht> opdrachtIt = excelData.getOpdrachtLijst().iterator();
 		while (opdrachtIt.hasNext()) {
 			Opdracht opdracht = opdrachtIt.next();
@@ -109,6 +119,7 @@ public class GenereerXls {
 
 			rijenteller += 2;
 
+			//voor elke taak uit elke opdracht
 			Iterator<Taak> taakIt = opdracht.getTaakLijst().iterator();
 			while (taakIt.hasNext()) {
 				Taak taak = taakIt.next();
@@ -161,9 +172,9 @@ public class GenereerXls {
 				
 				double totaalAantalUren = 0;
 
+				// voor elke planning uit elke taak van elke opdracht
 				Iterator<Planning> planningIt = taak.getPlanningLijst().iterator();
 				while (planningIt.hasNext()) {
-					
 					
 					Planning planning = planningIt.next();
 
@@ -213,15 +224,10 @@ public class GenereerXls {
 			fileOut = new FileOutputStream(dest);
 			workbook.write(fileOut);
 			fileOut.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			LOGGER.error("IOException: " + TAG + " workbook.write(fileOut); fileOut.close(); ", e);
-		}
-		try {
 			workbook.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-			LOGGER.error("IOException: " + TAG + "workbook.close(); ", e);
+			LOGGER.error("IOException: " + TAG + " workbook.write(fileOut); fileOut.close(); ", e);
 		}
 	}
 

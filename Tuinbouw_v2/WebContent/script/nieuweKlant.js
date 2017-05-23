@@ -10,15 +10,12 @@ function setup(){
 	
 	if(tekst.length <= 20){
 		
-		
 		$("#adressen").hide();
 		$("#exportatie").hide();
-		
 	} else {
 	
 		$("#adressen").show();
 		$("#exportatie").show();
-		
 	}
 }
 

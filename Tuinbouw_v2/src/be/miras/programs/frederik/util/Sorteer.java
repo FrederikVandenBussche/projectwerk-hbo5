@@ -10,10 +10,11 @@ import java.util.Map;
 /**
  * @author Frederik Vanden Bussche
  * 
- * class met sorteer methodes
+ * util class met sorteer methodes
  */
 public class Sorteer {
 
+	
 	public Sorteer() {
 	}
 	
@@ -21,7 +22,7 @@ public class Sorteer {
 	 * @param ongesorteerd Map<Integer, String
 	 * @return Map<INteger, String>
 	 * 
-	 * sorteerd de geparameteriseerde map alfabetisch op value
+	 * sorteert de geparameteriseerde map alfabetisch op value
 	 */
 	public static Map<Integer, String> SorteerMap( Map<Integer, String> ongesorteerd){
 		List<Integer> mapKeys = new ArrayList<>(ongesorteerd.keySet());
@@ -52,4 +53,5 @@ public class Sorteer {
 		return gesorteerd;
 	}
 
+	
 }

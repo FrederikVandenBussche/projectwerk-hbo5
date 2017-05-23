@@ -27,8 +27,10 @@ import be.miras.programs.frederik.util.InputValidatieStrings;
  */
 @WebServlet("/TaakOpslaanServlet")
 public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -49,10 +51,9 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 		String opmerking = request.getParameter("opmerking").trim();
 		
 		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
-
-		String inputValidatieErrorMsg = inputValidatie(new String[] { taaknaam });
-
 		Taak taak = null;
+		
+		String inputValidatieErrorMsg = inputValidatie(new String[] { taaknaam });
 		
 		HttpSession session = request.getSession();
 		int opdrachtId = (int) session.getAttribute("id");
@@ -71,10 +72,13 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 				taak.setId(taakId);
 				
 			} else {
+				
 				// het betreft een bestaande taak
 				// indien er iets gewijzigd werd, de wijzigingen aanpassen
 				taak = taakDaoAdapter.haalTaak(taakId);
+				
 				if (!taak.getTaakNaam().equals(taaknaam) || !taak.getOpmerking().equals(opmerking)) {
+					
 					taak.setTaakNaam(taaknaam);
 					taak.setOpmerking(opmerking);
 					taak.setOpdrachtId(opdrachtId);
@@ -87,6 +91,7 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 			}
 	
 		} else {
+			
 			taak = taakDaoAdapter.haalTaak(taakId);
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
@@ -129,6 +134,7 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 
 	@Override
 	public String inputValidatie(String[] teValideren) {
+		
 		String taaknaam = teValideren[0];
 
 		String inputValidatieErrorMsg = "";

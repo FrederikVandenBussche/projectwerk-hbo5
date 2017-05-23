@@ -18,14 +18,20 @@ import be.miras.programs.frederik.dbo.DbWerkgever;
  *
  */
 public class DbWerkgeverDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbWerkgeverDao.class);
 	private final String TAG = "DbWerkgeverDao: ";
+	
+	
+	public DbWerkgeverDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbWerkgever werkgever = (DbWerkgever) o;
 			session.beginTransaction();
@@ -45,6 +51,7 @@ public class DbWerkgeverDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		return id;
 	}
 
@@ -55,6 +62,7 @@ public class DbWerkgeverDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbWerkgever where id = :id";
 		List<DbWerkgever> lijst = new ArrayList<DbWerkgever>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -75,6 +83,7 @@ public class DbWerkgeverDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			werkgever = lijst.get(0);
 		}
@@ -107,16 +116,16 @@ public class DbWerkgeverDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbWerkgever werkgever = (DbWerkgever) o;
 			session.beginTransaction();
@@ -142,6 +151,7 @@ public class DbWerkgeverDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbWerkgever where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -175,6 +185,7 @@ public class DbWerkgeverDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbWerkgever where persoonId = :persoonId";
 		List<DbWerkgever> lijst = new ArrayList<DbWerkgever>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -195,6 +206,7 @@ public class DbWerkgeverDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			werkgever = lijst.get(0);
 		}

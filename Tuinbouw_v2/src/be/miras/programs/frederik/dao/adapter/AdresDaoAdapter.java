@@ -24,15 +24,13 @@ import be.miras.programs.frederik.model.Adres;
  *
  */
 public class AdresDaoAdapter implements ICRUD {
+	
+	
 	private DbAdresDao dbAdresDao;
 	private DbGemeenteDao dbGemeenteDao;
 	private DbStraatDao dbStraatDao;
 	
 
-
-	/**
-	 * 
-	 */
 	public AdresDaoAdapter() {
 		super();
 		this.dbAdresDao = new DbAdresDao();
@@ -64,6 +62,7 @@ public class AdresDaoAdapter implements ICRUD {
 		// indien de opgegeven straatnaam nog niet in de databank zit
 		// voeg toe
 		int straatId = dbStraatDao.geefIdVan(adres.getStraat());
+		
 		if (straatId < 0) {
 			// straatnaam staat nog niet in databank
 			DbStraat dbStraat = new DbStraat();
@@ -149,7 +148,6 @@ public class AdresDaoAdapter implements ICRUD {
 	 */
 	public Adres leesWaarKlantAdresId(int klantAdresId) {
 		Adres adres = new Adres();
-		
 		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
 		
 		int id = dbKlantAdresDao.geefEersteAdresId(klantAdresId);
@@ -177,7 +175,6 @@ public class AdresDaoAdapter implements ICRUD {
 	 */
 	public List<Adres> leesWaarKlantId(int klantId){
 		List<Adres> adresLijst = new ArrayList<Adres>();
-		
 		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
 		
 		List<Integer> adresIds = dbKlantAdresDao.leesLijst(klantId);
@@ -211,10 +208,10 @@ public class AdresDaoAdapter implements ICRUD {
 	 */
 	public List<Adres> leesWaarPersoonId(int persoonId){
 		List<Adres> adresLijst = new ArrayList<Adres>();
-		
 		DbPersoonAdresDao dbPersoonAdresDao = new DbPersoonAdresDao();
 		
 		List<Integer> adresIds = dbPersoonAdresDao.leesLijst(persoonId);
+		
 		for(int id : adresIds){
 			Adres a = new Adres();
 			DbAdres dbAdres = (DbAdres) dbAdresDao.lees(id);
@@ -232,5 +229,6 @@ public class AdresDaoAdapter implements ICRUD {
 		
 		return adresLijst;
 	}
+	
 	
 }

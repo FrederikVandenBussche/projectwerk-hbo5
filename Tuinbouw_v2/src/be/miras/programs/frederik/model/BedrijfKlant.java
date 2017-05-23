@@ -10,6 +10,9 @@ public class BedrijfKlant extends Klant implements Ivergelijk {
 
 	private String naam;
 	private String contactpersoon;
+	
+	public BedrijfKlant(){
+	}
 
 	/**
 	 * @return the naam String

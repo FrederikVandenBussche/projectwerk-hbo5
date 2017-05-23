@@ -17,14 +17,20 @@ import be.miras.programs.frederik.dbo.DbStatus;
  *
  */
 public class DbStatusDao implements ICRUD {
+	
 	private static final Logger LOGGER = Logger.getLogger(DbStatusDao.class);
 	private final String TAG = "DbStatusDao: ";
+	
+	
+	public DbStatusDao(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try{
 			DbStatus status = (DbStatus)o;
 			session.beginTransaction();
@@ -44,6 +50,7 @@ public class DbStatusDao implements ICRUD {
 		} finally {
 			session.close();
 		}	
+		
 		return id;
 	}
 
@@ -54,6 +61,7 @@ public class DbStatusDao implements ICRUD {
 		Transaction transaction = null;
 		String query = "FROM DbStatus where id = :id";
 		List<DbStatus> lijst = new ArrayList<DbStatus>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -73,6 +81,7 @@ public class DbStatusDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			status = lijst.get(0);
 		}
@@ -105,16 +114,16 @@ public class DbStatusDao implements ICRUD {
 		} finally {
 			session.close();
 		}
-		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
+		
 		return objectLijst;
 	}
 
 	@Override
 	public void wijzig(Object o) {
-
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		
 		try {
 			DbStatus status = (DbStatus)o;
 			session.beginTransaction();
@@ -140,6 +149,7 @@ public class DbStatusDao implements ICRUD {
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "DELETE FROM DbStatus where id = :id";
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -168,11 +178,13 @@ public class DbStatusDao implements ICRUD {
 	 * return id van DbStatus met een bepaalde naam
 	 */
 	public int lees(String naam) {
+		int id = Integer.MIN_VALUE;
 		DbStatus status = new DbStatus();
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		String query = "FROM DbStatus where naam = :naam";
 		List<DbStatus> lijst = new ArrayList<DbStatus>();
+		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
@@ -192,10 +204,11 @@ public class DbStatusDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
 		if (!lijst.isEmpty()) {
 			status = lijst.get(0);
+			id = status.getId();
 		}
-		int id = status.getId();
 		
 		return id;
 	}

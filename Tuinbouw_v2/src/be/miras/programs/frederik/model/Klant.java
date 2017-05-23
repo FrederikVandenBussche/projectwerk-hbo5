@@ -19,6 +19,9 @@ public class Klant implements Ivergelijk {
 	private String btwNummer;
 	private boolean isBtwAanrekenen;
 	private ArrayList<Adres> adreslijst;
+	
+	public Klant(){
+	}
 
 	/**
 	 * @return the id int

@@ -10,6 +10,7 @@ import java.util.Date;
  *
  */
 public class Werkgever implements Ivergelijk {
+	
 	private int id;
 	private String naam;
 	private String voornaam;
@@ -21,6 +22,10 @@ public class Werkgever implements Ivergelijk {
 	private int persoonId;
 	private int gebruikerId;
 	private ArrayList<Adres> adreslijst;
+	
+	
+	public Werkgever(){
+	}
 
 	/**
 	 * @return the id int
@@ -203,17 +208,5 @@ public class Werkgever implements Ivergelijk {
 		return isVerschillend;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return "Werkgever [id=" + id + ", naam=" + naam + ", voornaam=" + voornaam + ", geboortedatum=" + geboortedatum
-				+ ", email=" + email + ", wachtwoord=" + wachtwoord + ", gebruikersnaam=" + gebruikersnaam
-				+ ", bevoegdheidID=" + bevoegdheidID + "]";
-	}
 
-	
 }

@@ -23,6 +23,7 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/TaakVerwijderenServlet")
 public class TaakVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 	
@@ -42,20 +43,18 @@ public class TaakVerwijderenServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		TaakDaoAdapter taakDaoAdapter = new TaakDaoAdapter();
+		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
 
 		int taakId = Datatype.stringNaarInt(request.getParameter("taakId"));
 
 		HttpSession session = request.getSession();
 		int opdrachtId = (int) session.getAttribute("id");
 		
-		// de taak uit de databank verwijderen
 		taakDaoAdapter.verwijder(taakId);
-		
-		OpdrachtDetailDaoAdapter opdrachtDetailDaoAdapter = new OpdrachtDetailDaoAdapter();
+
 		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
 		
 		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
-		
 		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);

@@ -2,10 +2,8 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +40,7 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/OpdrachtToonDetailServlet")
 public class OpdrachtToonDetailServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 	
@@ -64,6 +63,18 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 
 		HttpSession session = request.getSession();
 		
+		DbKlantDao dbKlantDao = new DbKlantDao();
+		Opdracht opdracht = new Opdracht();
+		Map<Integer, String> adresMap = new HashMap<Integer, String>();
+		// maak een lijst met alle klanten met hun aanspreeknaam
+		// op het scherm OpdrachtDedail.jsp wodt een keuzemenu samengesteld
+		// waardoor
+		// men een reeds bestaande klant kan kiezen
+		Map<Integer, String> klantNaamMap = new HashMap<Integer, String>();
+		MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
+		List<Materiaal> materiaalLijst = new ArrayList<Materiaal>();
+		List<Materiaal> gebruikteMaterialenLijst = new ArrayList<Materiaal>();
+		
 		// bovenaan de content wordt de aanspreektitel van de
 		// opdrachtgever weergegeven
 		String aanspreeknaam = null;
@@ -77,25 +88,8 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		String adresString;
 		String staticmap = null;
 		String googlemap = null;
-
-		Opdracht opdracht = new Opdracht();
-
-		Map<Integer, String> adresMap = new HashMap<Integer, String>();
-
-		// klantlijst ophalen
-		DbKlantDao dbKlantDao = new DbKlantDao();
 		DbKlant dbKlant = null;
 		adresString = null;
-
-		// maak een lijst met alle klanten met hun aanspreeknaam
-		// op het scherm OpdrachtDedail.jsp wodt een keuzemenu samengesteld
-		// waardoor
-		// men een reeds bestaande klant kan kiezen
-		Map<Integer, String> klantNaamMap = new HashMap<Integer, String>();
-
-		MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
-		List<Materiaal> materiaalLijst = new ArrayList<Materiaal>();
-		List<Materiaal> gebruikteMaterialenLijst = new ArrayList<Materiaal>();
 
 		ArrayList<DbKlant> klantLijst = (ArrayList<DbKlant>) (Object) dbKlantDao.leesAlle();
 		Iterator<DbKlant> it = klantLijst.iterator();
@@ -112,12 +106,13 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 		klantNaamMap = Sorteer.SorteerMap(klantNaamMap);
 		    
 		if (id < 0) {
+			
 			// het gaat om de aanmaak van een nieuwe opdracht
 			aanspreeknaam = " ";
 			buttonNaam = "Voeg toe";
 			opdracht.setId(Integer.MIN_VALUE);
-
 		} else {
+			
 			DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 
@@ -140,12 +135,15 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 			String naam = null;
 			
 			if(dbKlant.getClass().getSimpleName().equals("DbParticulier")) {
+				
 				String voornaam = ((DbParticulier) dbKlant).getVoornaam();
 				String familienaam = ((DbParticulier) dbKlant).getNaam();
 				naam = familienaam.concat(" ").concat(voornaam);
 			} else if(dbKlant.getClass().getSimpleName().equals("DbBedrijf")){
+				
 				naam = ((DbBedrijf) dbKlant).getBedrijfnaam();
 			} else {
+				
 				// DbKlant is geen DbParticulier en ook geen DbBedrijf
 			}
 			
@@ -162,6 +160,7 @@ public class OpdrachtToonDetailServlet extends HttpServlet {
 			Iterator<Adres> adresIter = adresLijst.iterator();
 			while (adresIter.hasNext()) {
 				Adres adres = adresIter.next();
+				
 				adresMap.put(adres.getId(), adres.toString());
 			}
 

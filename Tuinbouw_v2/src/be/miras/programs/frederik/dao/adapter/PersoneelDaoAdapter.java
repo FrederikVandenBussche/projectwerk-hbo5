@@ -5,15 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.apache.log4j.Logger;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
 import be.miras.programs.frederik.dao.DbGebruikerDao;
 import be.miras.programs.frederik.dao.DbPersoonDao;
 import be.miras.programs.frederik.dao.DbWerknemerDao;
-import be.miras.programs.frederik.dao.HibernateUtil;
 import be.miras.programs.frederik.dao.ICRUD;
 import be.miras.programs.frederik.dbo.DbGebruiker;
 import be.miras.programs.frederik.dbo.DbPersoon;
@@ -30,6 +24,10 @@ import be.miras.programs.frederik.util.GoogleApis;
  *
  */
 public class PersoneelDaoAdapter implements ICRUD{
+	
+	
+	public PersoneelDaoAdapter(){
+	}
 	
 	@Override
 	public int voegToe(Object o) {
@@ -56,7 +54,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 		dbgebruiker.setEmail(personeel.getEmail());
 		dbgebruiker.setBevoegdheidId(2);
 		dbgebruiker.setGebruikersnaam(gebruikersnaam);
-		
 		dbGebruikerDao.voegToe(dbgebruiker);
 
 		dbwerknemer.setLoon(personeel.getLoon());
@@ -71,19 +68,15 @@ public class PersoneelDaoAdapter implements ICRUD{
 	public Object lees(int id) {
 		
 		Personeel personeel = new Personeel();
-		
 		DbPersoon dbPersoon = new DbPersoon();
 		DbWerknemer dbWerknemer = new DbWerknemer();	
 		DbGebruiker dbGebruiker = new DbGebruiker();
-		
 		DbPersoonDao dbPersoonDao = new DbPersoonDao();
 		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 		
 		dbWerknemer = dbWerknemerDao.leesWaarPersoonId(id);
-		
 		dbPersoon = (DbPersoon) dbPersoonDao.lees(id);
-		
 		dbGebruiker = (DbGebruiker) dbGebruikerDao.leesWaarPersoonId(id);
 		
 		AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
@@ -109,8 +102,8 @@ public class PersoneelDaoAdapter implements ICRUD{
 		personeel.setAanwervingsdatum(dbWerknemer.getAanwervingsdatum());
 		personeel.setLoon(dbWerknemer.getLoon());
 		personeel.setEmail(dbGebruiker.getEmail());
-
 		personeel.setAdreslijst((ArrayList<Adres>) adresLijst);
+		
 		return personeel;
 	}
 
@@ -121,7 +114,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 		List<DbPersoon> dbPersoonLijst = new ArrayList<DbPersoon>();
 		List<DbWerknemer> dbWerknemerLijst = new ArrayList<DbWerknemer>();	
 		List<DbGebruiker> dbGebruikerLijst = new ArrayList<DbGebruiker>();
-		
 		DbPersoonDao dbPersoonDao = new DbPersoonDao();
 		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
@@ -142,7 +134,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 			personeel.setPersoonId(dbwerknemer.getPersoonId());
 			personeel.setLoon(dbwerknemer.getLoon());
 			personeel.setAanwervingsdatum(dbwerknemer.getAanwervingsdatum());
-			
 			personeelLijst.add(personeel);
 			
 			idLijst[i] = dbwerknemer.getPersoonId();
@@ -181,8 +172,8 @@ public class PersoneelDaoAdapter implements ICRUD{
 				}	
 			}
 		}
-	
 		List<Object> objectLijst = new ArrayList<Object>(personeelLijst);
+		
 		return objectLijst;
 	}
 
@@ -194,7 +185,6 @@ public class PersoneelDaoAdapter implements ICRUD{
 		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 		DbPersoonDao dbPersoonDao = new DbPersoonDao();
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
-		
 		DbWerknemer dbwerknemer = new DbWerknemer();
 		DbPersoon dbpersoon = new DbPersoon();
 		DbGebruiker dbgebruiker = new DbGebruiker();
@@ -223,9 +213,7 @@ public class PersoneelDaoAdapter implements ICRUD{
 		dbgebruiker.setEmail(personeel.getEmail());
 		dbgebruiker.setBevoegdheidId(2);
 		dbgebruiker.setPersoonId(personeel.getPersoonId());
-		
 		dbGebruikerDao.wijzig(dbgebruiker);
-		
 	}
 
 	@Override
@@ -234,30 +222,26 @@ public class PersoneelDaoAdapter implements ICRUD{
 		// vooraleer het personeelslid te verwijderen eerst alle adressen verwijderen.
 		PersoonAdresDaoAdapter adresDaoAdapter = new PersoonAdresDaoAdapter();
 		adresDaoAdapter.verwijderVanPersoon(id);
-		
 		DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 		DbPersoonDao dbPersoonDao = new DbPersoonDao();
 		DbGebruikerDao dbGebruikerDao = new DbGebruikerDao();
 			
 		dbWerknemerDao.verwijderWaarPersoonId(id);
-		
 		dbGebruikerDao.verwijderWaarPersoonId(id);
-		
 		dbPersoonDao.verwijder(id);
-				
-		
 	}
 
 	private String creeerGebruikersnaam(Personeel personeel, DbGebruikerDao dbGebruikerDao) {
 		String gebruikersnaam = personeel.getVoornaam().concat(".").concat(personeel.getNaam());
 		int aantalKeer = dbGebruikerDao.aantalMetGebruikersnaam(gebruikersnaam);
-
 		int nr = 1;
+		
 		while (aantalKeer > 0){
 			gebruikersnaam = gebruikersnaam.concat(String.valueOf(nr));
 			nr++;
 			aantalKeer = dbGebruikerDao.aantalMetGebruikersnaam(gebruikersnaam);
 		}
+		
 		return gebruikersnaam;
 	}
 	

@@ -25,8 +25,10 @@ import be.miras.programs.frederik.util.Datatype;
  */
 @WebServlet("/BedrijfsgegevensAdresVerwijderenServlet")
 public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -45,15 +47,13 @@ public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres_id"));
 
 		PersoonAdresDaoAdapter adao = new PersoonAdresDaoAdapter();
+		WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
+		Werkgever werkgever = new Werkgever();
 		
 		adao.verwijder(adresId);
 
-		
 		HttpSession session = request.getSession();
 		int gebruikerId = (int) session.getAttribute("gebruikerId");
-
-		WerkgeverDaoAdapter wDao = new WerkgeverDaoAdapter();
-		Werkgever werkgever = new Werkgever();
 
 		werkgever = (Werkgever) wDao.lees(gebruikerId);
 

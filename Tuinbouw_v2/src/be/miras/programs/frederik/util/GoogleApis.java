@@ -24,6 +24,7 @@ import be.miras.programs.frederik.model.Adres;
  */
 public class GoogleApis {
 
+	// constanten voor adres-latlng conversie en omgekeerd
 	final static private String basisUrl = "https://maps.googleapis.com/maps/api/";
 	final static private String geocode = "geocode/";
 	final static private String format = "json?";
@@ -33,9 +34,8 @@ public class GoogleApis {
 
 	// constanten voor het berekenen van een afstand tussen 2 locaties
 	final static private String distancematrix = "distancematrix/";
-	final static private String distance_units = "units=metric"; // metric = km,
-																	// imperial
-																	// = miles
+	final static private String distance_units = "units=metric"; 
+					// metric = km, imperial = miles
 	final static private String distance_origins = "&origins=";
 	final static private String distance_destinations = "&destinations=";
 	final static private String DISTANCE_MATRIX_API_KEY = "&key=AIzaSyAUnPw4QSRquDQOT11dKrytCR_wnVnO6wk";
@@ -52,6 +52,10 @@ public class GoogleApis {
 
 	private static final Logger LOGGER = Logger.getLogger(GoogleApis.class);
 	private static final String TAG = "GoogleApis: ";
+	
+	
+	public GoogleApis(){
+	}
 
 	/**
 	 * @param adres Adres
@@ -228,7 +232,6 @@ public class GoogleApis {
 
 			// Zend request
 			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-			;
 			wr.close();
 
 			// Get Response
@@ -245,8 +248,8 @@ public class GoogleApis {
 			return response.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
-			LOGGER.error("IEException: " + TAG + "targetUrl = " + targetUrl);
-			LOGGER.error("IEException: " + TAG + "ExecutePost(targetUrl) ", e);
+			LOGGER.error("IOException: " + TAG + "targetUrl = " + targetUrl);
+			LOGGER.error("IOException: " + TAG + "ExecutePost(targetUrl) ", e);
 			return null;
 		} finally {
 			if (connection != null) {

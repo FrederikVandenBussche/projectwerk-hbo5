@@ -21,12 +21,11 @@ import be.miras.programs.frederik.model.Materiaal;
  *
  */
 public class MateriaalDaoAdapter implements ICRUD {
+	
 	private DbMateriaalDao dbMateriaalDao;
 	private DbTypeMateriaalDao dbTypeMateriaalDao;
 	
-	/**
-	 * 
-	 */
+
 	public MateriaalDaoAdapter() {
 		super();
 		this.dbMateriaalDao = new DbMateriaalDao();
@@ -129,9 +128,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 		dbMateriaalDao.wijzig(dbMateriaal);
 		
-		
-		System.out.println("als dit niet meer voorkomt : " + oudTypeMateriaalId);
-		
 		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(oudTypeMateriaalId)){
 			System.out.println("het komt niet meer voor");
 			dbTypeMateriaalDao.verwijder(oudTypeMateriaalId);
@@ -140,7 +136,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 	@Override
 	public void verwijder(int id) {
-		
 		int typeMateriaalId = dbMateriaalDao.geefTypeMateriaalId(id);
 		dbMateriaalDao.verwijder(id);
 
@@ -148,7 +143,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 			DbTypeMateriaalDao dtmd = new DbTypeMateriaalDao();
 			dtmd.verwijder(typeMateriaalId);
 		}
-
 	}
 
 	/**

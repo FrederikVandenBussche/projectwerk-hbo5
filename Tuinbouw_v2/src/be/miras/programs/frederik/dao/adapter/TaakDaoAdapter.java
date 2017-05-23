@@ -28,12 +28,11 @@ import be.miras.programs.frederik.model.Taak;
  *
  */
 public class TaakDaoAdapter implements ICRUD {
+	
 	private DbOpdrachtTaakDao dbOpdrachtTaakDao;
 	private DbTaakDao dbTaakDao;
 
-	/**
-	 * 
-	 */
+	
 	public TaakDaoAdapter() {
 		super();
 		this.dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
@@ -45,7 +44,6 @@ public class TaakDaoAdapter implements ICRUD {
 		Taak taak = (Taak) o;
 		
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
-		
 		DbTaak dbTaak = new DbTaak();
 		DbOpdrachtTaak dbOpdrachtTaak= new DbOpdrachtTaak();
 		DbVooruitgang dbVooruitgang = new DbVooruitgang();
@@ -75,7 +73,6 @@ public class TaakDaoAdapter implements ICRUD {
 		dbOpdrachtTaak.setOpmerking(taak.getOpmerking());
 		dbOpdrachtTaakDao.voegToe(dbOpdrachtTaak);
 		
-		
 		return dbTaak.getId();
 	}
 
@@ -102,8 +99,8 @@ public class TaakDaoAdapter implements ICRUD {
 			 * anders : maak een nieuwe dbTaak aan.
 			 */
 			dbTaak.setNaam(taak.getTaakNaam());
-			
 			long aantal = dbOpdrachtTaakDao.hoeveelMetTaakId(taak.getId());
+			
 			if (aantal == 1 ){
 				//wijzigen
 				dbTaak.setId(taak.getId());
@@ -118,7 +115,6 @@ public class TaakDaoAdapter implements ICRUD {
 		int dbTaakId = dbTaak.getId();
 		String dbOpmerking = taak.getOpmerking();
 		dbOpdrachtTaakDao.wijzigOpmerking(dbOpdrachtId, dbTaakId, dbOpmerking);
-		
 	}
 
 	@Override
@@ -134,11 +130,11 @@ public class TaakDaoAdapter implements ICRUD {
 		
 		// verwijder de DbTaak als ze enkel in deze dbOpdrachtTaak wordt gebruikt 
 		long aantal = dbOpdrachtTaakDao.hoeveelMetTaakId(taakId);
+		
 		if (aantal <= 0){
 			dbTaakDao.verwijder(taakId);
 		}
 		dbVooruitgangDao.verwijder(dbOpdrachtTaak.getVooruitgangId());
-		
 	}
 
 	/**
@@ -158,9 +154,7 @@ public class TaakDaoAdapter implements ICRUD {
 		while(it.hasNext()){
 			
 			Taak taak = new Taak();
-			
-			DbOpdrachtTaak dbOpdrachtTaak = it.next();
-						
+			DbOpdrachtTaak dbOpdrachtTaak = it.next();			
 			int dbTaakId = dbOpdrachtTaak.getTaakId();
 			
 			DbTaak dbTaak = (DbTaak) dbTaakDao.lees(dbTaakId);
@@ -208,7 +202,6 @@ public class TaakDaoAdapter implements ICRUD {
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbTaakDao dbTaakDao = new DbTaakDao();
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
-		
 		List<Planning> planningLijst = new ArrayList<Planning>();
 		List<Planning> gewerkteUrenLijst = new ArrayList<Planning>();
 		
@@ -245,7 +238,6 @@ public class TaakDaoAdapter implements ICRUD {
 				planning.setIsAanwezig(wot.getAanwezig());
 
 				planningLijst.add(planning);
-
 			} else {
 				
 				Planning gewerkteUren = new Planning();
@@ -261,7 +253,7 @@ public class TaakDaoAdapter implements ICRUD {
 				gewerkteUrenLijst.add(gewerkteUren);
 			}
 		}
-		
+
 		taak.setPlanningLijst(planningLijst);
 		taak.setGewerkteUrenLijst(gewerkteUrenLijst);
 		
@@ -278,7 +270,7 @@ public class TaakDaoAdapter implements ICRUD {
 		PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
 		List<Personeel> lijst = new ArrayList<Personeel>();
 		HashMap<Integer, String> werknemerMap = new HashMap<Integer, String>();
-
+		
 		lijst = (List<Personeel>) (Object) dao.leesAlle();
 
 		Iterator<Personeel> it = lijst.iterator();

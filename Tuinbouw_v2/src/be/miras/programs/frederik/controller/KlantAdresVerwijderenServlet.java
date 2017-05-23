@@ -37,8 +37,10 @@ import be.miras.programs.frederik.util.GoogleApis;
  */
 @WebServlet("/KlantAdresVerwijderenServlet")
 public class KlantAdresVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -153,7 +155,6 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 
 					int opdrachtId = opdracht.getId();
 					String opdrachtNaam = opdracht.getNaam();
-
 					opdrachtMap.put(opdrachtId, opdrachtNaam);
 				}
 		
@@ -162,7 +163,6 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 		request.setAttribute("variabelVeld1", variabelVeld1);
 		request.setAttribute("variabelVeldnaam2", variabelVeldnaam2);
 		request.setAttribute("variabelVeld2", variabelVeld2);
-		
 		request.setAttribute("klant", klant);
 		request.setAttribute("opdrachtMap", opdrachtMap);
 

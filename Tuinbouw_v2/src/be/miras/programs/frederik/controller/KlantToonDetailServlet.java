@@ -31,6 +31,7 @@ import be.miras.programs.frederik.util.GoogleApis;
  */
 @WebServlet("/KlantParticulierToonDetailsServlet")
 public class KlantToonDetailServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 	

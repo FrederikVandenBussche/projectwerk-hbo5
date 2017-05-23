@@ -27,6 +27,7 @@ import be.miras.programs.frederik.model.Opdracht;
  */
 @WebServlet("/OpdrachtVerwijderen")
 public class OpdrachtVerwijderenServlet extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 
@@ -56,23 +57,31 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
 		
 		// de opdracht uit de databank verwijderen
+		
 		// 1. Werknemer_Opdracht_Taak
 		dbWerknemerOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
+		
 		// 2. Opdracht_Materiaal
 		dbOpdrachtMateriaalDao.verwijderWaarOpdrachtId(opdrachtId);
+		
 		// 3. Opdracht_Taak
 		// ik wil eerst een lijst met Vooruitgag Ids en taakIds
 		List<Integer> vooruitgangIdLijst = dbOpdrachtTaakDao.leesVooruitgangIds(opdrachtId);
 		List<Integer> taakIdLijst = dbOpdrachtTaakDao.leesTaakIds(opdrachtId);
 		dbOpdrachtTaakDao.verwijderWaarOpdrachtId(opdrachtId);
+		
 		// 4. Vooruitgang
 		for (int vId : vooruitgangIdLijst) {
+			
 			dbVooruitgangDao.verwijder(vId);
 		}
+		
 		// 5. Taak
 		for (int tId : taakIdLijst) {
+			
 			dbTaakDao.verwijder(tId);
 		}
+		
 		// 6. Opdracht
 		dbOpdrachtDao.verwijder(opdrachtId);
 	

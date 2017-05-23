@@ -7,6 +7,7 @@ package be.miras.programs.frederik.model;
  *
  */
 public class Adres implements Ivergelijk {
+	
 	private int id;
 	private String straat;
 	private int nummer;
@@ -16,6 +17,10 @@ public class Adres implements Ivergelijk {
 	private Integer persoonId;
 	private String staticmap;
 	private String googlemap;
+	
+	
+	public Adres(){
+	}
 
 	/**
 	 * @return the id int
@@ -166,15 +171,5 @@ public class Adres implements Ivergelijk {
 		return isVerschillend;
 	}
 
-	@Override
-	public String toString() {
-		if (this.getBus() != null && !this.getBus().isEmpty()) {
-			return this.getStraat() + " " + this.getNummer() + " " + this.getBus() + " " + this.getPostcode() + " "
-					+ this.getPlaats();
-		} else {
-			return this.getStraat() + " " + this.getNummer() + " " + this.getPostcode() + " " + this.getPlaats();
-		}
-	}
 
-	
 }

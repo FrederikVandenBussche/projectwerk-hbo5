@@ -33,19 +33,23 @@ import be.miras.programs.frederik.util.Datum;
  * Genereer een pdf file
  */
 public class GenereerPdf {
+	
 	private static final Logger LOGGER = Logger.getLogger(GenereerPdf.class);
 	private static final String TAG = "GenereerPdf: ";
-
+	
+	
+	public GenereerPdf(){
+	}
 	
 	/**
 	 * @param dest String :  path + filename van de pdf file
-	 * @param factuur Factuur : de data die in de pdf geplaatst wordt
+	 * @param factuurData FactuurData : de data die in de pdf geplaatst wordt
 	 */
-	public void genereer(String dest, Factuur factuur) {
+	public void genereer(String dest, FactuurData factuurData) {
 		File file = new File(dest);
 		file.getParentFile().mkdirs();
 		try {
-			createPdf(dest, factuur);
+			createPdf(dest, factuurData);
 		} catch (IOException e) {
 			e.printStackTrace();
 			LOGGER.error("IOException: " + TAG + "public void genereer() : ", e); 	
@@ -54,22 +58,22 @@ public class GenereerPdf {
 
 	/**
 	 * @param dest String :  path + filename van de pdf file
-	 * @param factuur Factuur : de data die in de pdf geplaatst wordt
+	 * @param factuurData FactuurData : de data die in de pdf geplaatst wordt
 	 * @throws FileNotFoundException 
 	 */
-	private void createPdf(String dest, Factuur factuur) throws FileNotFoundException{
+	private void createPdf(String dest, FactuurData factuurData) throws FileNotFoundException{
 		double totaalPrijs = 0;
 
-		// Initialize PDF writer
+		// Initialiseer PDF writer
 		PdfWriter writer = new PdfWriter(dest);
 
-		// Initialize PDF document
+		// Initialiseer PDF document
 		PdfDocument pdf = new PdfDocument(writer);
 
-		// Initialize document
+		// Initialiseer document
 		Document document = new Document(pdf);
 
-		// add paragraph to the document
+		// voeg een paragraaf an het document toe
 		Text titelTekst = new Text("Tuinbouwbedrijf hitek");
 		titelTekst.setFontSize(30);
 		Paragraph titel = new Paragraph(titelTekst);
@@ -78,8 +82,8 @@ public class GenereerPdf {
 		
 		document.add(new Paragraph("\n"));
 
-		String klantNaam = factuur.getKlantNaam();
-		Adres adres = factuur.getAdres();
+		String klantNaam = factuurData.getKlantNaam();
+		Adres adres = factuurData.getAdres();
 		String adresDeel1 = adres.getStraat() + " " + adres.getNummer() + " ";
 		if (adres.getBus() != null) {
 			adresDeel1 = adresDeel1.concat(adres.getBus());
@@ -92,7 +96,7 @@ public class GenereerPdf {
 		document.add(new Paragraph("\n"));
 		document.add(new Paragraph("\n"));
 		
-		List<Opdracht> opdrachtLijst = factuur.getOpdrachtLijst();
+		List<Opdracht> opdrachtLijst = factuurData.getOpdrachtLijst();
 		Iterator<Opdracht> opdrachtIterator = opdrachtLijst.iterator();
 		while (opdrachtIterator.hasNext()) {
 			Opdracht opdracht = opdrachtIterator.next();
@@ -197,7 +201,7 @@ public class GenereerPdf {
 				verplaatsingTabel.addHeaderCell(hcell);
 			}
 
-			Iterator<Verplaatsing> verplaatsingIt = factuur.getVerplaatsingLijst().iterator();
+			Iterator<Verplaatsing> verplaatsingIt = factuurData.getVerplaatsingLijst().iterator();
 			while (verplaatsingIt.hasNext()) {
 				Verplaatsing verplaatsing = verplaatsingIt.next();
 
@@ -290,7 +294,7 @@ public class GenereerPdf {
 		totaalTabel.addCell(new Cell().add("BTW "));
 		int btw = 0;
 		double btwPrijs = 0;
-		if (factuur.isBtwAanrekenen()){
+		if (factuurData.isBtwAanrekenen()){
 			btw = Constanten.Btw;
 			btwPrijs = totaalPrijs * btw / 100;
 			btwPrijs = Math.round(totaalPrijs * 100) / 100;
@@ -313,7 +317,7 @@ public class GenereerPdf {
 		document.add(new Paragraph("\n"));
 
 		//bedrijfsadres
-		Adres bedrijfAdres = factuur.getBedrijfsAdres();
+		Adres bedrijfAdres = factuurData.getBedrijfsAdres();
 		Text bedrijfsnaam = new Text(Constanten.Bedrijfsnaam.concat(" "));
 		Text bedrijfadres = new Text(bedrijfAdres.getStraat().concat(" ")
 				.concat(String.valueOf(bedrijfAdres.getNummer())).concat(" ")

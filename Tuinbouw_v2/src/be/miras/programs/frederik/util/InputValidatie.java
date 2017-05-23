@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 /**
  * @author Frederik Vanden Bussche
  * 
+ *Util class voor inputvalidatie
  *         Er wordt een message gegenereert indien: 
  *         - een tekst leeg is of uit nummers bestaat 
  *         - een int niet enkel uit cijfers bestaat 
@@ -18,6 +19,10 @@ import java.util.regex.Pattern;
  *
  */
 public class InputValidatie {
+	
+	
+	public InputValidatie(){
+	}
 	
  	/**
  	 * @param tekst String
@@ -161,24 +166,14 @@ public class InputValidatie {
 					msg = errorMsg;
 				}
 
-				if (Datatype.stringNaarInt(datum.substring(0, 2)) > 31 // meer
-																		// dan
-																		// 31
-																		// dagen
-						|| Datatype.stringNaarInt(datum.substring(3, 5)) > 12 // meer
-																				// dan
-																				// 12
-																				// maanden
-						|| Datatype.stringNaarInt(datum.substring(6, 10)) < 1900 // vroeger
-																					// dan
-																					// 1900
-						|| Datatype.stringNaarInt(datum.substring(6, 10)) > (date.getYear() + 2000) // later
-																											// dan
-																											// nu
-																											// binnen
-																											// 100
-																											// jaar
-				) {
+				if (Datatype.stringNaarInt(datum.substring(0, 2)) > 31 
+						// meer dan 31dagen
+						|| Datatype.stringNaarInt(datum.substring(3, 5)) > 12 
+						// meer dan 12 maanden
+						|| Datatype.stringNaarInt(datum.substring(6, 10)) < 1900 
+						// vroeger dan 1900
+						|| Datatype.stringNaarInt(datum.substring(6, 10)) > (date.getYear() + 2000)) {
+						// later dan nu binnen 100 jaar
 					msg = errorMsg;
 				}
 			} else if ((datum.length() == 10 &&
@@ -195,23 +190,14 @@ public class InputValidatie {
 					msg = errorMsg;
 				}
 				
-				if (Datatype.stringNaarInt(datum.substring(8, 10)) > 31 // meer
-																		// dan
-																		// 31
-																		// dagen
-						|| Datatype.stringNaarInt(datum.substring(5, 7)) > 12 // meer
-																				// dan
-																				// 12
-																				// maanden
-						|| Datatype.stringNaarInt(datum.substring(0, 4)) < 1900 // vroeger
-																				// dan
-																				// 1900
-						|| Datatype.stringNaarInt(datum.substring(0, 4)) > (date.getYear() + 2000) // later
-																											// dan
-																											// nu
-																											// binnen
-																											// 100
-																											// jaar
+				if (Datatype.stringNaarInt(datum.substring(8, 10)) > 31 
+						// meer dan 31 dagen
+						|| Datatype.stringNaarInt(datum.substring(5, 7)) > 12 
+						// meer dan 12 maanden
+						|| Datatype.stringNaarInt(datum.substring(0, 4)) < 1900 
+						// vroeger dan 1900
+						|| Datatype.stringNaarInt(datum.substring(0, 4)) > (date.getYear() + 2000) 
+						// later dan nu binnen 100 jaar
 				) {
 					msg = errorMsg;
 				}
@@ -260,4 +246,5 @@ public class InputValidatie {
 		return msg;
 	}
 
+	
 }
