@@ -72,8 +72,6 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 		
 		String inputValidatieErrorMsg = inputValidatie(
 				new String[]{klantNaam, opdrachtNaam, startDatumString, eindDatumString});
-				
-		RequestDispatcher view = null;
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
 						
@@ -185,7 +183,15 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 					dbOpdracht.setLatitude(latitude);
 					dbOpdracht.setLongitude(longitude);
 
-					this.id = dbOpdrachtDao.voegToe(dbOpdracht);
+					int bestaandeDbOpdrachtId = dbOpdrachtDao.haalId(dbOpdracht);
+					if (bestaandeDbOpdrachtId < 0){
+						
+						this.id = dbOpdrachtDao.voegToe(dbOpdracht);
+					} else {
+						
+						this.id = bestaandeDbOpdrachtId;
+					}
+					session.setAttribute("id", this.id);
 				}
 
 			} else {
@@ -304,23 +310,17 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 				}
 			}
 
-			OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(this.id);
 			
 			request.setAttribute("id", this.id);
-			request.setAttribute("opdrachtDetailData", opdrachtDetailData);
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
-			
-			view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
-			
 		} else {
-			OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(this.id);
 			
-			request.setAttribute("opdrachtDetailData", opdrachtDetailData);
-			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
-			
-			view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
+			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);	
 		}
+		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(this.id);
+		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
 		
+		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
 		view.forward(request, response);
 	}
 

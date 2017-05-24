@@ -68,8 +68,16 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 				taak.setTaakNaam(taaknaam);
 				taak.setOpmerking(opmerking);
 
-				taakId = taakDaoAdapter.voegToe(taak);
-				taak.setId(taakId);
+				int bestaandeTaakId = taakDaoAdapter.haalId(taak);
+				if (bestaandeTaakId < 0){
+					
+					taakId = taakDaoAdapter.voegToe(taak);
+				} else {
+					
+					taakId = bestaandeTaakId;
+				}
+				
+				taak = taakDaoAdapter.haalTaak(taakId);
 				
 			} else {
 				
@@ -85,8 +93,6 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 					
 					taakDaoAdapter.wijzig(taak);
 					
-					taak.setTaakNaam(taaknaam);
-					taak.setOpmerking(opmerking);
 				}
 			}
 	

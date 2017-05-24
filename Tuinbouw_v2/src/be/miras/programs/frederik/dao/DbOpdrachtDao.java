@@ -372,5 +372,54 @@ public class DbOpdrachtDao implements ICRUD {
 		return isKomtvoor;
 	}
 
+	/**
+	 * @param dbOpdracht DbOpdracht
+	 * @return int
+	 * 
+	 * return de id van deze DbOpdracht
+	 * Indien deze record niet bestaat, return Integer.min_value
+	 */
+	public int haalId(DbOpdracht dbOpdracht) {
+		int id = Integer.MIN_VALUE;
+		List<Integer> lijst = new ArrayList<Integer>();
+		String query = "SELECT id FROM DbOpdracht where klantId = :klantId "
+												+ "and klantAdresId = :klantAdresId "
+												+ "and naam = :naam "
+												+ "and startdatum = :startdatum "
+												+ "and einddatum = :einddatum"; 
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("klantId", dbOpdracht.getKlantId());
+			q.setParameter("klantAdresId", dbOpdracht.getKlantAdresId());
+			q.setParameter("naam", dbOpdracht.getNaam());
+			q.setParameter("startdatum", dbOpdracht.getStartdatum());
+			q.setParameter("einddatum", dbOpdracht.getEinddatum());
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "haalId(dbOpdracht) ", e);
+		} finally {
+			session.close();
+		}
+		
+		if (!lijst.isEmpty()){
+			id = lijst.get(0);
+		}
+		
+		return id;
+	}
+
 
 }

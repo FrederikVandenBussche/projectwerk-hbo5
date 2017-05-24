@@ -88,7 +88,11 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			dbWerknemerOpdrachtTaak.setOpdrachtTaakTaakId(taakId);
 			dbWerknemerOpdrachtTaak.setBeginuur(beginuur);
 			
-			dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
+			boolean isReedsGepland = dbWerknemerOpdrachtTaakDao.isReedsGepland(dbWerknemerOpdrachtTaak);
+			if (!isReedsGepland){
+				
+				dbWerknemerOpdrachtTaakDao.voegToe(dbWerknemerOpdrachtTaak);
+			}
 		} else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);

@@ -433,5 +433,48 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		return isKomtvoor;
 	}
 
+	/**
+	 * @param dbWerknemerOpdrachtTaak DbWerknemerOpdrachtTaak
+	 * @return boolean
+	 * 
+	 * return true als deze werknemer reeds op deze dag (beginuur) gepland staat
+	 * return false als deze werknemer nog niet op deze dag (beginuur) gepland staat
+	 */
+	public boolean isReedsGepland(DbWerknemerOpdrachtTaak dbWerknemerOpdrachtTaak) {
+		boolean isReedsGepland = false;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT id FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId "
+																	+ "AND beginuur = :beginuur";
+		List<Long> lijst = new ArrayList<Long>();
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("werknemerId", dbWerknemerOpdrachtTaak.getWerknemerId());
+			q.setParameter("beginuur", dbWerknemerOpdrachtTaak.getBeginuur());
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "isreedsGepland(DbWerknemerOpdrachtTaak)", e);
+		} finally {
+			session.close();
+		}
+		
+		if (!lijst.isEmpty()) {
+			isReedsGepland = true;
+		}
+		
+		return isReedsGepland;
+	}
+
 
 }

@@ -101,7 +101,7 @@ public class TaakDaoAdapter implements ICRUD {
 			dbTaak.setNaam(taak.getTaakNaam());
 			long aantal = dbOpdrachtTaakDao.hoeveelMetTaakId(taak.getId());
 			
-			if (aantal == 1 ){
+			if (aantal >= 1 ){
 				//wijzigen
 				dbTaak.setId(taak.getId());
 				dbTaakDao.wijzig(dbTaak);
@@ -119,7 +119,6 @@ public class TaakDaoAdapter implements ICRUD {
 
 	@Override
 	public void verwijder(int taakId) {
-		System.out.println("taakId: " + taakId);
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbWerknemerOpdrachtTaakDao dbWerknemerOpdrachtTaakDao = new DbWerknemerOpdrachtTaakDao();
 		
@@ -282,6 +281,38 @@ public class TaakDaoAdapter implements ICRUD {
 		}
 
 		return werknemerMap;
+	}
+
+	/**
+	 * @param taak taak
+	 * @return int
+	 * 
+	 * return de id van deze taak
+	 * Indien deze record niet bestaat, return Integer.min_value
+	 */
+	public int haalId(Taak taak) {
+		int gevondenTaakId = Integer.MIN_VALUE;
+		
+		DbTaakDao dbTaakDao = new DbTaakDao();
+		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
+		
+		int taakId = dbTaakDao.geefIdVan(taak.getTaakNaam(), 1);
+		
+		if (taakId > 0){
+			
+			DbOpdrachtTaak dbOpdrachtTaak = new DbOpdrachtTaak();
+			dbOpdrachtTaak.setOpdrachtId(taak.getOpdrachtId());
+			dbOpdrachtTaak.setTaakId(taakId);
+			dbOpdrachtTaak.setOpmerking(taak.getOpmerking());
+			
+			int opdrachtTaakId = dbOpdrachtTaakDao.geefId(dbOpdrachtTaak);
+			
+			if (opdrachtTaakId > 0){
+				gevondenTaakId = taakId;
+			}
+		}
+		
+		return gevondenTaakId;
 	}
 	
 	
