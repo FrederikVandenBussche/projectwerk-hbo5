@@ -92,6 +92,7 @@ public class BedrijfsgegevensAdresOpslaanServlet extends HttpServlet implements 
 			adreslijst.add(adres);
 			werkgever.setAdreslijst(adreslijst);
 
+			request.setAttribute("tabKiezer", "adres");
 			request.setAttribute("werkgever", werkgever);
 			
 		} else {

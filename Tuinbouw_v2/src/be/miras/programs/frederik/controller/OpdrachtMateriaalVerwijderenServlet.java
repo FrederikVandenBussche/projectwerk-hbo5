@@ -53,6 +53,7 @@ public class OpdrachtMateriaalVerwijderenServlet extends HttpServlet {
 		
 		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
 		
+		request.setAttribute("tabKiezer", "materialen");
 		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");

@@ -112,6 +112,7 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				werkgever.setVoornaam(voornaam);
 				werkgever.setGeboortedatum(datum);
 			}
+			request.setAttribute("tabKiezer", "gegevens");
 			request.setAttribute("werkgever", werkgever);
 			
 		} else {

@@ -126,6 +126,7 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			
 			Personeel personeel = (Personeel) dao.lees(id);
 
+			request.setAttribute("tabKiezer", "gegevens");
 			request.setAttribute("personeelslid", personeel);
 			
 			view = request.getRequestDispatcher("/PersoneelDetail.jsp");	

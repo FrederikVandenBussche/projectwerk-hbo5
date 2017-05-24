@@ -315,6 +315,55 @@ public class DbOpdrachtMateriaalDao implements ICRUD {
 			session.close();
 		}
 	}
+
+		/**
+		 * @param opdrachtId int
+		 * @param materiaalId int
+		 * @return DbOpdrachtMateriaal
+		 * 
+		 * return DbOpdrachtMateriaal waar de opdrachtId en materiaalId als parameter meegegeven
+		 * worden.
+		 * Indien deze niet voorkomt in de tabel wordt de DbOpdrachtMateriaal Id op Integer.min_value
+		 * geplaats.
+		 */
+		public DbOpdrachtMateriaal leesIdWaarOpdrachtIdEnMateriaalId(int opdrachtId, int materiaalId) {
+			DbOpdrachtMateriaal opdrachtMateriaal = new DbOpdrachtMateriaal();
+			Session session = HibernateUtil.openSession();
+			Transaction transaction = null;
+			String query = "FROM DbOpdrachtMateriaal WHERE opdrachtId = :opdrachtId "
+													+ "AND materiaalId = :materiaalId";
+			List<DbOpdrachtMateriaal> lijst = new ArrayList<DbOpdrachtMateriaal>();
+			
+			try {
+				session.beginTransaction();
+				transaction = session.getTransaction();
+				Query q = session.createQuery(query);
+				q.setParameter("opdrachtId", opdrachtId);
+				q.setParameter("materiaalId", materiaalId);
+				lijst = q.list();
+				session.flush();
+				if(!transaction.wasCommitted()){
+					transaction.commit();
+				}
+			} catch (Exception e) {
+				if (transaction != null) {
+					transaction.rollback();
+				}
+				e.printStackTrace();
+				LOGGER.error("Exception: " + TAG + "FROM DbOpdrachtMateriaal WHERE opdrachtId = :opdrachtId "
+						+ "AND materiaalId = :materiaalId" + opdrachtId + " " + materiaalId + " " , e);
+			} finally {
+				session.close();
+			}
+			
+			if (!lijst.isEmpty()) {
+				opdrachtMateriaal = lijst.get(0);
+			} else {
+				opdrachtMateriaal.setId(Integer.MIN_VALUE);
+			}
+			
+			return opdrachtMateriaal;
+		}
 	
 	
 }

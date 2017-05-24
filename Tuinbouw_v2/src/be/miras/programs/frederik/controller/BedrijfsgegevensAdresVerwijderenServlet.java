@@ -65,6 +65,7 @@ public class BedrijfsgegevensAdresVerwijderenServlet extends HttpServlet {
 				it.remove();
 			}
 		}
+		request.setAttribute("tabKiezer", "adres");
 		werkgever.setAdreslijst(adreslijst);
 
 		RequestDispatcher view = request.getRequestDispatcher("/bedrijfsgegevensMenu");

@@ -83,6 +83,7 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 							e.printStackTrace();
 						}
 						dao.wijzigWachtwoord(id, encryptie);
+						inputValidatieErrorMsg = "Het wachtwoord werd succesvol gewijzigd!";
 						
 					} else {
 						inputValidatieErrorMsg = inputValidatieErrorMsg.concat(" Het nieuwe wachtwoord moet tenminste 8 karakters lang zijn.");
@@ -102,6 +103,7 @@ public class BedrijfsWachtwoordWijzigenServlet extends HttpServlet implements Ii
 
 		werkgever = (Werkgever) wDao.lees(gebruikerId);
 		
+		request.setAttribute("tabKiezer", "wachtwoord");
 		request.setAttribute("werkgever", werkgever);
 		request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 

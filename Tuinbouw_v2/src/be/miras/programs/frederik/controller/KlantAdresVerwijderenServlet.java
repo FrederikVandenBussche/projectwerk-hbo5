@@ -158,6 +158,7 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 					opdrachtMap.put(opdrachtId, opdrachtNaam);
 				}
 		
+		request.setAttribute("tabKiezer", "adres");
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("variabelVeldnaam1", variabelVeldnaam1);
 		request.setAttribute("variabelVeld1", variabelVeld1);

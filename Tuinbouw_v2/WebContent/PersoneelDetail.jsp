@@ -11,6 +11,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/nieuwPersoneel.js"></script>
+	<script type="text/javascript" src="script/tabKiezer.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -18,6 +19,7 @@
 	<%@ page isELIgnored="false"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<div id="container">
+		<input type="hidden" id ="tabKiezer" value="${tabKiezer }" />
 		<div id="nav">
 			<div id="afmeldMenu">
 				<img src="images/logo.png" alt="logo" id="logo">
@@ -77,12 +79,12 @@
 				${inputValidatieErrorMsg }
 			</div>
 			<ul id = "myTab" class = "nav nav-tabs">
-            	<li class = "active">
+            	<li id="ligegevens" class = "active">
             	    <a href = "#gegevens" data-toggle = "tab">
                 	    Gegevens
                 	</a>
          	   </li>
-         	   <li><a href = "#adres" data-toggle = "tab">Adresgegevens</a></li>	
+         	   <li id="liadres" ><a href = "#adres" data-toggle = "tab">Adresgegevens</a></li>	
        		</ul>
 	        <div id = "myTabContent" class = "tab-content">
     	        <div class = "tab-pane fade in active" id = "gegevens">

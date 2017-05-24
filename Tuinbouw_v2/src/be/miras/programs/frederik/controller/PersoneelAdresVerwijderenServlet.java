@@ -54,6 +54,7 @@ public class PersoneelAdresVerwijderenServlet extends HttpServlet {
 		
 		Personeel personeel = (Personeel) personeelDaoAdapter.lees(persoonId);
 		
+		request.setAttribute("tabKiezer", "adres");
 		request.setAttribute("personeelslid", personeel);
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("buttonNaam", opslaanBtnNaam);

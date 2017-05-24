@@ -12,6 +12,7 @@
     	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 		<script type="text/javascript" src="script/nieuweOpdracht.js"></script>
+		<script type="text/javascript" src="script/tabKiezer.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -19,6 +20,7 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 	<div id="container">
+		<input type="hidden" id ="tabKiezer" value="${tabKiezer }" />
 		<div id="nav">
 			<div id="afmeldMenu">
 				<img src="images/logo.png" alt="logo" id="logo">
@@ -133,12 +135,12 @@
 			</fieldset>
 			<div id="taakMateriaalVerwijderen">
 				<ul id = "myTab" class = "nav nav-tabs">
-            		<li class = "active">
+            		<li id="litaken" class = "active">
                 		<a href = "#taken" data-toggle = "tab">
                	 	    Taken
                			 </a>
             		</li>
-            		<li><a href = "#materialen" data-toggle = "tab">Materialen</a></li>	
+            		<li id="limaterialen"><a href = "#materialen" data-toggle = "tab">Materialen</a></li>	
       	  		</ul>
 		        <div id = "myTabContent" class = "tab-content">
     		        <div class = "tab-pane fade in active" id = "taken">
@@ -199,7 +201,7 @@
 							</c:forEach>
 						</select>
 						<label for ="hoeveelheid"> Hoeveelheid: </label> 
-						<input type="number" name="hoeveelheid" />
+						<input type="number" pattern="[0-9]+([\.,][0-9]+)?" step="0.01"name="hoeveelheid" />
 						${materiaal.eenheidsmaat }
 						<input type="submit" class = "btn btn-default active"  name="submit" value="Voeg toe" />
 					</form>
@@ -219,7 +221,7 @@
 							<tbody>
 								<c:forEach items="${opdrachtDetailData.opdracht.gebruiktMateriaalLijst }" var="materiaal">
 									<tr>
-										<td>${materiaal.soort } ${materiaal.id }</td>
+										<td>${materiaal.soort }</td>
 										<td>${materiaal.naam }</td>
 										<td>${materiaal.hoeveelheid }</td>
 										<td>${materiaal.eenheidsmaat }</td>

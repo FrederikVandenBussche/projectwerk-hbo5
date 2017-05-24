@@ -78,9 +78,12 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 			int opdrachtId = Integer.MIN_VALUE;
 			int taakId = Integer.MIN_VALUE;
 			Date startdatum = new Date();
+			
+			Date gisteren = new Date();
+			gisteren.setDate(gisteren.getDate() - 1);
 
 			List<Object> objectenLijst = new ArrayList<Object>();
-			objectenLijst = dbWerknemerOpdrachtTaakDao.leesOpdrachtIdTaakIdBeginuur(werknemerId);
+			objectenLijst = dbWerknemerOpdrachtTaakDao.leesOpdrachtIdTaakIdBeginuurNaDatum(werknemerId, gisteren);
 			Iterator<Object> iter = objectenLijst.iterator();
 			while (iter.hasNext()) {
 				Object[] obj = (Object[]) iter.next();
@@ -92,7 +95,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 				opdrachtId = (int) obj[1];
 				taakId = (int) obj[2];
 				startdatum = (Date) obj[3];
-
+					
 				String[] klantIdEnOpdrachtNaam = dbOpdrachtDao.selectKlantIdEnNaam(opdrachtId);
 				int klantId = Datatype.stringNaarInt(klantIdEnOpdrachtNaam[0]);
 				String opdrachtNaam = klantIdEnOpdrachtNaam[1];
@@ -107,7 +110,7 @@ public class PersoneelToonTakenlijstServlet extends HttpServlet {
 				taak.setTaaknaam(taakNaam);
 				taak.setKlantnaam(klantNaam);
 				taak.setDatum(startdatum);
-				
+					
 				lijst.add(taak);
 			}
 			

@@ -108,7 +108,7 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 			view = this.getServletContext().getRequestDispatcher("/klantenMenu");
 			
 		} else {
-
+			request.setAttribute("tabKiezer", "gegevens");
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 
 			view = request.getRequestDispatcher("/KlantDetail.jsp");

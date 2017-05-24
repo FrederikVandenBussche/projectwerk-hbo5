@@ -304,6 +304,47 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		
 		return lijst;
 	}
+	
+	/**
+	 * @param werknemerId int
+	 * @param date Date
+	 * @return List<Object>
+	 * 
+	 * haal OpdrachtId, TaakId en Beginuur met een bepaalde werknemerId uit databank
+	 * waar de startdatum na de geparameteriseerde datum is.
+	 */
+	public List<Object> leesOpdrachtIdTaakIdBeginuurNaDatum(int werknemerId, Date datum) {
+		List<Object> lijst = new ArrayList<Object>();
+		String query = "SELECT id, opdrachtTaakOpdrachtId, opdrachtTaakTaakId, beginuur "
+				+ "FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId and beginuur > :datum"; 
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("werknemerId", werknemerId);
+			q.setParameter("datum", datum);
+			System.out.println(q);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + " leesOpdrachtIdTaakIdBeginuurNaDatum(werknemerId, datum)" 
+					+ werknemerId + " " + "datum" + " ", e);
+		} finally {
+			session.close();
+		}
+		
+		return lijst;
+	}
 
 	/**
 	 * @param dag Date

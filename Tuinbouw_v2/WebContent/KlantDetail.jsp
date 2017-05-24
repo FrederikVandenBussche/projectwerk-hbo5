@@ -19,6 +19,7 @@
 	<%@ page isELIgnored="false"%>
 	
 	<div id="container">
+		<input type="hidden" id ="tabKiezer" value="${tabKiezer }" />
 		<div id="nav">
 			<div id="afmeldMenu">
 				<img src="images/logo.png" alt="logo" id="logo">
@@ -76,11 +77,11 @@
 			</div>
 			<div class="invulError">${inputValidatieErrorMsg }</div>
 			<ul id = "myTab" class = "nav nav-tabs">
-           		<li class = "active">
+           		<li id="ligegevens" class = "active">
             	   	<a href = "#gegevens" data-toggle = "tab">Klantgegevens</a>
            		</li>
-           		<li><a href = "#adres" data-toggle = "tab">Adres</a></li>
-           		<li><a href = "#exporteer" data-toggle = "tab">Exporteer prestaties</a></li>
+           		<li id="liadres"><a href = "#adres" data-toggle = "tab">Adres</a></li>
+           		<li id="liexporteer"><a href = "#exporteer" data-toggle = "tab">Exporteer prestaties</a></li>
         	</ul>
         	<div id = "myTabContent" class = "tab-content">
         	    	<div class = "tab-pane fade in active" id = "gegevens">

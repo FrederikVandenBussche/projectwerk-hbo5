@@ -61,39 +61,51 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
 			
-			int hoeveelheid = Datatype.stringNaarInt(hoeveelheidString);
+			double hoeveelheid = Datatype.stringNaarDouble(hoeveelheidString);
 
 			Materiaal materiaal = new Materiaal();
 			DbOpdrachtMateriaal dbOpdrachtMateriaal = new DbOpdrachtMateriaal();
 			DbOpdrachtMateriaalDao dbOpdrachtMateriaalDao = new DbOpdrachtMateriaalDao();
 			MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
 
+			//zoek materiaalId
 			List<Materiaal> materiaalLijst = (List<Materiaal>) (Object) materiaalDaoAdapter.leesAlle();
 
 			Iterator<Materiaal> it = materiaalLijst.iterator();
-			
 			while (it.hasNext()) {
 				Materiaal m = it.next();
 				
 				if (m.getId() == materiaalId) {
-					
 					materiaal = m;
 				}
 			}
+			
 
 			// toevoegen aan databank
 			dbOpdrachtMateriaal.setOpdrachtId(opdrachtId);
 			dbOpdrachtMateriaal.setMateriaalId(materiaal.getId());
 			dbOpdrachtMateriaal.setVerbruik(hoeveelheid);
-
-			dbOpdrachtMateriaalDao.voegToe(dbOpdrachtMateriaal);
-
+			
+			DbOpdrachtMateriaal dbOpdrachtMateriaalDuplicaat = 
+					dbOpdrachtMateriaalDao.leesIdWaarOpdrachtIdEnMateriaalId(opdrachtId, materiaal.getId());
+			
+			if (dbOpdrachtMateriaalDuplicaat.getId() <= 0){
+				
+				dbOpdrachtMateriaalDao.voegToe(dbOpdrachtMateriaal);
+			} else {
+				
+				double verbruik = hoeveelheid + dbOpdrachtMateriaalDuplicaat.getVerbruik();
+				dbOpdrachtMateriaal.setId(dbOpdrachtMateriaalDuplicaat.getId());
+				dbOpdrachtMateriaal.setVerbruik(verbruik);
+				dbOpdrachtMateriaalDao.wijzig(dbOpdrachtMateriaal);
+			}
 		} else {
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
 		}
 		OpdrachtDetailData opdrachtDetailData = opdrachtDetailDaoAdapter.haalOpdrachtdetailDataOp(opdrachtId);
 		
+		request.setAttribute("tabKiezer", "materialen");
 		request.setAttribute("opdrachtDetailData", opdrachtDetailData);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/OpdrachtDetail.jsp");
@@ -120,7 +132,7 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 		
 		String msg = null;
 		
-		msg = InputValidatie.geheelGetal(hoeveelheidString);
+		msg = InputValidatie.kommagetal(hoeveelheidString);
 		if (msg != null) {
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.HoeveelheidGeheelGetal).concat(msg);
 		}

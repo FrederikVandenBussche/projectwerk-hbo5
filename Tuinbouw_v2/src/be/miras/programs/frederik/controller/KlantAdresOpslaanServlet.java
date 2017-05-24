@@ -213,13 +213,13 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			opdrachtMap.put(opdrachtId, opdrachtNaam);
 		}
 		
+		request.setAttribute("tabKiezer", "adres");
 		request.setAttribute("id", id); // klant_id
 		request.setAttribute("aanspreeknaam", aanspreeknaam);
 		request.setAttribute("variabelVeld1", variabelVeld1);
 		request.setAttribute("variabelVeldnaam1", variabelVeldnaam1);
 		request.setAttribute("variabelVeld2", variabelVeld2);
 		request.setAttribute("variabelVeldnaam2", variabelVeldnaam2);
-
 		request.setAttribute("klant", klant);
 		request.setAttribute("opdrachtMap", opdrachtMap);
 		
