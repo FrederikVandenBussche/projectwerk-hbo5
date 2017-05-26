@@ -321,5 +321,75 @@ public class DbKlantDao implements ICRUD {
 		return dbKlant;
 	}
 
+	/**
+	 * @param klant DbKlant
+	 * @return int
+	 * 
+	 * return de id van deze klant
+	 * Als deze record niet bestaat, return Integer.min_value
+	 */
+	public int haalId(DbKlant klant) {
+		int id = Integer.MIN_VALUE;
+		
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		List<Integer> lijst = new ArrayList<Integer>();
+		if (klant.getClass().getSimpleName().equals("DbParticulier")){
+			
+			String query = "SELECT id FROM DbKlant where naam = :naam "
+										+ "AND voornaam = :voornaam";
+			try {
+				session.beginTransaction();
+				transaction = session.getTransaction();
+				Query q = session.createQuery(query);
+				q.setParameter("naam", ((DbParticulier) klant).getNaam());
+				q.setParameter("voornaam", ((DbParticulier) klant).getVoornaam());
+				lijst = q.list();
+				session.flush();
+				if(!transaction.wasCommitted()){
+					transaction.commit();
+				}
+			} catch (Exception e) {
+				if (transaction != null) {
+					transaction.rollback();
+				}
+				e.printStackTrace();
+				LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+			} finally {
+				session.close();
+			}
+		} else if (klant.getClass().getSimpleName().equals("DbBedrijf")){
+			
+			String query = "SELECT id FROM DbKlant where bedrijfnaam = :bedrijfnaam "
+					+ "AND btwNummer = :btwNummer";
+			try {
+				session.beginTransaction();
+				transaction = session.getTransaction();
+				Query q = session.createQuery(query);
+				q.setParameter("bedrijfnaam", ((DbBedrijf) klant).getBedrijfnaam());
+				q.setParameter("btwNummer", ((DbBedrijf) klant).getBtwNummer());
+				lijst = q.list();
+				session.flush();
+				if(!transaction.wasCommitted()){
+					transaction.commit();
+				}
+			} catch (Exception e) {
+				if (transaction != null) {
+					transaction.rollback();
+				}
+				e.printStackTrace();
+				LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+			} finally {
+				session.close();
+			}
+		}
+		
+		if (!lijst.isEmpty()) {
+			id = lijst.get(0);
+		}
+		
+		return id;
+	}
+
 	
 }

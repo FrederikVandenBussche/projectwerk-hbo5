@@ -35,7 +35,8 @@ public class MateriaalDaoAdapter implements ICRUD {
 	@Override
 	public int voegToe(Object o) {
 		Materiaal materiaal = (Materiaal) o;
-
+		int materiaalId = Integer.MIN_VALUE;
+		
 		DbMateriaal dbMateriaal = new DbMateriaal();
 
 		String naamType = materiaal.getSoort();
@@ -54,9 +55,9 @@ public class MateriaalDaoAdapter implements ICRUD {
 		dbMateriaal.setEenheidsprijs(materiaal.getEenheidsprijs());
 		dbMateriaal.setTypeMateriaalId(id);
 
-		dbMateriaalDao.voegToe(dbMateriaal);
+		materiaalId = dbMateriaalDao.voegToe(dbMateriaal);
 
-		return Integer.MIN_VALUE;
+		return materiaalId;
 	}
 
 	@Override
@@ -77,10 +78,10 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 		Iterator<DbMateriaal> it = dbMateriaalLijst.iterator();
 		while (it.hasNext()) {
+			dbMateriaal = it.next();
+			
 			DbTypeMateriaal dbTypeMateriaal = null;
 			Materiaal materiaal = new Materiaal();
-
-			dbMateriaal = it.next();
 			String type = null;
 
 			Iterator<DbTypeMateriaal> typeIt = dbTypeMateriaalLijst.iterator();
@@ -184,6 +185,33 @@ public class MateriaalDaoAdapter implements ICRUD {
 			lijst.add(materiaal);
 		}
 		return lijst;
+	}
+
+	/**
+	 * @param materiaal Materiaal
+	 * @return int
+	 * 
+	 * return de id van dit Materiaal
+	 * Als deze record niet bestaat, return Integer.min_value
+	 */
+	public int haalId(Materiaal materiaal) {
+		int id = Integer.MIN_VALUE;
+		
+		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
+		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
+		DbMateriaal dbMateriaal = new DbMateriaal();
+		
+		id = dbTypeMateriaalDao.lees(materiaal.getSoort());
+		
+		if (id > 0){
+			dbMateriaal.setNaam(materiaal.getNaam());
+			dbMateriaal.setEenheid(materiaal.getEenheidsmaat());
+			dbMateriaal.setTypeMateriaalId(id);
+			
+			id = dbMateriaalDao.haalId(dbMateriaal);
+		}
+		
+		return id;
 	}
 
 	

@@ -2,6 +2,7 @@ package be.miras.programs.frederik.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -75,8 +76,16 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 
 			if (id < 0) {
 				// nieuwMateriaal
-				dao.voegToe(materiaal);
+				int bestaandMateriaalId = dao.haalId(materiaal);
 				
+				if (bestaandMateriaalId <= 0){
+					id = dao.voegToe(materiaal);
+				} else {
+					id = bestaandMateriaalId;
+					
+					materiaal.setId(id);
+					dao.wijzig(materiaal);
+				}
 			} else {
 
 				materiaal.setId(id);
@@ -85,15 +94,19 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		} else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);	
-			
-			// het materiaal ophalen zoals het was
-			materiaal = new Materiaal();
-			materiaal = (Materiaal) dao.lees(id);
 		}
 		
 		List<Materiaal> lijst = new ArrayList<Materiaal>();
 				
 		lijst = (List<Materiaal>) (Object) dao.leesAlle();
+		
+		Iterator<Materiaal> it = lijst.iterator();
+		while (it.hasNext()) {
+			Materiaal m = it.next();
+			if (m.getId() == id) {
+				materiaal = m;
+			}
+		}
 		
 		request.setAttribute("materiaalLijst", lijst);
 		request.setAttribute("materiaal", materiaal);

@@ -14,8 +14,8 @@ function setup(){
 		var li = "li";
 		var liElement = li.concat(tab);
 		
-		$("#myTab li").removeClass("active");
-		$("#myTabContent div").removeClass("in active");
+		$("#myTab > li").removeClass("active");
+		$("#myTabContent > div").removeClass("in active");
 				
 		$('#' + liElement).addClass("active");
 		$('#' + tab).addClass("in active");

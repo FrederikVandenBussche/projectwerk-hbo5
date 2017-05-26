@@ -254,5 +254,50 @@ public class DbMateriaalDao implements ICRUD {
 		return isKomtVoor;
 	}
 
+	/**
+	 * @param dbMateriaal DbMateriaal
+	 * @return int
+	 * 
+	 * return de id van dit DbMateriaal
+	 * Als deze record niet bestaat, return Integer.min_value
+	 */
+	public int haalId(DbMateriaal dbMateriaal) {
+		int id = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT id FROM DbMateriaal where naam = :naam "
+							+ "AND typeMateriaalId = :typeMateriaalId "
+							+ "AND eenheid = :eenheid";
+		List<Integer> lijst = new ArrayList<Integer>();
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("naam", dbMateriaal.getNaam());
+			q.setParameter("typeMateriaalId", dbMateriaal.getTypeMateriaalId());
+			q.setParameter("eenheid", dbMateriaal.getEenheid());
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+		} finally {
+			session.close();
+		}
+		
+		if (!lijst.isEmpty()) {
+			id = lijst.get(0);
+		}
+		
+		return id;
+	}
+
 	
 }

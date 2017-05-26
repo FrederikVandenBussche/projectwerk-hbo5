@@ -244,6 +244,27 @@ public class PersoneelDaoAdapter implements ICRUD{
 		
 		return gebruikersnaam;
 	}
+
+	/**
+	 * @param personeel Personeel
+	 * @return int
+	 * 
+	 * Controle of de persoon met zelfde naam, voornaam en geboortedatum
+	 * in de databank zit.
+	 * return de id van dit DbPersoon 
+	 * Als deze record niet bestaat: return Integer.min_value
+	 */
+	public int haalId(Personeel personeel) {
+		DbPersoonDao dbPersoonDao = new DbPersoonDao();
+		DbPersoon dbPersoon = new DbPersoon();
+		
+		dbPersoon.setNaam(personeel.getNaam());
+		dbPersoon.setVoornaam(personeel.getVoornaam());
+		dbPersoon.setGeboortedatum(personeel.getGeboortedatum());
+		
+		int persoonId = dbPersoonDao.haalId(dbPersoon);
+		return persoonId;
+	}
 	
 	
 }

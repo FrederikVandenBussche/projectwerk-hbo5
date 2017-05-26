@@ -11,6 +11,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
+	<script type="text/javascript" src="script/tabKiezer.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -18,6 +19,7 @@
 	<%@ page isELIgnored="false"%>
 	
 	<div id="container">
+		<input type="hidden" id ="tabKiezer" value="${tabKiezer }" />
 		<div id="nav">
 			<div id="afmeldMenu">
 				<img src="images/logo.png" alt="logo" id="logo">
@@ -72,12 +74,12 @@
 		<div id="content">
 			<br />	
 			<ul id = "myTab" class = "nav nav-tabs">
-        	    <li class = "active">
+        	    <li id="liparticulier" class = "active">
         	        <a href = "#particulier" data-toggle = "tab">
         	            Lijst met particuliere klanten
         	        </a>
         	    </li>
-        	    <li><a href = "#bedrijf" data-toggle = "tab">Lijst met bedrijf klanten</a></li>	
+        	    <li id="libedrijf"><a href = "#bedrijf" data-toggle = "tab">Lijst met bedrijf klanten</a></li>	
         	</ul>
 	        <div id = "myTabContent" class = "tab-content">
 	            <div class = "tab-pane fade in active" id = "particulier">

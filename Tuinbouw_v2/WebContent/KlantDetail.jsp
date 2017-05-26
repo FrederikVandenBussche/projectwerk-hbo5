@@ -12,6 +12,7 @@
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="script/legeTabelVerbergen.js"></script>
 	<script type="text/javascript" src="script/nieuweKlant.js"></script>
+	<script type="text/javascript" src="script/tabKiezer.js"></script>
 </head>
 <body>
 	<!--  taglib om jstl expression language te gebruiken -->
@@ -107,99 +108,88 @@
 					</form>
             	</div>
         	    	<div class = "tab-pane fade" id = "adres">
-            		<br />
-            		 <ul id = "adresTab" class = "nav nav-tabs">
-						<c:forEach items="${klant.adreslijst }" var = "element" varStatus = "status">
-							<li class = ${status.first ? 'active' : '' } >
-								<a href = "#${element.id }" data-toggle = "tab">
-									${element.straat } ${element.nummer } ${element.bus }
-									<br />
-									${element.postcode } ${element.plaats }
-								</a>
-							</li>
-						</c:forEach>
-						<li>
-							<a href = "#nieuwAdres" data-toggle = "tab">
-								Voeg nieuw adres toe
-							</a>
-						</li>
-					</ul>
-					<div id = "adresContent" class = "tab-content">
-						<c:forEach items = "${klant.adreslijst }" var = "element" varStatus = "status">
-							<div class = "tab-pane fade ${status.first ? ' in active' : '' }" id = "${element.id }">
-								<div>	
-									<form action="klantAdresVerwijderen" method="post">
-										<div class="staticmap">
-											<a href="${element.googlemap }" target="_blank">
-												<img src="${element.staticmap }" alt="kaart van dit adres">
-											</a>
-										</div>
-										<div>
-											<input type="hidden" name="adres_id" value=${element.id } />
-											<input type="hidden" name="klant_id" value="${id }" />
-											<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" />
-											<input type="hidden" name="variabelVeldnaam1" value="${variabelVeldnaam1 }" />
-											<input type="hidden" name="variabelVeld1" value="${variabelVeld1 }" />
-											<input type="hidden" name="variabelVeldnaam2" value="${variabelVeldnaam2 }" />
-											<input type="hidden" name="variabelVeld2" value="${variabelVeld2 }" />
-											<input type="submit" class = "btn btn-default btn-block" name="submit" value="Verwijder dit adres" />
-										</div>
-									</form>
-								</div>
-							</div>
-						</c:forEach>
-						<div class = "tab-pane fade" id = "nieuwAdres">
-							<div>
-								<form action="klantAdresOpslaan" method="post">
-									<div class = "inputvelden form-group">
-										<label class = "control-label col-sm-2" for="straat">straat: </label>
-										<div class = "col-sm-10">
-											<input type="text" name="straat" />
-										</div>
-										<label class = "control-label col-sm-2" for="nr">nr: </label>
-										<div class = "col-sm-10">
-											<input type="number" name="nr" size="5" />
-										</div>
-										<label class = "control-label col-sm-2" for="bus">bus: </label>
-										<div class = "col-sm-10">
-											 <input type="text" name="bus" size="5" />
-										</div>
-										<label class = "control-label col-sm-2" for="postcode">postcode: </label>
-										<div class = "col-sm-10">
-											 <input type="number" name="postcode" size="5" />
-										</div>
-										<label class = "control-label col-sm-2" for="plaats">plaats: </label>
-										<div class = "col-sm-10">
-											 <input type="text" name="plaats" />	
-										</div> 
-										<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" />
-										<input type="hidden" name="klant_id" value="${id}" />
-										<input type="hidden" name="variabelVeldnaam1" value="${variabelVeldnaam1 }" />
-										<input type="hidden" name="variabelVeld1" value="${variabelVeld1 }" />
-										<input type="hidden" name="variabelVeldnaam2" value="${variabelVeldnaam2 }" />
-										<input type="hidden" name="variabelVeld2" value="${variabelVeld2 }" />
-										<div class="col-sm-offset-2 col-sm-10">
-											<input type="submit" class = "btn btn-default active" name="submit" value="Voeg nieuw adres toe" />
+        	    		<div id="bijNieuwVerbergen">
+        	    			<br />
+        	    			<ul id = "adresTab" class = "nav nav-tabs">
+								<c:forEach items="${klant.adreslijst }" var = "element" varStatus = "status">
+									<li class = ${status.first ? 'active' : '' } >
+										<a href = "#${element.id }" data-toggle = "tab">
+											${element.straat } ${element.nummer } ${element.bus }
+											<br />
+											${element.postcode } ${element.plaats }
+										</a>
+									</li>
+								</c:forEach>
+								<li>
+									<a href = "#nieuwAdres" data-toggle = "tab">
+										Voeg nieuw adres toe
+									</a>
+								</li>
+							</ul>
+							<div id = "adresContent" class = "tab-content">
+								<c:forEach items = "${klant.adreslijst }" var = "element" varStatus = "status">
+									<div class = "tab-pane fade ${status.first ? ' in active' : '' }" id = "${element.id }">
+										<div>	
+											<form action="klantAdresVerwijderen" method="post">
+												<div class="staticmap">
+													<a href="${element.googlemap }" target="_blank">
+														<img src="${element.staticmap }" alt="kaart van dit adres">
+													</a>
+												</div>
+												<div>
+													<input type="hidden" name="adres_id" value=${element.id } />
+													<input type="hidden" name="klant_id" value="${id }" />
+													<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" />
+													<input type="hidden" name="variabelVeldnaam1" value="${variabelVeldnaam1 }" />
+													<input type="hidden" name="variabelVeld1" value="${variabelVeld1 }" />
+													<input type="hidden" name="variabelVeldnaam2" value="${variabelVeldnaam2 }" />
+													<input type="hidden" name="variabelVeld2" value="${variabelVeld2 }" />
+													<input type="submit" class = "btn btn-default btn-block" name="submit" value="Verwijder dit adres" />
+												</div>
+											</form>
 										</div>
 									</div>
-								</form>
+								</c:forEach>
+								<div class = "tab-pane fade" id = "nieuwAdres">
+									<div>
+										<form action="klantAdresOpslaan" method="post">
+											<div class = "inputvelden form-group">
+												<label class = "control-label col-sm-2" for="straat">straat: </label>
+												<div class = "col-sm-10">
+													<input type="text" name="straat" />
+												</div>
+												<label class = "control-label col-sm-2" for="nr">nr: </label>
+												<div class = "col-sm-10">
+													<input type="number" name="nr" size="5" />
+												</div>
+												<label class = "control-label col-sm-2" for="bus">bus: </label>
+												<div class = "col-sm-10">
+													 <input type="text" name="bus" size="5" />
+												</div>
+												<label class = "control-label col-sm-2" for="postcode">postcode: </label>
+												<div class = "col-sm-10">
+													 <input type="number" name="postcode" size="5" />
+												</div>
+												<label class = "control-label col-sm-2" for="plaats">plaats: </label>
+												<div class = "col-sm-10">
+													 <input type="text" name="plaats" />	
+												</div> 
+												<input type="hidden" name="aanspreeknaam" value="${aanspreeknaam}" />
+												<input type="hidden" name="klant_id" value="${id}" />
+												<input type="hidden" name="variabelVeldnaam1" value="${variabelVeldnaam1 }" />
+												<input type="hidden" name="variabelVeld1" value="${variabelVeld1 }" />
+												<input type="hidden" name="variabelVeldnaam2" value="${variabelVeldnaam2 }" />
+												<input type="hidden" name="variabelVeld2" value="${variabelVeld2 }" />
+												<div class="col-sm-offset-2 col-sm-10">
+													<input type="submit" class = "btn btn-default active" name="submit" value="Voeg nieuw adres toe" />
+												</div>
+											</div>
+										</form>
+									</div>
+								</div>
 							</div>
-						</div>
+        	    		</div>	
 					</div>
-				
-            		 <!-- 
-            		 
-            		 
-            		 
-            		 
-            		 
-            		 
-            		 
-            		 
-            		 
-            		 
-            		  -->
-				</div>
         	    	<div class = "tab-pane fade" id = "exporteer">
         	    		<br />
         	    		<form action="exporteerPrestaties" method="get">

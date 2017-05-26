@@ -95,8 +95,13 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 			// wijzigingen aanbrengen in de databank
 			if (id < 0) {
 				// nieuw Klant toevoegen
-				id = dbKlantDao.voegToe(klant);
+				int bestaandeKlantId = dbKlantDao.haalId(klant);
 				
+				if (bestaandeKlantId <= 0) {
+					id = dbKlantDao.voegToe(klant);
+				} else {
+					id = bestaandeKlantId;
+				}
 			} else { // ( id !< 0)
 				// een bestaande Klant wijzigen
 				dbKlantDao.wijzig(klant);			
@@ -104,11 +109,12 @@ public class KlantOpslaanServlet extends HttpServlet implements IinputValidatie 
 			
 			session.setAttribute("id", id);
 			
-			//view = request.getRequestDispatcher("/Klantbeheer.jsp");
+			request.setAttribute("tabKiezer",  this.type);
+			
 			view = this.getServletContext().getRequestDispatcher("/klantenMenu");
 			
 		} else {
-			request.setAttribute("tabKiezer", "gegevens");
+
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 
 			view = request.getRequestDispatcher("/KlantDetail.jsp");

@@ -62,7 +62,7 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 				new String[]{voornaam, naam, loonString, email, 
 						nieuweGeboortedatumString, nieuweAanwervingsdatumString});
 
-		PersoneelDaoAdapter dao = new PersoneelDaoAdapter();
+		PersoneelDaoAdapter personeelDaoAdapter = new PersoneelDaoAdapter();
 		
 		if (inputValidatieErrorMsg.isEmpty()) {
 			
@@ -87,15 +87,22 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			personeel.setAanwervingsdatum(aanwervingsdatum);
 
 			if (this.id < 0) {
-				id = dao.voegToe(personeel);
+				
+				// er kunnen geen 2 personen met dezelfde voornaam, naam en 
+				// geboortedatum geregistreerd worden.
+				int bestaandPersoneelId = personeelDaoAdapter.haalId(personeel);
+				if (bestaandPersoneelId <= 0){
+					id = personeelDaoAdapter.voegToe(personeel);
+				} else {
+					id = bestaandPersoneelId;
+				}
+				
 
 				request.setAttribute("id", id);
 
 			} else {
 				// indien er iets gewijzigd werd, de wijzigingen opslaan
-				PersoneelDaoAdapter personeelAdapter = new PersoneelDaoAdapter();
-				
-				Personeel p = (Personeel) personeelAdapter.lees(id);
+				Personeel p = (Personeel) personeelDaoAdapter.lees(id);
 				
 				if (personeel.getGeboortedatum() == null)
 						personeel.setGeboortedatum(p.getGeboortedatum());
@@ -110,11 +117,11 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 					personeel.setGebruikerId(p.getGebruikerId());
 					personeel.setWerknemerId(p.getWerknemerId());
 						
-					dao.wijzig(personeel);
+					personeelDaoAdapter.wijzig(personeel);
 				}
 			}
 		
-			personeelLijst = (List<Personeel>) (Object) dao.leesAlle();
+			personeelLijst = (List<Personeel>) (Object) personeelDaoAdapter.leesAlle();
 			
 			request.setAttribute("personeelLijst", personeelLijst);
 			
@@ -124,7 +131,7 @@ public class PersoneelOpslaanServlet extends HttpServlet implements IinputValida
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 			
-			Personeel personeel = (Personeel) dao.lees(id);
+			Personeel personeel = (Personeel) personeelDaoAdapter.lees(id);
 
 			request.setAttribute("tabKiezer", "gegevens");
 			request.setAttribute("personeelslid", personeel);

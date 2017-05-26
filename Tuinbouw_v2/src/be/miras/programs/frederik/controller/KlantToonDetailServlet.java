@@ -105,7 +105,7 @@ public class KlantToonDetailServlet extends HttpServlet {
 				 * Daarom stellen we nu de aanspreeknaam van het personeelslid
 				 * tijdelijk in.
 				 */
-				aanspreeknaam = "een nieuwe klant";
+				aanspreeknaam = "";
 
 			} else {
 				// het gaat niet om een nieuwe klant.

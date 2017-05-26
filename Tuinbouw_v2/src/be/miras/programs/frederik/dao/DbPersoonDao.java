@@ -217,5 +217,50 @@ public class DbPersoonDao implements ICRUD {
 		return persoonLijst;
 	}
 
+	/**
+	 * @param dbpersoon DbPersoon
+	 * @return int
+	 * 
+	 * return de id van dit DbPersoon
+	 * Als deze record niet bestaat, return Integer.min_value
+	 */
+	public int haalId(DbPersoon dbPersoon) {
+		int id = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT id FROM DbPersoon where naam = :naam "
+				+ "AND voornaam = :voornaam "
+				+ "AND geboortedatum = :geboortedatum";
+		List<Integer> lijst = new ArrayList<Integer>();
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("naam", dbPersoon.getNaam());
+			q.setParameter("voornaam", dbPersoon.getVoornaam());
+			q.setParameter("geboortedatum", dbPersoon.getGeboortedatum());
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+		} finally {
+			session.close();
+		}
+		
+		if (!lijst.isEmpty()) {
+			id = lijst.get(0);
+		}
+
+		return id;
+	}
+
 
 }

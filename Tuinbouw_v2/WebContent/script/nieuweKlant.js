@@ -10,12 +10,12 @@ function setup(){
 	
 	if(tekst.length <= 20){
 		
-		$("#adressen").hide();
-		$("#exportatie").hide();
+		$("#klantAanspreekNaam").hide();
+		$("#bijNieuwVerbergen").hide();
 	} else {
-	
-		$("#adressen").show();
-		$("#exportatie").show();
+		
+		$("#klantAanspreekNaam").show();
+		$("#bijNieuwVerbergen").show();
 	}
 }
 
