@@ -194,6 +194,14 @@
     <url-pattern>/klantOpslaan</url-pattern>
   </servlet-mapping>
   <servlet>
+  	<servlet-name>klantVerwijderen</servlet-name>
+  	<servlet-class>be.miras.programs.frederik.controller.KlantVerwijderServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>klantVerwijderen</servlet-name>
+  	<url-pattern>/klantVerwijderen</url-pattern>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>klantAdresOpslaan</servlet-name>
     <servlet-class>be.miras.programs.frederik.controller.KlantAdresOpslaanServlet</servlet-class>
   </servlet>

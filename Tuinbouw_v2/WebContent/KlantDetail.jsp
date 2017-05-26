@@ -213,6 +213,12 @@
 						</form>
         	    	</div>
     		</div>
+    		<div id="klantVerwijderen">
+    			<form action="klantVerwijderen" method="post">
+    				<input type="hidden" name="id" value="${id }" />
+    				<input type="submit" class = "btn btn-default btn-lg btn-block" name="verwijder_btn" value="Verwijder deze klant" />
+    			</form>
+    		</div>
 		</div>
 	</div>
 </body>

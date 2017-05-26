@@ -172,5 +172,45 @@ public class DbVooruitgangDao implements ICRUD {
 		}
 	}
 
+	/**
+	 * @param vooruitgangId int
+	 * @return int
+	 * 
+	 * return select statusId from vooruitgang where id = geparamteriseerde vooruitgangId
+	 */
+	public int leesStatusId(int id) {
+		int statusId = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT statusId FROM DbVooruitgang where id = :id";
+		List<Integer> lijst = new ArrayList<Integer>();
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("id", id);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+		} finally {
+			session.close();
+		}
+		
+		if (!lijst.isEmpty()) {
+			statusId = lijst.get(0);
+		}
+
+		return statusId;
+	}
+
 	
 }

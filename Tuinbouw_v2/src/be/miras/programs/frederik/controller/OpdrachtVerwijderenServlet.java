@@ -55,6 +55,7 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		DbVooruitgangDao dbVooruitgangDao = new DbVooruitgangDao();
 		DbOpdrachtTaakDao dbOpdrachtTaakDao = new DbOpdrachtTaakDao();
 		DbOpdrachtDao dbOpdrachtDao = new DbOpdrachtDao();
+		OpdrachtDaoAdapter opdrachtDaoAdapter = new OpdrachtDaoAdapter();
 		
 		// de opdracht uit de databank verwijderen
 		
@@ -85,7 +86,6 @@ public class OpdrachtVerwijderenServlet extends HttpServlet {
 		// 6. Opdracht
 		dbOpdrachtDao.verwijder(opdrachtId);
 	
-		OpdrachtDaoAdapter opdrachtDaoAdapter = new OpdrachtDaoAdapter();
 		List<Opdracht> opdrachtLijst = opdrachtDaoAdapter.haalOpdrachtenOp();
 		
 		request.setAttribute("opdrachtLijst", opdrachtLijst);
