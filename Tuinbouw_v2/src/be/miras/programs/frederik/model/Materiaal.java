@@ -12,6 +12,7 @@ public class Materiaal implements Ivergelijk {
 	private String naam;
 	private String eenheidsmaat;
 	private double eenheidsprijs;
+	private int soortId;
 	private String soort;
 	private double hoeveelheid;
 	
@@ -79,15 +80,30 @@ public class Materiaal implements Ivergelijk {
 	}
 
 	/**
-	 * @return the soort String
+	 * @return the soortId int
+	 */
+	public int getSoortId() {
+		return soortId;
+	}
+
+	/**
+	 * @param soortId
+	 *            the soortId to set int
+	 */
+	public void setSoortId(int soortId) {
+		this.soortId = soortId;
+	}
+	
+	/**
+	 * @return the soortId String
 	 */
 	public String getSoort() {
 		return soort;
 	}
 
 	/**
-	 * @param soort
-	 *            the soort to set String
+	 * @param soortId
+	 *            the soortId to set String
 	 */
 	public void setSoort(String soort) {
 		this.soort = soort;
@@ -116,7 +132,7 @@ public class Materiaal implements Ivergelijk {
 		Materiaal m2 = (Materiaal) p;
 
 		if (m1.getNaam().equals(m2.getNaam()) && m1.getEenheidsmaat().equals(m2.getEenheidsmaat())
-				&& m1.getEenheidsprijs() == m2.getEenheidsprijs() && m1.getSoort().equals(m2.getSoort())) {
+				&& m1.getEenheidsprijs() == m2.getEenheidsprijs() && m1.getSoortId() == m2.getSoortId()) {
 
 			isVerschillend = false;
 		}

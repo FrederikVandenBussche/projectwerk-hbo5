@@ -3,6 +3,7 @@ package be.miras.programs.frederik.dao.adapter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import be.miras.programs.frederik.dao.DbMateriaalDao;
 import be.miras.programs.frederik.dao.DbOpdrachtMateriaalDao;
@@ -12,6 +13,7 @@ import be.miras.programs.frederik.dbo.DbMateriaal;
 import be.miras.programs.frederik.dbo.DbOpdrachtMateriaal;
 import be.miras.programs.frederik.dbo.DbTypeMateriaal;
 import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.model.TypeMateriaal;
 
 /**
  * @author Frederik Vanden Bussche
@@ -35,27 +37,25 @@ public class MateriaalDaoAdapter implements ICRUD {
 	@Override
 	public int voegToe(Object o) {
 		Materiaal materiaal = (Materiaal) o;
-		int materiaalId = Integer.MIN_VALUE;
 		
 		DbMateriaal dbMateriaal = new DbMateriaal();
-
-		String naamType = materiaal.getSoort();
-		int id = dbTypeMateriaalDao.lees(naamType);
-
-		if (id < 0) {
+		
+		int typeMateriaalId = materiaal.getSoortId();
+		
+		if (typeMateriaalId < 0) {
 			// TypeMateriaal bestaat nog niet
 			DbTypeMateriaal dbTypeMateriaal = new DbTypeMateriaal();
-			dbTypeMateriaal.setNaam(naamType);
-			dbTypeMateriaalDao.voegToe(dbTypeMateriaal);
-			id = dbTypeMateriaalDao.lees(naamType);
+			dbTypeMateriaal.setNaam(materiaal.getNaam());
+			typeMateriaalId = dbTypeMateriaalDao.voegToe(dbTypeMateriaal);
+			
 		}
 
 		dbMateriaal.setNaam(materiaal.getNaam());
 		dbMateriaal.setEenheid(materiaal.getEenheidsmaat());
 		dbMateriaal.setEenheidsprijs(materiaal.getEenheidsprijs());
-		dbMateriaal.setTypeMateriaalId(id);
+		dbMateriaal.setTypeMateriaalId(typeMateriaalId);
 
-		materiaalId = dbMateriaalDao.voegToe(dbMateriaal);
+		int materiaalId = dbMateriaalDao.voegToe(dbMateriaal);
 
 		return materiaalId;
 	}
@@ -67,40 +67,45 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 	@Override
 	public List<Object> leesAlle() {
-		List<Materiaal> materiaalLijst = new ArrayList<Materiaal>();
+		List<TypeMateriaal> typeMateriaalLijst = new ArrayList<TypeMateriaal>();
 		List<DbMateriaal> dbMateriaalLijst = new ArrayList<DbMateriaal>();
 		List<DbTypeMateriaal> dbTypeMateriaalLijst = new ArrayList<DbTypeMateriaal>();
-
-		DbMateriaal dbMateriaal = null;
 
 		dbMateriaalLijst = (ArrayList<DbMateriaal>) (Object) dbMateriaalDao.leesAlle();
 		dbTypeMateriaalLijst = (ArrayList<DbTypeMateriaal>) (Object) dbTypeMateriaalDao.leesAlle();
 
-		Iterator<DbMateriaal> it = dbMateriaalLijst.iterator();
-		while (it.hasNext()) {
-			dbMateriaal = it.next();
+		Iterator<DbTypeMateriaal> dbTypeMateriaalIt = dbTypeMateriaalLijst.iterator();
+		while (dbTypeMateriaalIt.hasNext()) {
+			DbTypeMateriaal dbTypeMateriaal = dbTypeMateriaalIt.next();
 			
-			DbTypeMateriaal dbTypeMateriaal = null;
-			Materiaal materiaal = new Materiaal();
-			String type = null;
+			TypeMateriaal typeMateriaal = new TypeMateriaal();
+			typeMateriaal.setId(dbTypeMateriaal.getId());
+			typeMateriaal.setNaam(dbTypeMateriaal.getNaam());
+			List<Materiaal> materiaalLijst = new ArrayList<Materiaal>();
 
-			Iterator<DbTypeMateriaal> typeIt = dbTypeMateriaalLijst.iterator();
-			while (typeIt.hasNext()) {
-				dbTypeMateriaal = typeIt.next();
-				if (dbTypeMateriaal.getId() == dbMateriaal.getTypeMateriaalId()) {
-					type = dbTypeMateriaal.getNaam();
+			Iterator<DbMateriaal> dbMateriaalIt = dbMateriaalLijst.iterator();
+			while (dbMateriaalIt.hasNext()) {
+				DbMateriaal dbMateriaal = dbMateriaalIt.next();
+				if (dbMateriaal.getTypeMateriaalId() == dbTypeMateriaal.getId()) {
+					
+					Materiaal materiaal = new Materiaal();
+					materiaal.setId(dbMateriaal.getId());
+					materiaal.setNaam(dbMateriaal.getNaam());
+					materiaal.setEenheidsmaat(dbMateriaal.getEenheid());
+					materiaal.setEenheidsprijs(dbMateriaal.getEenheidsprijs());
+					materiaal.setSoortId(dbTypeMateriaal.getId());
+					materiaal.setSoort(dbTypeMateriaal.getNaam());
+					
+					materiaalLijst.add(materiaal);
+					dbMateriaalIt.remove();
 				}
 			}
-
-			materiaal.setId(dbMateriaal.getId());
-			materiaal.setNaam(dbMateriaal.getNaam());
-			materiaal.setEenheidsmaat(dbMateriaal.getEenheid());
-			materiaal.setEenheidsprijs(dbMateriaal.getEenheidsprijs());
-			materiaal.setSoort(type);
-			materiaalLijst.add(materiaal);
+			
+			typeMateriaal.setMateriaalLijst(materiaalLijst);
+			typeMateriaalLijst.add(typeMateriaal);
 		}
-
-		List<Object> objectLijst = new ArrayList<Object>(materiaalLijst);
+		
+		List<Object> objectLijst = new ArrayList<Object>(typeMateriaalLijst);
 		return objectLijst;
 	}
 
@@ -109,9 +114,9 @@ public class MateriaalDaoAdapter implements ICRUD {
 		Materiaal materiaal = (Materiaal) o;
 		DbMateriaal dbMateriaal = new DbMateriaal();
 
-		int typeMateriaalId = dbTypeMateriaalDao.lees(materiaal.getSoort());
+		int typeMateriaalId = materiaal.getSoortId();
 		int oudTypeMateriaalId = dbMateriaalDao.geefTypeMateriaalId(materiaal.getId());
-		System.out.println("zoek id van : " + materiaal.getSoort() + ": " + typeMateriaalId);
+		
 		if (typeMateriaalId < 0) {
 			DbTypeMateriaal dtm = new DbTypeMateriaal();
 
@@ -121,7 +126,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 		} 
 		
 		dbMateriaal.setTypeMateriaalId(typeMateriaalId);
-		
 		dbMateriaal.setId(materiaal.getId());
 		dbMateriaal.setNaam(materiaal.getNaam());
 		dbMateriaal.setEenheid(materiaal.getEenheidsmaat());
@@ -130,7 +134,6 @@ public class MateriaalDaoAdapter implements ICRUD {
 		dbMateriaalDao.wijzig(dbMateriaal);
 		
 		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(oudTypeMateriaalId)){
-			System.out.println("het komt niet meer voor");
 			dbTypeMateriaalDao.verwijder(oudTypeMateriaalId);
 		}
 	}
@@ -139,10 +142,9 @@ public class MateriaalDaoAdapter implements ICRUD {
 	public void verwijder(int id) {
 		int typeMateriaalId = dbMateriaalDao.geefTypeMateriaalId(id);
 		dbMateriaalDao.verwijder(id);
-
-		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(typeMateriaalId)) {
-			DbTypeMateriaalDao dtmd = new DbTypeMateriaalDao();
-			dtmd.verwijder(typeMateriaalId);
+		
+		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(typeMateriaalId)){
+			dbTypeMateriaalDao.verwijder(typeMateriaalId);
 		}
 	}
 
@@ -198,20 +200,30 @@ public class MateriaalDaoAdapter implements ICRUD {
 		int id = Integer.MIN_VALUE;
 		
 		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
-		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
 		DbMateriaal dbMateriaal = new DbMateriaal();
 		
-		id = dbTypeMateriaalDao.lees(materiaal.getSoort());
+		dbMateriaal.setNaam(materiaal.getNaam());
+		dbMateriaal.setEenheid(materiaal.getEenheidsmaat());
+		dbMateriaal.setTypeMateriaalId(materiaal.getSoortId());
 		
-		if (id > 0){
-			dbMateriaal.setNaam(materiaal.getNaam());
-			dbMateriaal.setEenheid(materiaal.getEenheidsmaat());
-			dbMateriaal.setTypeMateriaalId(id);
-			
-			id = dbMateriaalDao.haalId(dbMateriaal);
-		}
+		id = dbMateriaalDao.haalId(dbMateriaal);
 		
 		return id;
+	}
+
+	/**
+	 * @param typeMateriaalId int
+	 * 
+	 * Verwijder het typeMateriaal
+	 * en alle materialen met geparameteriseerde typeMateriaalId.
+	 */
+	public void verwijderTypeMateriaal(int typeMateriaalId) {
+		DbMateriaalDao dbMateriaalDao = new DbMateriaalDao();
+		DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
+		
+		dbMateriaalDao.verwijderWaarTypeMateriaalId(typeMateriaalId);
+		dbTypeMateriaalDao.verwijder(typeMateriaalId);
+		
 	}
 
 	

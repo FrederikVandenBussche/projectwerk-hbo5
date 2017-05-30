@@ -23,12 +23,10 @@ import be.miras.programs.frederik.dao.DbStraatDao;
 import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbBedrijf;
-import be.miras.programs.frederik.dbo.DbGemeente;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbKlantAdres;
 import be.miras.programs.frederik.dbo.DbOpdracht;
 import be.miras.programs.frederik.dbo.DbParticulier;
-import be.miras.programs.frederik.dbo.DbStraat;
 import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.GoogleApis;
@@ -90,51 +88,24 @@ public class KlantAdresOpslaanServlet extends HttpServlet implements IinputValid
 			DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
 			DbAdres dbAdres = new DbAdres();
 			DbKlantAdres dbKlantAdres = new DbKlantAdres();
-
+			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+			
 			Adres adres = new Adres();
-
-			int gemeenteId = dbGemeenteDao.geefIdVan(postcode, plaats);
-			
-			if (gemeenteId < 0) {
-				DbGemeente gemeente = new DbGemeente();
-				gemeente.setNaam(plaats);
-				gemeente.setPostcode(postcode);
-				dbGemeenteDao.voegToe(gemeente);
-				gemeenteId = dbGemeenteDao.geefIdVan(postcode, plaats);
-			}
-			
-			int straatId = dbStraatDao.geefIdVan(straat);
-			
-			if (straatId < 0) {
-				DbStraat dbStraat = new DbStraat();
-				dbStraat.setNaam(straat);
-				dbStraatDao.voegToe(dbStraat);
-				straatId = dbStraatDao.geefIdVan(straat);
-			}
-
-			dbAdres.setStraatId(straatId);
-			dbAdres.setGemeenteId(gemeenteId);
-			dbAdres.setHuisnummer(nummer);
-			dbAdres.setBus(bus);
-			int adresId = dbAdresDao.voegToe(dbAdres);
-
-			dbKlantAdres.setKlantId(id);
-			dbKlantAdres.setAdresId(adresId);
-			dbKlantAdresDao.voegToe(dbKlantAdres);
-
-			adres.setId(adresId);
 			adres.setStraat(straat);
 			adres.setNummer(nummer);
 			adres.setBus(bus);
 			adres.setPostcode(postcode);
 			adres.setPlaats(plaats);
-			adres.setPersoonId(id);
+			
+			int adresId = adresDaoAdapter.voegToe(adres);
 
-			String staticmap = GoogleApis.urlBuilderStaticMap(adres);
-			adres.setStaticmap(staticmap);
-
-			String googlemap = GoogleApis.urlBuilderGoogleMaps(adres);
-			adres.setGooglemap(googlemap);
+			dbKlantAdres.setKlantId(id);
+			dbKlantAdres.setAdresId(adresId);
+			
+			int dbKlantAdresId = dbKlantAdresDao.geefIdVan(dbKlantAdres);
+			if ( dbKlantAdresId < 0){
+				dbKlantAdresDao.voegToe(dbKlantAdres);
+			}
 		}else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);

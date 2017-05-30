@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.model.TypeMateriaal;
 import be.miras.programs.frederik.util.Datatype;
 import be.miras.programs.frederik.util.InputValidatieStrings;
 import be.miras.programs.frederik.util.InputValidatie;
@@ -44,17 +45,19 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 			throws ServletException, IOException {
 		response.setContentType("text/html");
 
-		int id = Integer.parseInt(request.getParameter("id"));
+		int materiaalId = Datatype.stringNaarInt(request.getParameter("materiaalId"));
+		int typeMateriaalId = Datatype.stringNaarInt(request.getParameter("typeMateriaalId"));
 		String naam = request.getParameter("naam").trim();
-		String soort = request.getParameter("soort").trim();
 		String eenheidsmaat = request.getParameter("eenheidsmaat").trim();
 		String eenheidsprijsString = request.getParameter("eenheidsprijs").trim();
-
+		
 		String inputValidatieErrorMsg = inputValidatie(
-				new String[]{naam, soort, eenheidsmaat, eenheidsprijsString});
+				new String[]{naam, Integer.toString(typeMateriaalId), eenheidsmaat, eenheidsprijsString});
 		
 		MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
 		Materiaal materiaal = null;
+		List<TypeMateriaal> lijst = new ArrayList<TypeMateriaal>();
+		String tabKiezer = null;
 				
 		if (inputValidatieErrorMsg.isEmpty()) {
 			materiaal = new Materiaal();
@@ -70,45 +73,62 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 			}
 			
 			materiaal.setNaam(naam);
-			materiaal.setSoort(soort);
 			materiaal.setEenheidsmaat(eenheidsmaat);
 			materiaal.setEenheidsprijs(eenheidsprijs);
+			materiaal.setSoortId(typeMateriaalId);
 
-			if (id < 0) {
+			if (materiaalId < 0) {
 				// nieuwMateriaal
 				int bestaandMateriaalId = dao.haalId(materiaal);
 				
 				if (bestaandMateriaalId <= 0){
-					id = dao.voegToe(materiaal);
+					materiaalId = dao.voegToe(materiaal);
 				} else {
-					id = bestaandMateriaalId;
+					materiaalId = bestaandMateriaalId;
 					
-					materiaal.setId(id);
+					materiaal.setId(materiaalId);
 					dao.wijzig(materiaal);
 				}
 			} else {
 
-				materiaal.setId(id);
+				materiaal.setId(materiaalId);
 				dao.wijzig(materiaal);
 			}
 		} else {
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);	
 		}
-		
-		List<Materiaal> lijst = new ArrayList<Materiaal>();
 				
-		lijst = (List<Materiaal>) (Object) dao.leesAlle();
-		
-		Iterator<Materiaal> it = lijst.iterator();
+		lijst = (List<TypeMateriaal>) (Object) dao.leesAlle();
+		Iterator<TypeMateriaal> it = lijst.iterator();
 		while (it.hasNext()) {
-			Materiaal m = it.next();
-			if (m.getId() == id) {
-				materiaal = m;
+			TypeMateriaal tm = it.next();
+			if (tm.getId() == typeMateriaalId) {
+				
+				tabKiezer = tm.getNaam();
+				
+				if (inputValidatieErrorMsg.isEmpty()){
+					
+					materiaal.setId(-1);
+					materiaal.setNaam("");
+					materiaal.setEenheidsmaat("");
+					materiaal.setEenheidsprijs(0.0);
+					materiaal.setSoortId(Integer.MIN_VALUE);
+				} else {
+					Iterator<Materiaal> materiaalIt = tm.getMateriaalLijst().iterator();
+					while (materiaalIt.hasNext()){
+						Materiaal m = materiaalIt.next();
+						
+						if(m.getId() == materiaalId){
+							materiaal = m;
+						}
+					}
+				}
 			}
 		}
 		
-		request.setAttribute("materiaalLijst", lijst);
+		request.setAttribute("tabKiezer", tabKiezer);
+		request.setAttribute("typeMateriaalLijst", lijst);
 		request.setAttribute("materiaal", materiaal);
 		
 		RequestDispatcher view = request.getRequestDispatcher("/Materiaalbeheer.jsp");
@@ -130,7 +150,7 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 	@Override
 	public String inputValidatie(String[] teValideren) {
 		String naam = teValideren[0];
-		String soort = teValideren[1];
+		String typeMateriaalId = teValideren[1];
 		String eenheidsmaat = teValideren[2];
 		String eenheidsprijsString = teValideren[3];
 		
@@ -142,10 +162,9 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		if (msg != null) {
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Naam).concat(msg);
 		}
-		
-		msg = InputValidatie.enkelAlfabetisch(soort);
+		msg = InputValidatie.ingevuld(typeMateriaalId);
 		if (msg != null) {
-			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Soort).concat(msg);
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat("Type materiaal is niet ingevuld. ");
 		}
 		
 		msg = InputValidatie.ingevuld(eenheidsmaat);
@@ -154,11 +173,14 @@ public class MateriaalOpslaanServlet extends HttpServlet  implements IinputValid
 		}
 		
 		msg = InputValidatie.kommagetal(eenheidsprijsString);
+		String msg2 = InputValidatie.ingevuld(eenheidsprijsString);
 		if (msg != null) {
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Eenheidsprijs).concat(msg);
-		} else if (Datatype.stringNaarDouble(eenheidsprijsString) <= 0){
+		} else if (Datatype.stringNaarDouble(eenheidsprijsString) <= 0 ){
 			msg = InputValidatieStrings.EenheidsprijsNietCorrect;
 			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(msg);
+		} else if(msg2 != null){
+			inputValidatieErrorMsg = inputValidatieErrorMsg.concat(InputValidatieStrings.Eenheidsprijs).concat(msg2);
 		}
 		
 		return inputValidatieErrorMsg;

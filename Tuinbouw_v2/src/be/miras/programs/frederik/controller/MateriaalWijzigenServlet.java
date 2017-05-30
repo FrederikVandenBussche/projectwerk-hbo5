@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.model.TypeMateriaal;
 import be.miras.programs.frederik.util.Datatype;
 
 /**
@@ -53,23 +54,35 @@ public class MateriaalWijzigenServlet extends HttpServlet {
 			view = request.getRequestDispatcher("/logout");
 		} else {
 
-			int id = Datatype.stringNaarInt(request.getParameter("id"));
-
+			int materiaalId = Datatype.stringNaarInt(request.getParameter("materiaalId"));
+			int typeMateriaalId = Datatype.stringNaarInt(request.getParameter("typeMateriaalId"));
+			
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-			List<Materiaal> lijst = new ArrayList<Materiaal>();
+			List<TypeMateriaal> lijst = new ArrayList<TypeMateriaal>();
 			Materiaal materiaal = new Materiaal();
+			String tabKiezer = null;
 			
-			lijst = (List<Materiaal>) (Object) dao.leesAlle();
+			lijst = (List<TypeMateriaal>) (Object) dao.leesAlle();
 			
-			Iterator<Materiaal> it = lijst.iterator();
+			Iterator<TypeMateriaal> it = lijst.iterator();
 			while (it.hasNext()) {
-				Materiaal m = it.next();
-				if (m.getId() == id) {
-					materiaal = m;
+				TypeMateriaal tm = it.next();
+				if (tm.getId() == typeMateriaalId) {
+					
+					tabKiezer = tm.getNaam();
+					
+					Iterator<Materiaal> materiaalIt = tm.getMateriaalLijst().iterator();
+					while (materiaalIt.hasNext()){
+						Materiaal m = materiaalIt.next();
+						if(m.getId() == materiaalId){
+							materiaal = m;
+						}
+					}
 				}
 			}
 
-			request.setAttribute("materiaalLijst", lijst);
+			request.setAttribute("tabKiezer", tabKiezer);
+			request.setAttribute("typeMateriaalLijst", lijst);
 			request.setAttribute("materiaal", materiaal);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");

@@ -135,6 +135,7 @@
 					</form>
         		</div>
    			    <div class = "tab-pane fade" id = "adres">
+   			    	<div id="bijNieuwVerbergen">
         	       	<br />
 					<ul id = "adresTab" class = "nav nav-tabs">
 						<c:forEach items="${personeelslid.adreslijst }" var = "element" varStatus = "status">
@@ -208,6 +209,7 @@
 							</div>
 						</div>
 					</div>
+        			</div>		
         		</div>
         	</div>
 			<div id="personeelVerwijderen">

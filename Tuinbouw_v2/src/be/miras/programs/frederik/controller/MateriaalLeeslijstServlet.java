@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import be.miras.programs.frederik.dao.adapter.MateriaalDaoAdapter;
 import be.miras.programs.frederik.model.Materiaal;
+import be.miras.programs.frederik.model.TypeMateriaal;
 
 /**
  * @author Frederik Vanden Bussche
@@ -53,15 +54,15 @@ public class MateriaalLeeslijstServlet extends HttpServlet {
 		} else {
 			
 			MateriaalDaoAdapter dao = new MateriaalDaoAdapter();
-			List<Materiaal> lijst = new ArrayList<Materiaal>();
+			List<TypeMateriaal> lijst = new ArrayList<TypeMateriaal>();
 			Materiaal m = new Materiaal();
 			
 			// voor nieuw materiaal : id = -1
 			m.setId(-1);
 
-			lijst = (List<Materiaal>) (Object) dao.leesAlle();
+			lijst = (List<TypeMateriaal>)(Object) dao.leesAlle();
 			
-			request.setAttribute("materiaalLijst", lijst);
+			request.setAttribute("typeMateriaalLijst", lijst);
 			request.setAttribute("materiaal", m);
 
 			view = request.getRequestDispatcher("/Materiaalbeheer.jsp");

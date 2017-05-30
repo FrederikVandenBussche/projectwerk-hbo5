@@ -8,11 +8,11 @@ function setup(){
 	
 	if(tekst.length <= 14){
 		
-		$("#adressen").hide();
+		$("#bijNieuwVerbergen").hide();
 		$("#personeelVerwijderen").hide();	
 	} else {
 	
-		$("#adressen").show();
+		$("#bijNieuwVerbergen").show();
 		$("#personeelVerwijderen").show();	
 	}
 }

@@ -92,7 +92,7 @@ public class DbMateriaalDao implements ICRUD {
 	@Override
 	public List<Object> leesAlle() {
 		List<DbMateriaal> lijst = new ArrayList<DbMateriaal>();
-		String query = "FROM DbMateriaal order by typeMateriaalId"; 
+		String query = "FROM DbMateriaal order by naam"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 
@@ -287,7 +287,7 @@ public class DbMateriaalDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: " + TAG + "lees(id)" + id + "", e);
+			LOGGER.error("Exception: " + TAG + "haalId(dbMateriaal)", e);
 		} finally {
 			session.close();
 		}
@@ -295,8 +295,69 @@ public class DbMateriaalDao implements ICRUD {
 		if (!lijst.isEmpty()) {
 			id = lijst.get(0);
 		}
-		
+
 		return id;
+	}
+
+	public List<DbMateriaal> leesWaarTypeMateriaalId(int typeMateriaalId) {
+		List<DbMateriaal> lijst = new ArrayList<DbMateriaal>();
+		String query = "FROM DbMateriaal WHERE typeMateriaalId = :typeMateriaalId"; 
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("typeMateriaalId", typeMateriaalId);
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG  + " leesWaarTypeMateriaalId(typeMateriaalId) " + 
+					" " + typeMateriaalId + " ", e);
+		} finally {
+			session.close();
+		}
+		
+		return lijst;
+	}
+
+	/**
+	 * @param typeMateriaalId int
+	 * 
+	 * verwijder alle materialen met de geparameteriseerde typeMateriaalId
+	 */
+	public void verwijderWaarTypeMateriaalId(int typeMateriaalId) {
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "DELETE FROM DbMateriaal where typeMateriaalId = :typeMateriaalId";
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("typeMateriaalId", typeMateriaalId);
+			q.executeUpdate();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "verwijderWaarTypeMateriaalId(typeMateriaalId)" + typeMateriaalId + " ", e);
+		} finally {
+			session.close();
+		}
 	}
 
 	

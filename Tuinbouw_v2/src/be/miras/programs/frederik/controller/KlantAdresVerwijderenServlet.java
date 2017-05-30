@@ -14,14 +14,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import be.miras.programs.frederik.dao.DbAdresDao;
-import be.miras.programs.frederik.dao.DbGemeenteDao;
 import be.miras.programs.frederik.dao.DbKlantAdresDao;
 import be.miras.programs.frederik.dao.DbKlantDao;
 import be.miras.programs.frederik.dao.DbOpdrachtDao;
-import be.miras.programs.frederik.dao.DbStraatDao;
 import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
-import be.miras.programs.frederik.dbo.DbAdres;
 import be.miras.programs.frederik.dbo.DbBedrijf;
 import be.miras.programs.frederik.dbo.DbKlant;
 import be.miras.programs.frederik.dbo.DbOpdracht;
@@ -77,8 +73,13 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 			String errorMsg = "Kan dit adres niet verwijderen omdat er nog opdrachten op dit adres uit te voeren zijn.";
 			request.setAttribute("inputValidatieErrorMsg", errorMsg);
 		} else {
+			// klantAdres verwijderen
+			dbKlantAdresDao.verwijder(klantId, adresId);
+			
 			// adres verwijderen
-			adresVerwijderen(klantId, adresId);
+			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
+			adresDaoAdapter.verwijder(adresId);
+			
 		}
 		
 		// de klantDetails terug ophalen
@@ -183,46 +184,5 @@ public class KlantAdresVerwijderenServlet extends HttpServlet {
 		view.forward(request, response);
 	}
 	
-
-	/**
-	 * @param klantId int
-	 * @param adresId int
-	 * 
-	 * verwijderd het adres met een bepaalde klantId en adresId uit de databank
-	 */
-	private void adresVerwijderen(int klantId, int adresId) {
-		DbKlantAdresDao dbKlantAdresDao = new DbKlantAdresDao();
-		DbAdresDao dbAdresdao = new DbAdresDao();
-
-		// klantAdres verwijderen
-		dbKlantAdresDao.verwijder(klantId, adresId);
-
-		// straatId en gemeenteId ophalen
-		DbAdres dbadres = (DbAdres) dbAdresdao.lees(adresId);
-		int straatId = dbadres.getStraatId();
-		int gemeenteId = dbadres.getGemeenteId();
-
-		// delete dbAdres
-		dbAdresdao.verwijder(adresId);
-
-		// indien de straat nergens anders gebruikt wordt.
-		// deze uit de db verwijderen
-		boolean straatInGebruik = dbAdresdao.isStraatInGebruik(straatId);
-
-		if (!straatInGebruik) {
-			DbStraatDao dbStraatDao = new DbStraatDao();
-
-			dbStraatDao.verwijder(straatId);
-
-		}
-		// indien de gemeente nergens anders gebruikt wordt
-		// deze uit de db verwijderen
-		boolean gemeenteInGebruik = dbAdresdao.isGemeenteInGebruik(gemeenteId);
-
-		if (!gemeenteInGebruik) {
-			DbGemeenteDao dbGemeenteDao = new DbGemeenteDao();
-			dbGemeenteDao.verwijder(gemeenteId);
-		}
-	}
 
 }

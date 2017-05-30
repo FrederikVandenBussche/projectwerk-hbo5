@@ -194,12 +194,12 @@
     <url-pattern>/klantOpslaan</url-pattern>
   </servlet-mapping>
   <servlet>
-  	<servlet-name>klantVerwijderen</servlet-name>
-  	<servlet-class>be.miras.programs.frederik.controller.KlantVerwijderServlet</servlet-class>
+    <servlet-name>klantVerwijderen</servlet-name>
+    <servlet-class>be.miras.programs.frederik.controller.KlantVerwijderServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-  	<servlet-name>klantVerwijderen</servlet-name>
-  	<url-pattern>/klantVerwijderen</url-pattern>
+    <servlet-name>klantVerwijderen</servlet-name>
+    <url-pattern>/klantVerwijderen</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>klantAdresOpslaan</servlet-name>
@@ -344,5 +344,29 @@
   <servlet-mapping>
     <servlet-name>wieIsWaar</servlet-name>
     <url-pattern>/wieIsWaarMenu</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>taakMarkerenAlsAfgewerkt</servlet-name>
+    <servlet-class>be.miras.programs.frederik.controller.TaakMarkerenAlsAfgewerktServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>taakMarkerenAlsAfgewerkt</servlet-name>
+    <url-pattern>/taakMarkerenAlsAfgewerkt</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>typeMateriaalToevoegen</servlet-name>
+    <servlet-class>be.miras.programs.frederik.controller.TypeMateriaalToevoegenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>typeMateriaalToevoegen</servlet-name>
+    <url-pattern>/typeMateriaalToevoegen</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>typeMateriaalVerwijderen</servlet-name>
+    <servlet-class>be.miras.programs.frederik.controller.TypeMateriaalVerwijderenServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>typeMateriaalVerwijderen</servlet-name>
+    <url-pattern>/typeMateriaalVerwijderen</url-pattern>
   </servlet-mapping>
 </web-app>

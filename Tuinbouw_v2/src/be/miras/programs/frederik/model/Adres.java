@@ -171,5 +171,21 @@ public class Adres implements Ivergelijk {
 		return isVerschillend;
 	}
 
+	/* 
+	 * return" straat nummer (bus) postcode plaats"
+	 */
+	@Override
+	public String toString() {
+		String adresString = null;
+		if (this.bus == null && this.bus.isEmpty()){
+			adresString =  this.straat + " " + this.nummer + 
+					" " + this.postcode + " " + this.plaats;
+		} else {
+			adresString =  this.straat + " " + this.nummer + " " + 
+					this.bus + " " + this.postcode + " " + this.plaats;
+		}
+		return adresString;
+	}
+	
 
 }

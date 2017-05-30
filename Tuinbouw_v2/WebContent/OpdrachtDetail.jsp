@@ -170,7 +170,7 @@
 										<tr>
 											<td>${element.taakNaam }</td>
 											<td class="progressbar">
-												<progress class = "progress" value="${element.vooruitgangPercentage } " max="100"></progress>
+												<progress class="progress" value="${element.vooruitgangPercentage }" max="100"></progress>
 											</td>
 											<td>${element.status }</td>
 											<td>${fn:substring(element.opmerking, 0, 20 ) }</td>
@@ -242,7 +242,7 @@
 			<div id="opdrachtVerwijderenDiv">
 				<form action="opdrachtVerwijderen" method="post">
 					<input type="hidden" name="id" value="${opdrachtDetailData.opdracht.id }" /> 
-					<input type="submit" class = "btn btn-default btn-block" name="submit" value="Deze opdracht verwijderen" />
+					<input type="submit" class = "btn btn-default btn-lg btn-block" name="submit" value="Deze opdracht verwijderen" />
 				</form>
 			</div>
 			</div>

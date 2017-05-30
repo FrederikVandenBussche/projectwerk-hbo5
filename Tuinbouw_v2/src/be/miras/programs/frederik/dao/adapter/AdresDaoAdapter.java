@@ -48,14 +48,13 @@ public class AdresDaoAdapter implements ICRUD {
 		// indien de opgegeven postcode + gemeente nog niet in de databank zit
 		// voeg toe
 		int gemeenteId = dbGemeenteDao.geefIdVan(adres.getPostcode(), adres.getPlaats());
+		
 		if (gemeenteId < 0) {
 			// gemeente nog niet in databank
 			DbGemeente dbGemeente = new DbGemeente();
 			dbGemeente.setNaam(adres.getPlaats());
 			dbGemeente.setPostcode(adres.getPostcode());
-			dbGemeenteDao.voegToe(dbGemeente);
-
-			gemeenteId = dbGemeenteDao.geefIdVan(adres.getPostcode(), adres.getPlaats());
+			gemeenteId = dbGemeenteDao.voegToe(dbGemeente);
 		}
 
 		// zoek ID van straat
@@ -67,18 +66,26 @@ public class AdresDaoAdapter implements ICRUD {
 			// straatnaam staat nog niet in databank
 			DbStraat dbStraat = new DbStraat();
 			dbStraat.setNaam(adres.getStraat());
-			dbStraatDao.voegToe(dbStraat);
+			straatId = dbStraatDao.voegToe(dbStraat);
 
-			straatId = dbStraatDao.geefIdVan(adres.getStraat());
 		}
 
 		dbAdres.setStraatId(straatId);
 		dbAdres.setGemeenteId(gemeenteId);
 		dbAdres.setHuisnummer(adres.getNummer());
 		dbAdres.setBus(adres.getBus());
-		dbAdresDao.voegToe(dbAdres);
-
-		return Integer.MIN_VALUE;
+		
+		// zoek ID van het adres
+		// indien het opgegeven adres nog niet in de databank zit
+		// voeg toe
+		int adresId = dbAdresDao.geefIdVan(dbAdres);
+		
+		if (adresId < 0){
+			
+			adresId = dbAdresDao.voegToe(dbAdres);
+		}
+		
+		return adresId;
 	}
 
 	/**

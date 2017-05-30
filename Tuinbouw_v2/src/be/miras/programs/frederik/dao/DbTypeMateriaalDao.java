@@ -91,7 +91,7 @@ public class DbTypeMateriaalDao implements ICRUD {
 	@Override
 	public List<Object> leesAlle() {
 		List<DbTypeMateriaal> lijst = new ArrayList<DbTypeMateriaal>();
-		String query = "FROM DbTypeMateriaal"; // SELECT * FROM DbTypeMateriaal
+		String query = "FROM DbTypeMateriaal ORDER BY naam";
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 

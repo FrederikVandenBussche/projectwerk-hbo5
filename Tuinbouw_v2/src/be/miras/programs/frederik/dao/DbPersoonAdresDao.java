@@ -318,5 +318,52 @@ public class DbPersoonAdresDao implements ICRUD {
 		return isInGebruik;
 	}
 
+	/**
+	 * @param dbPersoonAdres DbPersoonAdres
+	 * @return int
+	 * 
+	* return de id van dit adres
+	 * 
+	 * indien deze record nog niet bestaat: 
+	 * return Integer.min_value
+	 */
+	public int geefIdVan(DbPersoonAdres dbPersoonAdres) {
+		int id = Integer.MIN_VALUE;
+		Session session = HibernateUtil.openSession();
+		Transaction transaction = null;
+		String query = "SELECT id FROM DbPersoonAdres where adresId = :adresId "
+												+ "AND persoonId = :persoonId";
+		List<Integer> lijst = new ArrayList<Integer>();
+		
+		try {
+			session.beginTransaction();
+			transaction = session.getTransaction();
+			Query q = session.createQuery(query);
+			q.setParameter("adresId", dbPersoonAdres.getAdresId());
+			q.setParameter("persoonId", dbPersoonAdres.getPersoonId());
+			lijst = q.list();
+			session.flush();
+			if(!transaction.wasCommitted()){
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			if (transaction != null) {
+				transaction.rollback();
+			}
+			e.printStackTrace();
+			LOGGER.error("Exception: " + TAG + "geefIdVan(dbPersoonAdres)" + 
+					",adresId: " + dbPersoonAdres.getAdresId() + 
+					", persoonId: " + dbPersoonAdres.getPersoonId(), e);
+		} finally {
+			session.close();
+		}
+		
+		if (!lijst.isEmpty()) {
+			id = lijst.get(0);
+		}
+		
+		return id;
+	}
+
 	
 }

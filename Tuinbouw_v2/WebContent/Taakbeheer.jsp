@@ -193,6 +193,12 @@
             </div>
         </div>
         </div>
+        <div>
+				<form action="taakMarkerenAlsAfgewerkt" method="post">
+					<input type="hidden" name="taakId" value = "${taak.id }" />
+					<input type="submit" class = "btn btn-default btn-lg btn-block" name="submit" value="Deze taak als 'afgewerkt' markeren." />
+				</form>
+			</div>
 		</div>
 	</div>
 </body>
