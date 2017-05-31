@@ -79,7 +79,7 @@ public class TaakToonDetailServlet extends HttpServlet {
 
 			} else {		
 				// het gaat om een bestaande taak
-				taak = taakDaoAdapter.haalTaak(taakId);
+				taak = taakDaoAdapter.haalTaak(taakId, opdrachtId);
 			}	
 				
 			request.setAttribute("klantNaam", klantNaam);

@@ -186,7 +186,8 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 					DbStatus dbStatus = (DbStatus) dbStatusDao.lees(dbVooruitgang.getStatusId());
 					taak.setStatus(dbStatus.getNaam());
 					
-					List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao.leesWaarTaakId(taak.getId());
+					List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = 
+							dbWerknemerOpdrachtTaakDao.leesWaarTaakIdOpdrachtId(taak.getId(), opdracht.getId());
 					
 					Iterator<DbWerknemerOpdrachtTaak> dbWOTIt = dbWerknemerOpdrachtTaakLijst.iterator();
 					while(dbWOTIt.hasNext()){

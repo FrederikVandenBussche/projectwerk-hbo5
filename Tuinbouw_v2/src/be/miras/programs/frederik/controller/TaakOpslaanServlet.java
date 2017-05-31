@@ -75,15 +75,18 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 				} else {
 					
 					taakId = bestaandeTaakId;
+					
+					taak.setId(taakId);
+					taakDaoAdapter.voegToe(taak);
 				}
 				
-				taak = taakDaoAdapter.haalTaak(taakId);
+				taak = taakDaoAdapter.haalTaak(taakId, opdrachtId);
 				
 			} else {
 				
 				// het betreft een bestaande taak
 				// indien er iets gewijzigd werd, de wijzigingen aanpassen
-				taak = taakDaoAdapter.haalTaak(taakId);
+				taak = taakDaoAdapter.haalTaak(taakId, opdrachtId);
 				
 				if (!taak.getTaakNaam().equals(taaknaam) || !taak.getOpmerking().equals(opmerking)) {
 					
@@ -98,7 +101,7 @@ public class TaakOpslaanServlet extends HttpServlet implements IinputValidatie {
 	
 		} else {
 			
-			taak = taakDaoAdapter.haalTaak(taakId);
+			taak = taakDaoAdapter.haalTaak(taakId, opdrachtId);
 			
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}

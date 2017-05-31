@@ -98,7 +98,7 @@ public class TaakPlanningToevoegenServlet extends HttpServlet implements IinputV
 			request.setAttribute("inputValidatieErrorMsg", inputValidatieErrorMsg);
 		}
 		
-		Taak taak = taakDaoAdapter.haalTaak(taakId);
+		Taak taak = taakDaoAdapter.haalTaak(taakId, opdrachtId);
 		
 		HashMap<Integer, String> werknemerMap = taakDaoAdapter.geefWerknemerMap();
 		

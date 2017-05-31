@@ -220,7 +220,8 @@ public class FacturatieDetailServlet extends HttpServlet {
 					taak.setOpmerking(dot.getOpmerking());
 					
 					//stel planningLijst op 
-					List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao.leesWaarTaakId(taakId);
+					List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = 
+							dbWerknemerOpdrachtTaakDao.leesWaarTaakIdOpdrachtId(taakId, dot.getOpdrachtId());
 					
 					Iterator<DbWerknemerOpdrachtTaak> dbwotlIt = dbWerknemerOpdrachtTaakLijst.iterator();
 					while (dbwotlIt.hasNext()){

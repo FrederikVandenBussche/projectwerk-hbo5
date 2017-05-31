@@ -191,9 +191,9 @@ public class TaakDaoAdapter implements ICRUD {
 	 * @param taakId int
 	 * @return Taak
 	 * 
-	 * haal de Taak op met de geparameteriseerde Id
+	 * haal de Taak op met de geparameteriseerde taak en opdrachtId
 	 */
-	public Taak haalTaak(int taakId){
+	public Taak haalTaak(int taakId, int opdrachtId){
 		Taak taak = new Taak();
 		
 		DbStatusDao dbStatusDao = new DbStatusDao();
@@ -206,7 +206,7 @@ public class TaakDaoAdapter implements ICRUD {
 		
 		// zoek de taak
 		DbTaak dbTaak = (DbTaak) dbTaakDao.lees(taakId);
-		DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakDao.leesWaarTaakId(taakId);
+		DbOpdrachtTaak dbOpdrachtTaak = dbOpdrachtTaakDao.leesWaarTaakIdEnOpdrachtId(taakId, opdrachtId);
 		DbVooruitgang dbVooruitgang = (DbVooruitgang) dbVooruitgangDao.lees(dbOpdrachtTaak.getVooruitgangId());
 		DbStatus dbStatus = (DbStatus) dbStatusDao.lees(dbVooruitgang.getStatusId());
 		
@@ -219,7 +219,7 @@ public class TaakDaoAdapter implements ICRUD {
 		
 		// planningLijst ophalen
 		List<DbWerknemerOpdrachtTaak> dbWerknemerOpdrachtTaakLijst = dbWerknemerOpdrachtTaakDao
-				.leesWaarTaakId(taakId);
+				.leesWaarTaakIdOpdrachtId(taakId, opdrachtId);
 
 		Iterator<DbWerknemerOpdrachtTaak> wotIt = dbWerknemerOpdrachtTaakLijst.iterator();
 		while (wotIt.hasNext()) {

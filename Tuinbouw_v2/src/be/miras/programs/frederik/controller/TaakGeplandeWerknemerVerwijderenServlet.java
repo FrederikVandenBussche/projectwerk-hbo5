@@ -65,7 +65,7 @@ public class TaakGeplandeWerknemerVerwijderenServlet extends HttpServlet {
 			
 			dbWerknemerOpdrachtTaakdao.verwijder(planningId);
 			
-			Taak taak = taakDaoAdapter.haalTaak(taakId);
+			Taak taak = taakDaoAdapter.haalTaak(taakId, opdrachtId);
 			HashMap<Integer, String> werknemerMap = taakDaoAdapter.geefWerknemerMap();
 			
 			String[] klantIdEnNaam = dbOpdrachtDao.selectKlantIdEnNaam(opdrachtId);

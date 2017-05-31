@@ -176,11 +176,11 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 	 * @param taakId int
 	 * @return Lijst<DbWerknemerOpdrachtTaak>
 	 * 
-	 * returnt waar opdrachtTaakTaakId
+	 * returnt waar opdrachtTaakTaakId en opdrachtTaakOpdrachtId
 	 */
-	public List<DbWerknemerOpdrachtTaak> leesWaarTaakId(int taakId) {
+	public List<DbWerknemerOpdrachtTaak> leesWaarTaakIdOpdrachtId(int taakId, int opdrachtId) {
 		List<DbWerknemerOpdrachtTaak> lijst = new ArrayList<DbWerknemerOpdrachtTaak>();
-		String query = "FROM DbWerknemerOpdrachtTaak where opdrachtTaakTaakId = :taakId"; 
+		String query = "FROM DbWerknemerOpdrachtTaak where opdrachtTaakTaakId = :taakId and opdrachtTaakOpdrachtId = :opdrachtId"; 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		
@@ -189,6 +189,7 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("taakId", taakId);
+			q.setParameter("opdrachtId", opdrachtId);
 			lijst = q.list();
 			session.flush();
 			if(!transaction.wasCommitted()){
