@@ -53,17 +53,17 @@
 			</div>
 			<div id="materialenMenu">
 				<form action="materialenMenu" method="get">
-					<input type="submit" name="submit" value="materialen" />
+					<input type="submit" name="submit" value="Materialen" />
 				</form>
 			</div>
 			<div id="personeelMenu">
 				<form action="personeelMenu" method="get">
-					<input type="submit" name="submit" value="personeel" />
+					<input type="submit" name="submit" value="Personeel" />
 				</form>
 			</div>
 			<div id="bedrijfsgegevensMenu">
 				<form action="bedrijfsgegevensMenu" method="get">
-					<input type="submit" name="submit" value="bedrijfsgegevens" />
+					<input type="submit" name="submit" value="Bedrijfsgegevens" />
 				</form>
 			</div>
 			<div id="wieIsWaarMenu">
@@ -187,13 +187,13 @@
 								</td>
 								<td>${element.isAanwezig }</td>
 							</tr>
-						</c:forEach>
-						</tbody>
-					</table>
-            </div>
-        </div>
-        </div>
-        <div>
+							</c:forEach>
+							</tbody>
+						</table>
+        	    	</div>
+        		</div>
+        	</div>
+        	<div id="bijNieuwVerbergen">
 				<form action="taakMarkerenAlsAfgewerkt" method="post">
 					<input type="hidden" name="taakId" value = "${taak.id }" />
 					<input type="submit" class = "btn btn-default btn-lg btn-block" name="submit" value="Deze taak als 'afgewerkt' markeren." />

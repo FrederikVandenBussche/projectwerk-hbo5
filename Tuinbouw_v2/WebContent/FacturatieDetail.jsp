@@ -51,17 +51,17 @@
 			</div>
 			<div id="materialenMenu">
 				<form action="materialenMenu" method="get">
-					<input type="submit" name="submit" value="materialen" />
+					<input type="submit" name="submit" value="Materialen" />
 				</form>
 			</div>
 			<div id="personeelMenu">
 				<form action="personeelMenu" method="get">
-					<input type="submit" name="submit" value="personeel" />
+					<input type="submit" name="submit" value="Personeel" />
 				</form>
 			</div>
 			<div id="bedrijfsgegevensMenu">
 				<form action="bedrijfsgegevensMenu" method="get">
-					<input type="submit" name="submit" value="bedrijfsgegevens" />
+					<input type="submit" name="submit" value="Bedrijfsgegevens" />
 				</form>
 			</div>
 			<div id="wieIsWaarMenu">
@@ -100,7 +100,7 @@
 					<c:forEach items="${factuur.opdrachtLijst }" var="opdracht">
 						Opdracht: ${opdracht.opdrachtNaam }.
 						
-						<div class="tabel">
+						<div class = "tabel">
 							<table class = "table table-striped table-hover">
 								<thead>
 								<tr>
@@ -137,7 +137,7 @@
             <div class = "tab-pane fade" id = "verplaatsingen">
                 <fieldset>
 					<legend>Overzicht verplaatsingskosten</legend>
-					<div class="tabel">
+					<div class = "tabel">
 						<table class = 'table table-striped table-hover'>
 							<thead>
 							<tr>
@@ -165,7 +165,7 @@
              <div class = "tab-pane fade" id = "materialen">
                 <fieldset>
 					<legend>Overzicht gebruikte materialen</legend>
-					<div class="tabel">
+					<div class = "tabel">
 						<table class = "table table-striped table-hover">
 							<thead>
 							<tr>

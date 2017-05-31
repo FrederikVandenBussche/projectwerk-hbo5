@@ -30,6 +30,7 @@ import be.miras.programs.frederik.dao.DbTaakDao;
 import be.miras.programs.frederik.dao.DbVooruitgangDao;
 import be.miras.programs.frederik.dao.DbWerknemerDao;
 import be.miras.programs.frederik.dao.DbWerknemerOpdrachtTaakDao;
+import be.miras.programs.frederik.dao.adapter.AdresDaoAdapter;
 import be.miras.programs.frederik.dbo.DbOpdracht;
 import be.miras.programs.frederik.dbo.DbOpdrachtTaak;
 import be.miras.programs.frederik.dbo.DbPersoon;
@@ -40,6 +41,7 @@ import be.miras.programs.frederik.dbo.DbWerknemer;
 import be.miras.programs.frederik.dbo.DbWerknemerOpdrachtTaak;
 import be.miras.programs.frederik.export.ExcelData;
 import be.miras.programs.frederik.export.GenereerXls;
+import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
@@ -94,11 +96,11 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			DbStatusDao dbStatusDao = new DbStatusDao();
 			DbWerknemerDao dbWerknemerDao = new DbWerknemerDao();
 			DbPersoonDao dbPersoonDao = new DbPersoonDao();
+			AdresDaoAdapter adresDaoAdapter = new AdresDaoAdapter();
 			ExcelData excelData = new ExcelData();
 			
 			// de opdrachtenlijst van deze klant ophalen
 			List<DbOpdracht> dbOpdrachtLijst = (ArrayList<DbOpdracht>) dbOpdrachtDao.leesWaarKlantId(id);
-			
 			excelData.setKlantNaam(klantnaam);
 			
 			Date begindatum = Datum.creeerDatum(begindatumString);
@@ -119,6 +121,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 							Opdracht opdracht = new Opdracht();
 							opdracht.setId(dbOpdracht.getId());
 							opdracht.setKlantId(dbOpdracht.getKlantId());
+							opdracht.setKlantAdresId(dbOpdracht.getKlantAdresId());
 							opdracht.setOpdrachtNaam(dbOpdracht.getNaam());
 							opdracht.setStartDatum(dbOpdracht.getStartdatum());
 							opdracht.setEindDatum(dbOpdracht.getEinddatum());
@@ -142,6 +145,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 								Opdracht opdracht = new Opdracht();
 								opdracht.setId(dbOpdracht.getId());
 								opdracht.setKlantId(dbOpdracht.getKlantId());
+								opdracht.setKlantAdresId(dbOpdracht.getKlantAdresId());
 								opdracht.setOpdrachtNaam(dbOpdracht.getNaam());
 								opdracht.setStartDatum(dbOpdracht.getStartdatum());
 								opdracht.setEindDatum(dbOpdracht.getEinddatum());
@@ -209,6 +213,10 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 					taakLijst.add(taak);
 				}
 				opdracht.setTaakLijst(taakLijst);
+				
+				int klantAdresId = opdracht.getKlantAdresId();
+				Adres adres = adresDaoAdapter.leesWaarKlantAdresId(klantAdresId);
+				opdracht.setAdresString(adres.toString());
 			}
 			
 			excelData.setOpdrachtLijst(opdrachtLijst);

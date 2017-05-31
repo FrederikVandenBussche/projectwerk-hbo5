@@ -69,7 +69,7 @@ public class OpdrachtMateriaalToevoegenServlet extends HttpServlet implements Ii
 			MateriaalDaoAdapter materiaalDaoAdapter = new MateriaalDaoAdapter();
 
 			//zoek materiaalId
-			List<Materiaal> materiaalLijst = (List<Materiaal>) (Object) materiaalDaoAdapter.leesAlle();
+			List<Materiaal> materiaalLijst = materiaalDaoAdapter.leesAlleMaterialen();
 
 			Iterator<Materiaal> it = materiaalLijst.iterator();
 			while (it.hasNext()) {

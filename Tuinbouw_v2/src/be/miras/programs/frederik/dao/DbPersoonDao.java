@@ -1,6 +1,8 @@
 package be.miras.programs.frederik.dao;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -33,6 +35,7 @@ public class DbPersoonDao implements ICRUD {
 		
 		try {
 			DbPersoon persoon = (DbPersoon) o;
+			persoon = this.tel30JaarBijGeboortedatum(persoon);
 			session.beginTransaction();
 			transaction = session.getTransaction();
 			session.save(persoon);
@@ -85,7 +88,7 @@ public class DbPersoonDao implements ICRUD {
 		if (!lijst.isEmpty()) {
 			persoon = lijst.get(0);
 		}
-
+		persoon = this.trek30AfBijGeboortedatum(persoon);
 		return persoon;
 	}
 
@@ -114,6 +117,13 @@ public class DbPersoonDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		
+		Iterator<DbPersoon> it = lijst.iterator();
+		while(it.hasNext()){
+			DbPersoon p = it.next();
+			p = this.trek30AfBijGeboortedatum(p);
+		}
+		
 		List<Object> objectLijst = new ArrayList<Object>(lijst);
 		
 		return objectLijst;
@@ -121,11 +131,13 @@ public class DbPersoonDao implements ICRUD {
 
 	@Override
 	public void wijzig(Object o) {
+		DbPersoon persoon = (DbPersoon) o;
+		persoon = this.tel30JaarBijGeboortedatum(persoon);
+		
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
 		
 		try {
-			DbPersoon persoon = (DbPersoon) o;
 			session.beginTransaction();
 			transaction = session.getTransaction();
 			session.saveOrUpdate(persoon);
@@ -142,6 +154,7 @@ public class DbPersoonDao implements ICRUD {
 		} finally {
 			session.close();
 		}
+		persoon = this.trek30AfBijGeboortedatum(persoon);
 	}
 
 	@Override
@@ -210,6 +223,7 @@ public class DbPersoonDao implements ICRUD {
 			
 			if (!lijst.isEmpty()) {
 				DbPersoon persoon = lijst.get(0);
+				persoon = this.trek30AfBijGeboortedatum(persoon);
 				persoonLijst.add(persoon);
 			}
 		}
@@ -225,6 +239,7 @@ public class DbPersoonDao implements ICRUD {
 	 * Als deze record niet bestaat, return Integer.min_value
 	 */
 	public int haalId(DbPersoon dbPersoon) {
+		dbPersoon = this.tel30JaarBijGeboortedatum(dbPersoon);
 		int id = Integer.MIN_VALUE;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
@@ -262,5 +277,35 @@ public class DbPersoonDao implements ICRUD {
 		return id;
 	}
 
-
+	/**
+	 * @param Persoon DbPersoon
+	 * @return DbPersoon
+	 * 
+	 * De databank kan niet overweg met een timestamp vroeger dan 1970.
+	 * Met deze reden wordt er 30jaar bijgetelt aan de geboortedatum
+	 */
+	private DbPersoon tel30JaarBijGeboortedatum(DbPersoon persoon){
+		Date geboorteDatum = persoon.getGeboortedatum();
+		geboorteDatum.setYear(geboorteDatum.getYear()+30);
+		persoon.setGeboortedatum(geboorteDatum);
+		System.out.println("telbij: " + persoon.getGeboortedatum());
+		return persoon;
+	}
+	
+	/**
+	 * @param Persoon DbPersoon
+	 * @return DbPersoon
+	 * 
+	 * De databank kan niet overweg met een timestamp vroeger dan 1970.
+	 * Met deze reden wordt de geboortedatum opgeslaan met 30jaar erbij getelt.
+	 * In deze metode wordt er terug 30 afgetrokken zodat de originele 
+	 * geboortedatum terug verschijnt.
+	 */
+	private DbPersoon trek30AfBijGeboortedatum(DbPersoon persoon){
+		Date geboorteDatum = persoon.getGeboortedatum();
+		geboorteDatum.setYear(geboorteDatum.getYear()-30);
+		persoon.setGeboortedatum(geboorteDatum);
+		System.out.println("trekaf: " + persoon.getGeboortedatum());
+		return persoon;
+	}
 }

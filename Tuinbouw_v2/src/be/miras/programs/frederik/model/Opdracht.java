@@ -22,8 +22,9 @@ public class Opdracht implements Ivergelijk {
 	private double longitude;
 	private List<Taak> taakLijst;
 	private List<Materiaal> gebruiktMateriaalLijst;
+	private String adresString;
 
-	
+
 	public Opdracht(){
 	}
 	
@@ -192,6 +193,20 @@ public class Opdracht implements Ivergelijk {
 		this.gebruiktMateriaalLijst = gebruiktMateriaalLijst;
 	}
 
+	/**
+	 * @return the adresString String
+	 */
+	public String getAdresString() {
+		return adresString;
+	}
+
+	/**
+	 * @param adresString the adresString to set String
+	 */
+	public void setAdresString(String adresString) {
+		this.adresString = adresString;
+	}
+	
 	@Override
 	public boolean isVerschillend(Object o, Object p) {
 		boolean isVerschillend = true;

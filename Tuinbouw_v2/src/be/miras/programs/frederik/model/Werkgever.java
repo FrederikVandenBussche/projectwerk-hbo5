@@ -197,8 +197,6 @@ public class Werkgever implements Ivergelijk {
 		boolean isVerschillend = true;
 		Werkgever w1 = (Werkgever) o;
 		Werkgever w2 = (Werkgever) p;
-		System.out.println(w1.toString());
-		System.out.println(w2.toString());
 
 		if (w1.getNaam().equals(w2.getNaam()) && w1.getVoornaam().equals(w2.getVoornaam())
 				&& w1.getGeboortedatum().equals(w2.getGeboortedatum()) && w1.getEmail().equals(w2.getEmail())

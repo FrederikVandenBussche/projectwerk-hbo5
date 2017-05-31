@@ -112,6 +112,40 @@ public class GoogleApis {
 	 * @param adres Adres
 	 * @return String
 	 * 
+	 * return de url om een Static Map te creëeren
+	 */
+	public static String urlBuilderStaticMap(Adres adres) {
+		String straat = adres.getStraat();
+		int huisnummer = adres.getNummer();
+		int postcode = adres.getPostcode();
+		String gemeente = adres.getPlaats();
+
+		String adresString = straat + "+" + huisnummer + "+" + postcode + "+" + gemeente;
+		String url = basisUrl + staticmap + adresString + staticmap_zoom + staticmap_size + staticmap_maptype
+				+ staticmap_marker + adresString + STATICMAP_API_KEY;
+		return url;
+	}
+
+	/**
+	 * @param adres Adres
+	 * @return String
+	 * 
+	 * return de url om het adres te tonen in google maps
+	 */
+	public static String urlBuilderGoogleMaps(Adres adres) {
+		String straat = adres.getStraat();
+		int huisnummer = adres.getNummer();
+		int postcode = adres.getPostcode();
+		String gemeente = adres.getPlaats();
+
+		String url = googleMaps + straat + " " + huisnummer + " " + postcode + " " + gemeente;
+		return url;
+	}
+
+	/**
+	 * @param adres Adres
+	 * @return String
+	 * 
 	 * return de url om de latlng uit een adres te halen
 	 */
 	private static String urlBuilder(Adres adres) {
@@ -178,40 +212,6 @@ public class GoogleApis {
 	}
 
 	/**
-	 * @param adres Adres
-	 * @return String
-	 * 
-	 * return de url om een Static Map te creëeren
-	 */
-	public static String urlBuilderStaticMap(Adres adres) {
-		String straat = adres.getStraat();
-		int huisnummer = adres.getNummer();
-		int postcode = adres.getPostcode();
-		String gemeente = adres.getPlaats();
-
-		String adresString = straat + "+" + huisnummer + "+" + postcode + "+" + gemeente;
-		String url = basisUrl + staticmap + adresString + staticmap_zoom + staticmap_size + staticmap_maptype
-				+ staticmap_marker + adresString + STATICMAP_API_KEY;
-		return url;
-	}
-
-	/**
-	 * @param adres Adres
-	 * @return String
-	 * 
-	 * return de url om het adres te tonen in google maps
-	 */
-	public static String urlBuilderGoogleMaps(Adres adres) {
-		String straat = adres.getStraat();
-		int huisnummer = adres.getNummer();
-		int postcode = adres.getPostcode();
-		String gemeente = adres.getPlaats();
-
-		String url = googleMaps + straat + " " + huisnummer + " " + postcode + " " + gemeente;
-		return url;
-	}
-
-	/**
 	 * @param targetUrl String
 	 * @return String
 	 * 
@@ -256,7 +256,6 @@ public class GoogleApis {
 				connection.disconnect();
 			}
 		}
-
 	}
 
 	/**
@@ -294,7 +293,6 @@ public class GoogleApis {
 					}
 				}
 			}
-
 		} catch (ParseException e) {
 			e.printStackTrace();
 			LOGGER.error("ParseException" + TAG + "haallatlng(jsonString): " + jsonString);

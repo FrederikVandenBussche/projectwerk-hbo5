@@ -13,12 +13,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
-import be.miras.programs.frederik.model.Adres;
 import be.miras.programs.frederik.model.Opdracht;
 import be.miras.programs.frederik.model.Planning;
 import be.miras.programs.frederik.model.Taak;
 import be.miras.programs.frederik.util.Datum;
-import be.miras.programs.frederik.util.GoogleApis;
 
 /**
  * @author Frederik Vanden Bussche
@@ -111,11 +109,10 @@ public class GenereerXls {
 			latlngRij.createCell(5).setCellValue(opdracht.getLongitude());
 
 			rijenteller++;
-
-			Adres adres = GoogleApis.zoekAdres(opdracht.getLatitude(), opdracht.getLongitude());
-
+			
+			String adresString = opdracht.getAdresString();
 			HSSFRow adresRij = sheet.createRow(rijenteller);
-			adresRij.createCell(1).setCellValue(adres.toString());
+			adresRij.createCell(1).setCellValue(adresString);
 
 			rijenteller += 2;
 

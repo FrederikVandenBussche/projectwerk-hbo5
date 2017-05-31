@@ -148,7 +148,6 @@ public class OpdrachtOpslaanServlet extends HttpServlet implements IinputValidat
 				 */
 				DbKlantAdresDao dkad = new DbKlantAdresDao();
 				DbKlantAdres dbKlantAdres = (DbKlantAdres) dkad.lees(teWijzigenKlantId);
-				System.out.println("klantid = " + teWijzigenKlantId);
 				int klantAdresId = dbKlantAdres.getId();
 				
 				if (klantAdresId <= 0) {

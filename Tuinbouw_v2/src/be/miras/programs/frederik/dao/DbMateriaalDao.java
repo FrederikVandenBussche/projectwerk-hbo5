@@ -210,49 +210,6 @@ public class DbMateriaalDao implements ICRUD {
 		
 		return typeMateriaalId;
 	}
-	
-	/**
-	 * @param typeMateriaalId int
-	 * @return boolean
-	 * 
-	 * return true indien het typeMateriaalId voorkomt in de databank
-	 */
-	public boolean isTypeMateriaalKomtVoor(int typeMateriaalId){
-		boolean isKomtVoor = true;
-		Session session = HibernateUtil.openSession();
-		Transaction transaction = null;
-		String query = "SELECT COUNT(id) FROM DbMateriaal where typeMateriaalId = :typeMateriaalId";
-		List<Long> lijst = new ArrayList<Long>();
-		
-		try {
-			session.beginTransaction();
-			transaction = session.getTransaction();
-			Query q = session.createQuery(query);
-			q.setParameter("typeMateriaalId", typeMateriaalId);
-			lijst = q.list();
-			session.flush();
-			if(!transaction.wasCommitted()){
-				transaction.commit();
-			}
-		} catch (Exception e) {
-			if (transaction != null) {
-				transaction.rollback();
-			}
-			e.printStackTrace();
-			LOGGER.error("Exception: " + TAG + "isTypeMateriaalKomtVoor(typeMateriaalId " + typeMateriaalId + " ", e);
-		} finally {
-			session.close();
-		}
-		
-		if (!lijst.isEmpty()) {
-			long aantal = lijst.get(0);
-			if (aantal == 0) {
-				isKomtVoor = false;
-			}
-		}
-		
-		return isKomtVoor;
-	}
 
 	/**
 	 * @param dbMateriaal DbMateriaal

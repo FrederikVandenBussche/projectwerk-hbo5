@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
-
 import be.miras.programs.frederik.dao.DbAdresDao;
 import be.miras.programs.frederik.dao.DbGemeenteDao;
 import be.miras.programs.frederik.dao.DbKlantAdresDao;

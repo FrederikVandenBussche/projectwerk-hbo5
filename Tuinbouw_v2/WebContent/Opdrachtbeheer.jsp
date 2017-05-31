@@ -52,17 +52,17 @@
 			</div>
 			<div id="materialenMenu">
 				<form action="materialenMenu" method="get">
-					<input type="submit" name="submit" value="materialen" />
+					<input type="submit" name="submit" value="Materialen" />
 				</form>
 			</div>
 			<div id="personeelMenu">
 				<form action="personeelMenu" method="get">
-					<input type="submit" name="submit" value="personeel" />
+					<input type="submit" name="submit" value="Personeel" />
 				</form>
 			</div>
 			<div id="bedrijfsgegevensMenu">
 				<form action="bedrijfsgegevensMenu" method="get">
-					<input type="submit" name="submit" value="bedrijfsgegevens" />
+					<input type="submit" name="submit" value="Bedrijfsgegevens" />
 				</form>
 			</div>
 			<div id="wieIsWaarMenu">
@@ -78,7 +78,7 @@
 				<input type="hidden" name="id" value="-1" />
 				<input type="submit" class = "btn btn-default btn-block active"  name="submit" value="Voeg nieuwe opdracht toe" />
 			</form>
-			<div class="groteTabel">
+			<div>
 				<table class = "table table-striped table-hover">
 					<thead>
 						<tr>

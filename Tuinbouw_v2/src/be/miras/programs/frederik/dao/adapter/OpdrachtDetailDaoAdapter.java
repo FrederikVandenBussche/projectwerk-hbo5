@@ -79,6 +79,8 @@ public class OpdrachtDetailDaoAdapter {
 		String googlemap = null;
 		
 		if (id < 0){
+			variabelveld1 = "";
+			variabelveld2= "";
 			aanspreeknaam = "";
 			buttonNaam = "Opslaan";
 			
@@ -134,7 +136,7 @@ public class OpdrachtDetailDaoAdapter {
 			leesTakenLijst(opdracht);
 
 			// lijst met alle materialen ophalen
-			materiaalLijst = (List<Materiaal>) (Object) materiaalDaoAdapter.leesAlle();
+			materiaalLijst = materiaalDaoAdapter.leesAlleMaterialen();
 
 			// lijst met de gebruikteMaterialen van deze opdracht ophalen
 			gebruikteMaterialenLijst = materiaalDaoAdapter.leesOpdrachtMateriaal(opdracht.getId());

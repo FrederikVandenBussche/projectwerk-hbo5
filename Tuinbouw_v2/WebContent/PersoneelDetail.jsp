@@ -52,17 +52,17 @@
 			</div>
 			<div id="materialenMenu">
 				<form action="materialenMenu" method="get">
-					<input type="submit" name="submit" value="materialen" />
+					<input type="submit" name="submit" value="Materialen" />
 				</form>
 			</div>
 			<div id="personeelMenu" class="actiefItem">
 				<form action="personeelMenu" method="get">
-					<input type="submit" name="submit" value="personeel" />
+					<input type="submit" name="submit" value="Personeel" />
 				</form>
 			</div>
 			<div id="bedrijfsgegevensMenu">
 				<form action="bedrijfsgegevensMenu" method="get">
-					<input type="submit" name="submit" value="bedrijfsgegevens" />
+					<input type="submit" name="submit" value="Bedrijfsgegevens" />
 				</form>
 			</div>
 			<div id="wieIsWaarMenu">

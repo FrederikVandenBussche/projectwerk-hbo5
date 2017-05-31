@@ -52,17 +52,17 @@
 			</div>
 			<div id="materialenMenu">
 				<form action="materialenMenu" method="get">
-					<input type="submit" name="submit" value="materialen" >
+					<input type="submit" name="submit" value="Materialen" >
 				</form>
 			</div>
 			<div id="personeelMenu">
 				<form action="personeelMenu" method="get">
-					<input type="submit" name="submit" value="personeel" >
+					<input type="submit" name="submit" value="Personeel" >
 				</form>
 			</div>
 			<div id="bedrijfsgegevensMenu">
 				<form action="bedrijfsgegevensMenu" method="get">
-					<input type="submit" name="submit" value="bedrijfsgegevens" >
+					<input type="submit" name="submit" value="Bedrijfsgegevens" >
 				</form>
 			</div>
 			<div id="wieIsWaarMenu">
@@ -84,7 +84,7 @@
 	        <div id = "myTabContent" class = "tab-content">
 	            <div class = "tab-pane fade in active" id = "particulier">
 	            	<br />
-	                <div id="particuliereLijst" class="groteTabel">
+	                <div id="particuliereLijst">
 						<div>
 							<form action="klantToonDetail" method="get">
 								<!--  if(id == -1){nieuwe klant} -->
@@ -121,7 +121,7 @@
 					</div>
     	        </div>
            		<div class = "tab-pane fade" id = "bedrijf">
-          			<div id="bedrijfLijst" class="groteTabel">
+          			<div id="bedrijfLijst">
 						<br />
 						<div>
 							<form action="klantToonDetail" method="get">

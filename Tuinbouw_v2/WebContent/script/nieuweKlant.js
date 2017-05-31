@@ -11,12 +11,12 @@ function setup(){
 	if(tekst.length <= 20){
 		
 		$("#klantAanspreekNaam").hide();
-		$("#bijNieuwVerbergen").hide();
+		$(".bijNieuwVerbergen").hide();
 		$("#klantVerwijderen").hide();
 	} else {
 		
 		$("#klantAanspreekNaam").show();
-		$("#bijNieuwVerbergen").show();
+		$(".bijNieuwVerbergen").show();
 		$("#klantVerwijderen").show();
 	}
 }

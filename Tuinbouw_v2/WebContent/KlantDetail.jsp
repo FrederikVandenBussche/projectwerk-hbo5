@@ -53,17 +53,17 @@
 			</div>
 			<div id="materialenMenu">
 				<form action="materialenMenu" method="get">
-					<input type="submit" name="submit" value="materialen" />
+					<input type="submit" name="submit" value="Materialen" />
 				</form>
 			</div>
 			<div id="personeelMenu">
 				<form action="personeelMenu" method="get">
-					<input type="submit" name="submit" value="personeel" />
+					<input type="submit" name="submit" value="Personeel" />
 				</form>
 			</div>
 			<div id="bedrijfsgegevensMenu">
 				<form action="bedrijfsgegevensMenu" method="get">
-					<input type="submit" name="submit" value="bedrijfsgegevens" />
+					<input type="submit" name="submit" value="Bedrijfsgegevens" />
 				</form>
 			</div>
 			<div id="wieIsWaarMenu">
@@ -108,7 +108,7 @@
 					</form>
             	</div>
         	    	<div class = "tab-pane fade" id = "adres">
-        	    		<div id="bijNieuwVerbergen">
+        	    		<div class ="bijNieuwVerbergen">
         	    			<br />
         	    			<ul id = "adresTab" class = "nav nav-tabs">
 								<c:forEach items="${klant.adreslijst }" var = "element" varStatus = "status">
@@ -191,26 +191,28 @@
         	    		</div>	
 					</div>
         	    	<div class = "tab-pane fade" id = "exporteer">
-        	    		<br />
-        	    		<form action="exporteerPrestaties" method="get">
-							<label for = "opdracht"> Exporteer opdracht: </label>
-							<select name = "opdracht">
-								<option value="0">Alle opdrachten</option>
-								<c:forEach items="${opdrachtMap }" var="element">
-									<option value="${element.key }">
-										${element.value }
-									</option>
-								</c:forEach>
-							</select>
-							<br />
-							<label for = "begindatum0"> Begindatum: </label>
-							<input type="date" name="begindatum" />
-							<br />
-							<label for = "einddatum"> Einddatum: </label>
-							<input type="date" name="einddatum"/>
-							<br />
-							<input type="submit" class = "btn btn-primary btn-block btn-lg active" name="submit" value="Exporteer als Excell-file" />
-						</form>
+        	    		<div class ="bijNieuwVerbergen">
+	        	    		<br />
+	        	    		<form action="exporteerPrestaties" method="get">
+								<label for = "opdracht"> Exporteer opdracht: </label>
+								<select name = "opdracht">
+									<option value="0">Alle opdrachten</option>
+									<c:forEach items="${opdrachtMap }" var="element">
+										<option value="${element.key }">
+											${element.value }
+										</option>
+									</c:forEach>
+								</select>
+								<br />
+								<label for = "begindatum0"> Begindatum: </label>
+								<input type="date" name="begindatum" />
+								<br />
+								<label for = "einddatum"> Einddatum: </label>
+								<input type="date" name="einddatum"/>
+								<br />
+								<input type="submit" class = "btn btn-primary btn-block btn-lg active" name="submit" value="Exporteer als Excell-file" />
+							</form>
+						</div>
         	    	</div>
     		</div>
     		<div id="klantVerwijderen">

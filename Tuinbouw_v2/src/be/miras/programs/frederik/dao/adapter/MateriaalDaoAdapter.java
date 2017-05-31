@@ -3,7 +3,6 @@ package be.miras.programs.frederik.dao.adapter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 import be.miras.programs.frederik.dao.DbMateriaalDao;
 import be.miras.programs.frederik.dao.DbOpdrachtMateriaalDao;
@@ -133,19 +132,12 @@ public class MateriaalDaoAdapter implements ICRUD {
 
 		dbMateriaalDao.wijzig(dbMateriaal);
 		
-		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(oudTypeMateriaalId)){
-			dbTypeMateriaalDao.verwijder(oudTypeMateriaalId);
-		}
 	}
 
 	@Override
 	public void verwijder(int id) {
-		int typeMateriaalId = dbMateriaalDao.geefTypeMateriaalId(id);
 		dbMateriaalDao.verwijder(id);
 		
-		if (!dbMateriaalDao.isTypeMateriaalKomtVoor(typeMateriaalId)){
-			dbTypeMateriaalDao.verwijder(typeMateriaalId);
-		}
 	}
 
 	/**
@@ -226,5 +218,34 @@ public class MateriaalDaoAdapter implements ICRUD {
 		
 	}
 
+	/**
+	 * @return List<Materiaal>
+	 * 
+	 * return een List<Materiaal> met alle materialen uit de db
+	 */
+	public List<Materiaal> leesAlleMaterialen() {
+		List<DbMateriaal> dbMateriaalLijst = new ArrayList<DbMateriaal>();
+		List<Materiaal> materiaalLijst = new ArrayList<Materiaal>();
+		
+		dbMateriaalLijst = (ArrayList<DbMateriaal>) (Object) dbMateriaalDao.leesAlle();
+
+		Iterator<DbMateriaal> dbMateriaalIt = dbMateriaalLijst.iterator();
+		while (dbMateriaalIt.hasNext()) {
+			DbMateriaal dbMateriaal = dbMateriaalIt.next();
+				
+			Materiaal materiaal = new Materiaal();
+			materiaal.setId(dbMateriaal.getId());
+			materiaal.setNaam(dbMateriaal.getNaam());
+			materiaal.setEenheidsmaat(dbMateriaal.getEenheid());
+			materiaal.setEenheidsprijs(dbMateriaal.getEenheidsprijs());
+			materiaal.setSoortId(dbMateriaal.getTypeMateriaalId());
+			
+			materiaalLijst.add(materiaal);
+		}
+		
+		return materiaalLijst;
+	}
+
+	
 	
 }

@@ -53,7 +53,11 @@ public class TypeMateriaalToevoegenServlet extends HttpServlet  implements Iinpu
 			DbTypeMateriaalDao dbTypeMateriaalDao = new DbTypeMateriaalDao();
 			DbTypeMateriaal dbTypeMateriaal = new DbTypeMateriaal();
 			dbTypeMateriaal.setNaam(naam);
-			dbTypeMateriaalDao.voegToe(dbTypeMateriaal);
+			
+			int id = dbTypeMateriaalDao.lees(naam);
+			if (id < 0){
+				dbTypeMateriaalDao.voegToe(dbTypeMateriaal);
+			}
 			
 			tabKiezer = naam;
 			

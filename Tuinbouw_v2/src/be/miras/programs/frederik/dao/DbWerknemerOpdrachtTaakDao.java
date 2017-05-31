@@ -326,7 +326,6 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 			Query q = session.createQuery(query);
 			q.setParameter("werknemerId", werknemerId);
 			q.setParameter("datum", datum);
-			System.out.println(q);
 			lijst = q.list();
 			session.flush();
 			if(!transaction.wasCommitted()){

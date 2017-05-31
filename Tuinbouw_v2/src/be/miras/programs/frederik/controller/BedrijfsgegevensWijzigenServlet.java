@@ -105,7 +105,7 @@ public class BedrijfsgegevensWijzigenServlet extends HttpServlet implements Iinp
 				persoon.setNaam(naam);
 				persoon.setVoornaam(voornaam);
 				persoon.setGeboortedatum(datum);
-
+				
 				dao.wijzig(persoon);		
 				
 				werkgever.setNaam(naam);
