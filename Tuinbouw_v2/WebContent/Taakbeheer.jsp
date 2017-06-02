@@ -18,8 +18,6 @@
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 	<%@ page isELIgnored="false"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-	
-	
 	<div id="container">
 		<div id="nav">
 			<div id="afmeldMenu">
@@ -102,99 +100,99 @@
 				</form>
 			</div>
 			<div id = "werknemerOpdrachtTaak">
-			<ul id = "myTab" class = "nav nav-tabs">
-            	<li class = "active">
-            	    <a href = "#planning" data-toggle = "tab">
-            	        Planning
-            	    </a>
-            	</li>
-            	<li><a href = "#gewerkteUren" data-toggle = "tab">Gewerkte uren</a></li>	
-        	</ul>
-	        <div id = "myTabContent" class = "tab-content">
-	            <div class = "tab-pane fade in active" id = "planning">
-	                <form action="taakPlanningToevoegen" method="post">
-	                	<div class = "inputvelden form control">
-	                		<label for = "werknemer">Voeg een nieuwe werknemer toe : </label>
-	                		<div >
-	                			<select name = "werknemer">
-									<c:forEach items="${werknemerMap }" var="werknemer">
-										<option value="${werknemer.key }">
-											${werknemer.value }
-										</option>							
-									</c:forEach>
-								</select>
-    	            		</div>
-        	        		<label for = "datum">Plan een nieuwe datum in: (dd/mm/yyyy) </label>
-           		     		<div >
-            	    			<input type="date" name="datum" />
-            	    		</div>
-                			<div >
-                				<input type="hidden" name = "taakId" value = "${taak.id }" />
-                				<input type="submit" class = "btn btn-default active" name="submit" value="Voeg toe" />	
+				<ul id = "myTab" class = "nav nav-tabs">
+            		<li class = "active">
+            		    <a href = "#planning" data-toggle = "tab">
+            		        Planning
+            		    </a>
+            		</li>
+            		<li><a href = "#gewerkteUren" data-toggle = "tab">Gewerkte uren</a></li>	
+        		</ul>
+	        	<div id = "myTabContent" class = "tab-content">
+	            	<div class = "tab-pane fade in active" id = "planning">
+	            	    <form action="taakPlanningToevoegen" method="post">
+	            	    	<div class = "inputvelden form control">
+	            	    		<label for = "werknemer">Voeg een nieuwe werknemer toe : </label>
+	                			<div >
+	                				<select name = "werknemer">
+										<c:forEach items="${werknemerMap }" var="werknemer">
+											<option value="${werknemer.key }">
+												${werknemer.value }
+											</option>							
+										</c:forEach>
+									</select>
+    	            			</div>
+        	        			<label for = "datum">Plan een nieuwe datum in: (dd/mm/yyyy) </label>
+           		     			<div >
+            	    				<input type="date" name="datum" />
+            	    			</div>
+                				<div >
+                					<input type="hidden" name = "taakId" value = "${taak.id }" />
+                					<input type="submit" class = "btn btn-default active" name="submit" value="Voeg toe" />	
+                				</div>
                 			</div>
-                		</div>
-					</form>
-					<br />
-					<br />
-					Volgende werknemer staan reeds gepland:
-					<table class = "table table-striped table-hover">
-						<thead>
-							<tr>
-								<th> naam </th>
-								<th> datum </th>
-								<th> </th>
-							</tr>
+						</form>
+						<br />
+						<br />
+						Volgende werknemer staan reeds gepland:
+						<table class = "table table-striped table-hover">
+							<thead>
+								<tr>
+									<th> naam </th>
+									<th> datum </th>
+									<th> </th>
+								</tr>
 							</thead>
 							<tbody>
-							<c:forEach items="${taak.planningLijst }" var="planning">
-								<tr>
-									<td>${planning.werknemer } </td>
-									<td>
-										<fmt:formatDate value="${planning.beginuur }" pattern="dd/MM/YYYY"/> 
-									</td>
-									<td>
-										<form action="taakGeplandeWerknemerVerwijderen" method="get">
-											<input type="hidden" name="planningId" value="${planning.id }" />
-											<input type="hidden" name="taakId" value = "${taak.id }" />
-											<input type="submit" class = "btn btn-default" name="submit" value="verwijder" /> 
-										</form>
-									</td>
-								</tr>
-							</c:forEach>
+								<c:forEach items="${taak.planningLijst }" var="planning">
+									<tr>
+										<td>${planning.werknemer } </td>
+										<td>
+											<fmt:formatDate value="${planning.beginuur }" pattern="dd/MM/YYYY"/> 
+										</td>
+										<td>
+											<form action="taakGeplandeWerknemerVerwijderen" method="get">
+												<input type="hidden" name="planningId" value="${planning.id }" />
+												<input type="hidden" name="taakId" value = "${taak.id }" />
+												<input type="submit" class = "btn btn-default" name="submit" value="verwijder" /> 
+											</form>
+										</td>
+									</tr>
+								</c:forEach>
 							</tbody>
 						</table>
-            </div>
-            <div class = "tab-pane fade" id = "gewerkteUren">
-                <table class = "table table-striped table-hover">
-						<thead>
-						<tr>
-							<th>Naam Werknemer </th>
-							<th>Beginuur</th>
-							<th>Einduur</th> <!--  een String -->
-						<th>isAanwezig</th>
-						<th></th>
-						</tr>
-						</thead>
-						<tbody>
-						<c:forEach items="${taak.gewerkteUrenLijst }" var="element">
-							<tr>
-								<td>${element.werknemer }</td>
-								<td>
-									<fmt:formatDate value="${element.beginuur }" pattern="dd/MM/YYYY HH:mm" />
-								</td>
-								<td>
-									<fmt:formatDate value="${element.einduur }" pattern="dd/MM/YYYY HH:mm" />
-								</td>
-								<td>${element.isAanwezig }</td>
-							</tr>
-							</c:forEach>
+           			 </div>
+            		<div class = "tab-pane fade" id = "gewerkteUren">
+                		<table class = "table table-striped table-hover">
+							<thead>
+								<tr>
+									<th>Naam Werknemer </th>
+									<th>Beginuur</th>
+									<th>Einduur</th> <!--  een String -->
+									<th>isAanwezig</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach items="${taak.gewerkteUrenLijst }" var="element">
+									<tr>
+										<td>${element.werknemer }</td>
+										<td>
+											<fmt:formatDate value="${element.beginuur }" pattern="dd/MM/YYYY HH:mm" />
+										</td>
+										<td>
+											<fmt:formatDate value="${element.einduur }" pattern="dd/MM/YYYY HH:mm" />
+										</td>
+										<td>${element.isAanwezig }</td>
+									</tr>
+								</c:forEach>
 							</tbody>
 						</table>
         	    	</div>
         		</div>
         	</div>
         	<div id= "bijNieuwVerbergen">
-				<form action="taakMarkerenAlsAfgewerkt" method="post">
+				<form action="taakMarkerenAlsAfgewerkt" method="post" >
 					<input type="hidden" name="taakId" value = "${taak.id }" />
 					<input type="submit" class = "btn btn-default btn-lg btn-block" name="submit" value="Deze taak als 'afgewerkt' markeren." />
 				</form>

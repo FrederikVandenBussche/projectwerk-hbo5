@@ -63,7 +63,7 @@ public class GenereerPdf {
 	 */
 	private void createPdf(String dest, FactuurData factuurData) throws FileNotFoundException{
 		double totaalPrijs = 0;
-
+		
 		// Initialiseer PDF writer
 		PdfWriter writer = new PdfWriter(dest);
 
@@ -218,7 +218,8 @@ public class GenereerPdf {
 					verplaatsingTabel.addCell(
 							new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add(String.valueOf(Constanten.KmVergoeding)));
-					double prijs = verplaatsing.getAantalKm() * Constanten.KmVergoeding;
+					double prijs = verplaatsing.getAantalKm() * verplaatsing.getAantalVerplaatsingen()
+							* Constanten.KmVergoeding;
 					verplaatsingTabel.addCell(
 							new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add(String.valueOf(prijs)));
@@ -342,6 +343,6 @@ public class GenereerPdf {
 		// document sluiten
 		document.close();
 	}
-
 	
+
 }

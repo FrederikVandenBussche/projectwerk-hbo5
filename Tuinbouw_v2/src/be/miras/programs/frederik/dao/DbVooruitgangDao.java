@@ -124,9 +124,9 @@ public class DbVooruitgangDao implements ICRUD {
 
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
+		DbVooruitgang vooruitgang = (DbVooruitgang) o;
 		
 		try {
-			DbVooruitgang vooruitgang = (DbVooruitgang) o;
 			session.beginTransaction();
 			transaction = session.getTransaction();
 			session.saveOrUpdate(vooruitgang);
@@ -139,7 +139,8 @@ public class DbVooruitgangDao implements ICRUD {
 				transaction.rollback();
 			}
 			e.printStackTrace();
-			LOGGER.error("Exception: " + TAG + "wijzig(o) " , e);
+			LOGGER.error("Exception: " + TAG + "wijzig(o), id = " 
+			+ vooruitgang.getId() + ", statusId = " + vooruitgang.getStatusId() + " " , e);
 		} finally {
 			session.close();
 		}

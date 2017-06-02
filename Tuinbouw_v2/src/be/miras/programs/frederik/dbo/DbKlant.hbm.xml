@@ -20,7 +20,5 @@
 			<property column="Voornaam" name="voornaam" type="java.lang.String"></property>
 		</joined-subclass>
 		
-		
-  
 	</class>
 </hibernate-mapping>

@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-
 import be.miras.programs.frederik.dao.DbOpdrachtTaakDao;
 import be.miras.programs.frederik.dao.DbStatusDao;
 import be.miras.programs.frederik.dao.DbVooruitgangDao;
@@ -58,8 +57,9 @@ public class FacturatieDownloadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		response.setContentType("text/html");
-
+		//response.setContentType("text/html");
+		response.setContentType("application/pdf");
+		
 		HttpSession session = request.getSession();
 		FactuurData factuurData = (FactuurData) session.getAttribute("factuur");
 		int adresId = Datatype.stringNaarInt(request.getParameter("adres"));
@@ -71,10 +71,8 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		factuurData.setAdres(facturatieAdres);
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
-
-		response.setContentType("application/pdf");
-
-		String PATH = "c:/tuinbouwbedrijf/facturen/";
+		
+		String PATH = "${catalina.home}/tuinbouwbedrijf/facturen/";
 		Date datum = new Date();
 		int dag = datum.getDate();
 		int maand = datum.getMonth();
@@ -84,11 +82,11 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		int seconden = datum.getSeconds();
 		String datumString = "_" + dag + "_" + maand + "_" + jaar + "_" + uur + "" + minuten + "" + seconden;
 		String fileNaam = factuurData.getKlantNaam() + datumString + ".pdf";
+		fileNaam = "test.pdf";
 		String dest = PATH.concat(fileNaam);
 
 		genereerPdf.genereer(dest, factuurData);
 
-		// open pdf in nieuw venster
 		File file = new File(dest);
 
 		response.setHeader("Content-disposition", "inline; filename=" + fileNaam);
@@ -97,7 +95,7 @@ public class FacturatieDownloadServlet extends HttpServlet {
 		BufferedOutputStream bufferedOutputStream = null;
 		
 		try {
-
+						
 			InputStream inputStream = new FileInputStream(file);
 			bufferedInputStream = new BufferedInputStream(inputStream);
 			bufferedOutputStream = new BufferedOutputStream(servletOutputStream);

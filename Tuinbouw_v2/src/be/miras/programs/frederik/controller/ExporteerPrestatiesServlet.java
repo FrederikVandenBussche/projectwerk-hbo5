@@ -226,7 +226,7 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			
 			response.setContentType("application/vnd.ms-excel");
 			
-			String PATH = "c:/tuinbouwbedrijf/prestaties/";
+			String PATH = "${catalina.home}/tuinbouwbedrijf/prestaties/";
 			
 			Date datum = new Date();
 			int dag = datum.getDate();

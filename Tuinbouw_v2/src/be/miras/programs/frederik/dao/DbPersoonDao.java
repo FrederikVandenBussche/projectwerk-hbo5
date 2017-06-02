@@ -288,7 +288,6 @@ public class DbPersoonDao implements ICRUD {
 		Date geboorteDatum = persoon.getGeboortedatum();
 		geboorteDatum.setYear(geboorteDatum.getYear()+30);
 		persoon.setGeboortedatum(geboorteDatum);
-		System.out.println("telbij: " + persoon.getGeboortedatum());
 		return persoon;
 	}
 	
@@ -305,7 +304,6 @@ public class DbPersoonDao implements ICRUD {
 		Date geboorteDatum = persoon.getGeboortedatum();
 		geboorteDatum.setYear(geboorteDatum.getYear()-30);
 		persoon.setGeboortedatum(geboorteDatum);
-		System.out.println("trekaf: " + persoon.getGeboortedatum());
 		return persoon;
 	}
 }
