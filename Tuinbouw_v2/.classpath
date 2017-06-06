@@ -38,5 +38,6 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/itext7-kernel-7.0.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/itext7-layout-7.0.2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/itext7-io-7.0.2.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/hibernate-c3p0-4.0.0.CR2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

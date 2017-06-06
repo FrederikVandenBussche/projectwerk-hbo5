@@ -72,17 +72,10 @@ public class FacturatieDownloadServlet extends HttpServlet {
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
 		
-		String PATH = "${catalina.home}/tuinbouwbedrijf/facturen/";
-		Date datum = new Date();
-		int dag = datum.getDate();
-		int maand = datum.getMonth();
-		int jaar = datum.getYear() + 1900;
-		int uur = datum.getHours();
-		int minuten = datum.getMinutes();
-		int seconden = datum.getSeconds();
-		String datumString = "_" + dag + "_" + maand + "_" + jaar + "_" + uur + "" + minuten + "" + seconden;
-		String fileNaam = factuurData.getKlantNaam() + datumString + ".pdf";
-		fileNaam = "test.pdf";
+		String PATH = System.getProperty("catalina.home");
+		PATH = PATH.concat("/tuinbouwbedrijf/factuur/");
+		
+		String fileNaam = "factuur.pdf";
 		String dest = PATH.concat(fileNaam);
 
 		genereerPdf.genereer(dest, factuurData);

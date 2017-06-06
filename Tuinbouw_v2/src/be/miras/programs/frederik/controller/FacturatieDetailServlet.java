@@ -195,10 +195,11 @@ public class FacturatieDetailServlet extends HttpServlet {
 				
 				//bereken het aantal km tussen werkgever en klant;
 				double aantalKm = Double.MIN_VALUE;
+				int klantAdresId = dbOpdracht.getKlantAdresId();
 				double opdrachtLat = opdracht.getLatitude();
 				double opdrachtLng = opdracht.getLongitude();
-				Adres adresOpdracht = GoogleApis.zoekAdres(opdrachtLat, opdrachtLng);
-				
+				//Adres adresOpdracht = GoogleApis.zoekAdres(opdrachtLat, opdrachtLng);
+				Adres adresOpdracht = adresDaoAdapter.leesWaarKlantAdresId(klantAdresId);
 				//bereken de afstand tussen het bedrijfsadres en de opdrachtAdres
 				aantalKm = GoogleApis.berekenAantalKilometers(bedrijfAdres, adresOpdracht);
 				
@@ -215,7 +216,6 @@ public class FacturatieDetailServlet extends HttpServlet {
 					
 					int taakId = dot.getTaakId();
 					String taakNaam = dbTaakDao.selectNaam(taakId);
-					
 					taak.setTaakNaam(taakNaam);
 					taak.setOpmerking(dot.getOpmerking());
 					
@@ -238,6 +238,7 @@ public class FacturatieDetailServlet extends HttpServlet {
 						if (planning.getEinduur() != null && 
 								planning.getEinduur().after(planning.getBeginuur()) &&
 								planning.getAantalUren() > 0){
+							
 							planningLijst.add(planning);
 						}
 					}

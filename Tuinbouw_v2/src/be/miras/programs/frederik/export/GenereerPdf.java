@@ -104,7 +104,10 @@ public class GenereerPdf {
 			Table tabel = new Table(new float[] { 1 });
 			tabel.setWidthPercent(100);
 			// opdrachtNaam
-			Paragraph opdrachtNaam = new Paragraph(opdracht.getOpdrachtNaam());
+			Text opdrachtTekst = new Text(opdracht.getOpdrachtNaam());
+			opdrachtTekst.setFontSize(20);
+			Paragraph opdrachtNaam = new Paragraph(opdrachtTekst).setBackgroundColor(new DeviceGray(0.75f));
+			opdrachtNaam.setTextAlignment(TextAlignment.CENTER);
 			tabel.addCell(opdrachtNaam);
 			document.add(tabel);
 
@@ -114,14 +117,14 @@ public class GenereerPdf {
 			Table overzichtWerkuren = new Table(colombreedtes);
 			overzichtWerkuren.setWidthPercent(100);
 
-			Cell[] header = new Cell[] { new Cell().setBackgroundColor(new DeviceGray(0.75f)).add("Taak"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
+			Cell[] header = new Cell[] { new Cell().add("Taak"),
+					new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add("Datum"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
+					new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add("# uren"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
+					new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add("Prijs"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
+					new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add("Totaal") };
 			for (Cell hcell : header) {
 				overzichtWerkuren.addHeaderCell(hcell);
@@ -161,7 +164,7 @@ public class GenereerPdf {
 				while (planningLijstIter.hasNext()) {
 					Planning planning = planningLijstIter.next();
 
-					overzichtWerkuren.addCell(new Cell().add(taak.getTaakNaam()));
+					overzichtWerkuren.addCell(new Cell().setBackgroundColor(new DeviceGray(0.75f)).add(taak.getTaakNaam()));
 					String datum = Datum.datumToString(planning.getBeginuur());
 					overzichtWerkuren.addCell(new Cell().setTextAlignment(TextAlignment.CENTER).add(datum));
 					overzichtWerkuren.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
@@ -169,34 +172,30 @@ public class GenereerPdf {
 					overzichtWerkuren.addCell(
 							new Cell().setTextAlignment(TextAlignment.CENTER).add(String.valueOf(Constanten.Uurloon)));
 					double prijs = planning.getAantalUren() * Constanten.Uurloon;
+					prijs = (double) Math.round(prijs * 100) / 100;
 					overzichtWerkuren
-							.addCell(new Cell().setTextAlignment(TextAlignment.CENTER).add(String.valueOf(prijs)));
+							.addCell(new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER).add(String.valueOf(prijs)));
 					totaalPrijs += prijs;
 				}
 			}
 			document.add(overzichtWerkuren);
 			
-			document.add(new Paragraph("\n"));
-			
 			// verplaatsingen
 			Table verplaatsingen = new Table(new float[] { 1 });
 			verplaatsingen.setWidthPercent(100);
-			verplaatsingen.addCell(new Cell().add("Verplaatsingen"));
+			Text verplaatsingTekst = new Text("Verplaatsingen").setBackgroundColor(new DeviceGray(0.75f));
+			Paragraph verplaatsingParagraaf = new Paragraph(verplaatsingTekst);
+			verplaatsingen.addCell(new Cell().add(verplaatsingParagraaf));
 			document.add(verplaatsingen);
 			Table verplaatsingTabel = new Table(colombreedtes);
 			verplaatsingTabel.setWidthPercent(100);
 
 			Cell[] verplaatsingHeader = new Cell[] {
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("Datum"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("# verplaatsingen"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("# km"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("Prijs/km"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("Totaal") };
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("Datum"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("# verplaatsingen"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("# km"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("Prijs/km"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("Totaal") };
 			for (Cell hcell : verplaatsingHeader) {
 				verplaatsingTabel.addHeaderCell(hcell);
 			}
@@ -209,47 +208,40 @@ public class GenereerPdf {
 					verplaatsingTabel.addCell(
 							new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add(Datum.datumToString(verplaatsing.getDag())));
-					verplaatsingTabel.addCell(
-							new Cell().setTextAlignment(TextAlignment.CENTER)
+					verplaatsingTabel.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add(String.valueOf(verplaatsing.getAantalVerplaatsingen())));
-					verplaatsingTabel.addCell(
-							new Cell().setTextAlignment(TextAlignment.CENTER)
+					verplaatsingTabel.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add(String.valueOf(verplaatsing.getAantalKm())));
-					verplaatsingTabel.addCell(
-							new Cell().setTextAlignment(TextAlignment.CENTER)
+					verplaatsingTabel.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
 							.add(String.valueOf(Constanten.KmVergoeding)));
 					double prijs = verplaatsing.getAantalKm() * verplaatsing.getAantalVerplaatsingen()
 							* Constanten.KmVergoeding;
-					verplaatsingTabel.addCell(
-							new Cell().setTextAlignment(TextAlignment.CENTER)
+					prijs = (double) Math.round(prijs * 100) / 100;
+					verplaatsingTabel.addCell(new Cell().setBackgroundColor(
+							new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
 							.add(String.valueOf(prijs)));
 					totaalPrijs += prijs;
 				}
 			}
 			document.add(verplaatsingTabel);
 			
-			document.add(new Paragraph("\n"));
-			
 			// materialen
 			Table materialen = new Table(new float[] { 1 });
 			materialen.setWidthPercent(100);
-			materialen.addCell(new Cell().add("Gebruikte materialen"));
+			Text materialenTekst = new Text("Gebruikte materialen").setBackgroundColor(new DeviceGray(0.75f));
+			Paragraph materialenParagraaf = new Paragraph(materialenTekst);
+			materialen.addCell(new Cell().add(materialenParagraaf));
 			document.add(materialen);
 			
 			Table materiaalTabel = new Table(colombreedtes);
 			materiaalTabel.setWidthPercent(100);
 
 			Cell[] materiaalHeader = new Cell[] {
-					new Cell().setBackgroundColor(new DeviceGray(0.75f))
-							.add("Soort"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f))
-							.add("Naam"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("aantal"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("eenheidsprijs"),
-					new Cell().setBackgroundColor(new DeviceGray(0.75f)).setTextAlignment(TextAlignment.CENTER)
-							.add("Totaal") };
+					new Cell().add("Soort"),
+					new Cell().add("Naam"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("aantal"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("eenheidsprijs"),
+					new Cell().setTextAlignment(TextAlignment.CENTER).add("Totaal") };
 			for (Cell hcell : materiaalHeader) {
 				materiaalTabel.addHeaderCell(hcell);
 			}
@@ -262,7 +254,8 @@ public class GenereerPdf {
 						new Cell().add(materiaal.getSoort()));
 				materiaalTabel.addCell(
 						new Cell().add(materiaal.getNaam()));
-				String aantal = String.valueOf(materiaal.getHoeveelheid()).concat(" ").concat(materiaal.getEenheidsmaat());
+				String aantal = String.valueOf(materiaal.getHoeveelheid()).concat(" ")
+						.concat(materiaal.getEenheidsmaat());
 				materiaalTabel.addCell(
 						new Cell().setTextAlignment(TextAlignment.CENTER)
 						.add(String.valueOf(aantal)));
@@ -270,16 +263,19 @@ public class GenereerPdf {
 						new Cell().setTextAlignment(TextAlignment.CENTER)
 						.add(String.valueOf(materiaal.getEenheidsprijs())));
 				double prijs = materiaal.getHoeveelheid() * materiaal.getEenheidsprijs();
+				prijs = (double) Math.round(prijs * 100) / 100;
 				materiaalTabel.addCell(
-						new Cell().setTextAlignment(TextAlignment.CENTER)
-						.add(String.valueOf(prijs)));
+						new Cell().setBackgroundColor(new DeviceGray(0.75f))
+						.setTextAlignment(TextAlignment.CENTER).add(String.valueOf(prijs)));
 				totaalPrijs += prijs;
 				
 			}
 			document.add(materiaalTabel);
 			
+			document.add(new Paragraph("\n"));
+			
 		} // einde opdrachtIterator
-		totaalPrijs = Math.round(totaalPrijs * 100) / 100;
+		totaalPrijs = (double) Math.round(totaalPrijs * 100) / 100;
 		document.add(new Paragraph("\n"));
 		
 		//totaal
@@ -298,7 +294,7 @@ public class GenereerPdf {
 		if (factuurData.isBtwAanrekenen()){
 			btw = Constanten.Btw;
 			btwPrijs = totaalPrijs * btw / 100;
-			btwPrijs = Math.round(totaalPrijs * 100) / 100;
+			btwPrijs = (double) Math.round(btwPrijs * 100) / 100;
 			totaalTabel.addCell(new Cell().setTextAlignment(TextAlignment.CENTER)
 					.add(String.valueOf(btw).concat(" %")));
 		} else {
@@ -319,7 +315,7 @@ public class GenereerPdf {
 
 		//bedrijfsadres
 		Adres bedrijfAdres = factuurData.getBedrijfsAdres();
-		Text bedrijfsnaam = new Text(Constanten.Bedrijfsnaam.concat(" "));
+		Text bedrijfsnaam = new Text(Constanten.Bedrijfsnaam.concat("\n"));
 		Text bedrijfadres = new Text(bedrijfAdres.getStraat().concat(" ")
 				.concat(String.valueOf(bedrijfAdres.getNummer())).concat(" ")
 				.concat(bedrijfAdres.getBus()).concat("\n")

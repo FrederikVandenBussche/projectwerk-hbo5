@@ -226,18 +226,10 @@ public class ExporteerPrestatiesServlet extends HttpServlet {
 			
 			response.setContentType("application/vnd.ms-excel");
 			
-			String PATH = "${catalina.home}/tuinbouwbedrijf/prestaties/";
+			String PATH = System.getProperty("catalina.home");
+			PATH = PATH.concat("/tuinbouwbedrijf/prestaties/");
 			
-			Date datum = new Date();
-			int dag = datum.getDate();
-			int maand = datum.getMonth();
-			int jaar = datum.getYear() + 1900;
-			int uur = datum.getHours();
-			int minuten = datum.getMinutes();
-			int seconden = datum.getSeconds();
-			String datumString = "_" + dag + "_" + maand + "_" + jaar
-					 + "_" + uur + "" + minuten + "" + seconden;
-			String fileNaam = excelData.getKlantNaam() + datumString + ".xls";
+			String fileNaam = "prestaties.xls";
 			String dest = PATH.concat(fileNaam);
 			
 			GenereerXls genereerXls = new GenereerXls();

@@ -58,7 +58,7 @@ public class GenereerXls {
 
 		// VetFont:
 		HSSFFont vetFont = workbook.createFont();
-		// titleFont.setFontHeightInPoints((short) 30);
+		
 		vetFont.setBold(true);
 		HSSFCellStyle vetStyle = workbook.createCellStyle();
 		vetStyle.setFont(vetFont);

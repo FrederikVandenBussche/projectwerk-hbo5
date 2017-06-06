@@ -97,6 +97,12 @@ public class WieIsWaarServlet extends HttpServlet {
 				Date startuur = wot.getBeginuur();
 				Date einduur = wot.getEinduur();
 				
+				// indien 0h00m00s => niet tonen
+				if (startuur.getHours() == 0 && startuur.getMinutes() == 0 
+						&& startuur.getSeconds() == 0){
+					startuur = null;
+				}
+				
 				int werknemerId = wot.getWerknemerId();
 				int opdrachtId = wot.getOpdrachtTaakOpdrachtId();
 				int taakId = wot.getOpdrachtTaakTaakId();

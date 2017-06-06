@@ -2,6 +2,7 @@ package be.miras.programs.frederik.dao;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -444,16 +445,18 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		boolean isReedsGepland = false;
 		Session session = HibernateUtil.openSession();
 		Transaction transaction = null;
-		String query = "SELECT id FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId "
-																	+ "AND beginuur = :beginuur";
-		List<Long> lijst = new ArrayList<Long>();
+		String query = "SELECT beginuur FROM DbWerknemerOpdrachtTaak where werknemerId = :werknemerId "
+								+ "AND opdrachtTaakOpdrachtId = :opdrachtId " 
+								+ "AND opdrachtTaakTaakId = :taakId";
+		List<Date> lijst = new ArrayList<Date>();
 		
 		try {
 			session.beginTransaction();
 			transaction = session.getTransaction();
 			Query q = session.createQuery(query);
 			q.setParameter("werknemerId", dbWerknemerOpdrachtTaak.getWerknemerId());
-			q.setParameter("beginuur", dbWerknemerOpdrachtTaak.getBeginuur());
+			q.setParameter("opdrachtId", dbWerknemerOpdrachtTaak.getOpdrachtTaakOpdrachtId());
+			q.setParameter("taakId", dbWerknemerOpdrachtTaak.getOpdrachtTaakTaakId());
 			lijst = q.list();
 			session.flush();
 			if(!transaction.wasCommitted()){
@@ -470,7 +473,17 @@ public class DbWerknemerOpdrachtTaakDao implements ICRUD {
 		}
 		
 		if (!lijst.isEmpty()) {
-			isReedsGepland = true;
+			Date beginuur = dbWerknemerOpdrachtTaak.getBeginuur();
+			Iterator<Date> it = lijst.iterator();
+			while(it.hasNext()){
+				Date date = it.next();
+				
+				if (date.getYear() == beginuur.getYear() &&
+						date.getMonth() == beginuur.getMonth() &&
+						date.getDate() == beginuur.getDate()){
+					isReedsGepland = true;
+				}
+			}
 		}
 		
 		return isReedsGepland;
